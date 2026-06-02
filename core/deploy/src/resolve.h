@@ -30,6 +30,4 @@ private:
   string filePath;
   string fileStr;
   string host;
-  map<string, string> resolveMap;
-  map<string, string> throwMap;
 };

@@ -26,6 +26,8 @@ let
       ../../../core/boot/style-nix.nix
       # btop
       ../../../core/btop/enable-nix.nix
+      # Deploy
+      ../../../core/deploy/enable-nix.nix
       # Fast Fetch
       ../../../core/fastfetch/enable-nix.nix # Fastfetch  -  You got to show something in that cmd for your reddit posts
       # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
