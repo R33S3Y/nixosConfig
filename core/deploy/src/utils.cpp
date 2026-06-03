@@ -115,17 +115,17 @@ vector<string> utils::splitStrByCharsByFilterStr(string inputStr,
 
   vector<string> output;
 
-  for (char inputChar : inputChars) {
-    string currentStr;
+  string currentStr;
 
-    for (int i = 0; i < filterStr.size(); i++) {
-      if (filterStr[i] == inputChar) {
-        output.push_back(currentStr);
-        currentStr.clear();
-      } else {
-        currentStr += inputStr[i];
-      }
+  for (int i = 0; i < filterStr.size(); i++) {
+    if (find(inputChars.begin(), inputChars.end(), filterStr[i]) !=
+        inputChars.end()) {
+      output.push_back(currentStr);
+      currentStr.clear();
+    } else {
+      currentStr += inputStr[i];
     }
+
     output.push_back(currentStr);
   }
 
