@@ -180,14 +180,7 @@ resolve::result resolve::resolveImportsStatements() {
       if (tmp.thrown == true) {
         continue;
       }
-      cout << "??? \n";
-      cout << tmp.type + "\n";
       if (tmp.type == "list") {
-        cout << "\n";
-        cout << "paths: \n";
-        for (string file : tmp.list) {
-          cout << file + "\n";
-        }
         res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
       } else {
         cout << tmp.str + "\n";
