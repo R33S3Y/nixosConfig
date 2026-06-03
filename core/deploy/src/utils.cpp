@@ -114,7 +114,6 @@ vector<string> utils::splitStrByCharsByFilterStr(string inputStr,
   }
 
   vector<string> output;
-
   string currentStr;
 
   for (int i = 0; i < filterStr.size(); i++) {
@@ -125,10 +124,8 @@ vector<string> utils::splitStrByCharsByFilterStr(string inputStr,
     } else {
       currentStr += inputStr[i];
     }
-
-    output.push_back(currentStr);
   }
-
+  output.push_back(currentStr);
   return output;
 }
 
