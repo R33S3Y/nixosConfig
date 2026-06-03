@@ -115,7 +115,7 @@ string eval::removeComments(string fileStr) {
 eval::result eval::statement(string test, bool canThrow) {
 
   test = utils::trim(test);
-  cout << "eval line:" + test + "\n";
+  cout << "eval line: " + test + "\n";
 
   if (test.front() == '\"' && test.back() == '\"') {
     // is string

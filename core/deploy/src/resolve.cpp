@@ -132,7 +132,7 @@ resolve::result resolve::resolveImportsStatements() {
     size_t lineEnd = workingFileStr.find(";");
 
     string lineStr = workingFileStr.substr(0, lineEnd);
-    cout << "import line:" + lineStr + "\n";
+    cout << "import line: " + lineStr + "\n";
     workingFileStr = workingFileStr.substr(lineEnd);
 
     lineStr = utils::replaceAll(lineStr, "imports", "");
