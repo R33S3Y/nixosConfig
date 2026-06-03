@@ -49,12 +49,18 @@ resolve::result resolve::resolveImportStatements() {
     lineStr = utils::trim(lineStr);
 
     eval::result tmp = ev.statement(lineStr);
-    if (tmp.str != "") {
-      res.paths.push_back(tmp.str);
-    }
-    if (tmp.error) {
+    if (tmp.error == true) {
+      // see the imports statements func for why we break
       res.error = true;
-      break; // see the imports statements func for why we break
+      return res;
+    }
+    if (tmp.thrown == true) {
+      continue;
+    }
+    if (tmp.type == "list") {
+      res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
+    } else if (tmp.str.size() != 0) {
+      res.paths.push_back(tmp.str);
     }
   }
 
