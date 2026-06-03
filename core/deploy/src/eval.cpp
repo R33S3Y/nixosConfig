@@ -115,7 +115,6 @@ string eval::removeComments(string fileStr) {
 eval::result eval::statement(string test, bool canThrow) {
 
   test = utils::trim(test);
-  cout << "eval line: " + test + "\n";
 
   if (test.front() == '\"' && test.back() == '\"') {
     // is string
@@ -367,7 +366,6 @@ eval::result eval::bracket(string test) {
   vector<string> items = utils::splitStrByChar(test, '+');
   test = "";
   for (string item : items) {
-    cout << "bracket item: " + item + "\n";
     eval::result hold = eval::statement(item, true);
     if (hold.error == true) {
       eval::result res;
@@ -397,7 +395,6 @@ eval::result eval::bracket(string test) {
   return res;
 }
 vector<string> eval::list(string test, bool throwLazy) {
-  cout << "test line: " + test + "\n";
   // mask and split
   string mask = test;
   mask = utils::blankWithinTokens(mask, "${", "}", '.');
@@ -428,8 +425,6 @@ vector<string> eval::list(string test, bool throwLazy) {
   // throw lazy items
   for (int i = 0; i < listItems.size(); i++) {
     string listItem = listItems[i];
-
-    cout << "list items: " + listItem + "\n";
 
     if (listItem.find("«") != string::npos ||
         listItem.find("»") != string::npos) {
