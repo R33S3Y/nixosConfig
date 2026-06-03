@@ -169,9 +169,6 @@ resolve::result resolve::resolveImportsStatements() {
       }
 
       eval::result tmp = ev.statement(item);
-      if (tmp.str != "") {
-        res.paths.push_back(tmp.str);
-      }
       if (tmp.error) {
         // errors for resolvekey only happen when it falls to resolve something.
         // If we fail to resolve something then we will need to rebuild the
@@ -179,6 +176,11 @@ resolve::result resolve::resolveImportsStatements() {
         // what files the host needs
         res.error = true;
         break;
+      }
+      if (tmp.type == "list") {
+        res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
+      } else {
+        res.paths.push_back(tmp.str);
       }
     }
   }
