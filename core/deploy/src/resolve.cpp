@@ -177,6 +177,7 @@ resolve::result resolve::resolveImportsStatements() {
         res.error = true;
         break;
       }
+      cout << "??? /n";
       if (tmp.type == "list") {
         cout << "\n";
         cout << "paths: \n";
