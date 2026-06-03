@@ -35,5 +35,5 @@ public:
   static string trim(string s);
 
   static string blankWithinTokens(string fileStr, string startToken,
-                                  string endToken = "");
+                                  string endToken = "", char blankChar = ' ');
 };

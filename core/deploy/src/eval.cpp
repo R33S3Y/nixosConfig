@@ -400,8 +400,8 @@ vector<string> eval::list(string test, bool throwLazy) {
   cout << "test line: " + test + "\n";
   // mask and split
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "${", "}");
-  mask = utils::blankWithinTokens(mask, "(", ")");
+  mask = utils::blankWithinTokens(mask, "${", "}", '.');
+  mask = utils::blankWithinTokens(mask, "(", ")", '.');
   vector<string> listItems =
       utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 

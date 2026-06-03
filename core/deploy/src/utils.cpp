@@ -160,7 +160,7 @@ string utils::trim(string s) {
 }
 
 string utils::blankWithinTokens(string fileStr, string startToken,
-                                string endToken) {
+                                string endToken, char blankChar) {
 
   if (endToken == "") {
     endToken = startToken;
@@ -179,7 +179,7 @@ string utils::blankWithinTokens(string fileStr, string startToken,
 
     for (size_t i = startRight; i < endLeft; i++) {
       if (fileStr[i] != '\n') {
-        fileStr[i] = ' ';
+        fileStr[i] = blankChar;
       }
     }
     holdStr += fileStr.substr(0, endRight);
