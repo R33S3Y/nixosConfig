@@ -132,11 +132,10 @@ resolve::result resolve::resolveImportsStatements() {
     size_t lineEnd = workingFileStr.find(";");
 
     string lineStr = workingFileStr.substr(0, lineEnd);
-    cout << lineStr + "\n";
+    cout << "import line:" + lineStr + "\n";
     workingFileStr = workingFileStr.substr(lineEnd);
 
     lineStr = utils::replaceAll(lineStr, "imports", "");
-    lineStr = utils::trim(lineStr);
 
     if (lineStr[0] !=
         '=') { // incase you end up with: thing = var.imports ++ [];
