@@ -111,50 +111,6 @@ string eval::removeComments(string fileStr) {
   }
   return output;
 }
-vector<string> eval::list(string test, bool throwLazy) {
-
-  // mask and split
-  string mask = test;
-  mask = utils::blankWithinTokens(mask, "${", "}");
-  mask = utils::blankWithinTokens(mask, "(", ")");
-  vector<string> listItems = utils::splitStrByCharByFilterStr(test, mask, ' ');
-
-  // is list and cleanup
-  if (listItems.size() == 0) {
-    return {};
-  }
-  for (int i = 0; i < listItems.size(); i++) {
-    listItems[i] = utils::trim(listItems[i]);
-    if (listItems[i].size() == 0) {
-      listItems.erase(listItems.begin() + i);
-      i--;
-    }
-  }
-  if (listItems.size() == 0)
-    return {};
-  if (listItems.front() != "[" || listItems.back() != "]") {
-    return {};
-  }
-
-  listItems.erase(listItems.begin());
-  listItems.pop_back();
-
-  // throw lazy items
-  for (int i = 0; i < listItems.size(); i++) {
-    string listItem = listItems[i];
-
-    if (listItem.find("«") != string::npos ||
-        listItem.find("»") != string::npos) {
-      // is lazy item like «thunk» or «lambda @ ...» or «github:...»
-      if (throwLazy == false)
-        continue;
-      listItems.erase(listItems.begin() + i);
-      i--;
-      continue;
-    }
-  }
-  return listItems;
-}
 
 eval::result eval::statement(string test, bool canThrow) {
 
@@ -162,6 +118,8 @@ eval::result eval::statement(string test, bool canThrow) {
 
   if (test.front() == '\"' && test.back() == '\"') {
     // is string
+
+    // cut quotes eg: "thing" -> thing
     test.erase(test.begin());
     test.pop_back();
 
@@ -170,6 +128,11 @@ eval::result eval::statement(string test, bool canThrow) {
     res.type = "str";
     res.str = test;
     return res;
+  }
+
+  if (test.front() == '(' && test.back() == ')') {
+    // is bracket
+    return eval::bracket(test);
   }
 
   vector<string> list = eval::list(test);
@@ -208,12 +171,12 @@ eval::result eval::statement(string test, bool canThrow) {
     return hold;
   }
 
+  // error land
   if (canThrow == false) {
     result res;
     res.error = true;
     return res;
   }
-
   cerr << "\n" + utils::error("Failed to resolve the following in "
                               "(\033[35m" +
                               eval::flakeLink + eval::filePath + "\033[0m)");
@@ -328,45 +291,17 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
 
     // resolve ( )
     if (attrsetKey.front() == '(' && attrsetKey.back() == ')') {
-      attrsetKey.erase(attrsetKey.begin());
-      attrsetKey.pop_back();
 
-      string mask = attrsetKey;
-      mask = utils::blankWithinTokens(mask, "\"", "\"");
-      mask = utils::blankWithinTokens(mask, "(", ")");
-      mask = utils::blankWithinTokens(mask, "[", "]");
-      vector<string> operators = {"-", "?", "++", "*",  "!",  "//",
-                                  "<", ">", "==", "!=", "&&", "||"};
-      for (string value : operators) {
-        if (mask.find(value) != string::npos) {
-          cerr << utils::error("Bracket has unsupported operators");
-          res.error = true;
-          return res;
-        }
+      eval::result hold = eval::bracket(attrsetKey);
+      if (hold.error == true) {
+        res.error = true;
+        return res;
       }
-
-      vector<string> items = utils::splitStrByChar(attrsetKey, '+');
-      attrsetKey = "";
-      for (string item : items) {
-        eval::result hold = eval::statement(item);
-        if (hold.error == true) {
-          res.error = true;
-          return res;
-        }
-        if (hold.thrown == true) {
-          res.thrown = true;
-          return res;
-        }
-        if (hold.type == "list") {
-          cerr << utils::error("Nested lists are not supported in this "
-                               "context. \033[35m:3\033[0m\n");
-          // yes, I really had to put a colourful :3 in their. (UwU)
-          // I what future me will see that and suffer... So yeah...
-          res.error = true;
-          return res;
-        }
-        attrsetKey += hold.str;
+      if (hold.thrown == true) {
+        res.thrown = true;
+        return res;
       }
+      attrsetKey = hold.str;
     }
 
     attrset += attrsetKey + ".";
@@ -413,4 +348,109 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     return res;
   }
   return hold;
+}
+
+eval::result eval::bracket(string test) {
+  // input check
+  if (test.front() != '(' && test.back() != ')') {
+    cerr << utils::error(
+        "Non bracket has been inserted into the bracket function");
+  }
+
+  // remove the starting and end brackets eg: "(thing)" -> "thing"
+  test.erase(test.begin());
+  test.pop_back();
+
+  // throw error on unsupported statements seeing as this isn't a real parser.
+  // (and I don't want it to be)
+  string mask = test;
+  mask = utils::blankWithinTokens(mask, "\"", "\"");
+  mask = utils::blankWithinTokens(mask, "(", ")");
+  mask = utils::blankWithinTokens(mask, "[", "]");
+  vector<string> operators = {"-", "?", "++", "*",  "!",  "//",
+                              "<", ">", "==", "!=", "&&", "||"};
+  for (string value : operators) {
+    if (mask.find(value) != string::npos) {
+      cerr << utils::error("Bracket has unsupported operators");
+      eval::result res;
+      res.error = true;
+      return res;
+    }
+  }
+
+  // process into str
+  vector<string> items = utils::splitStrByChar(test, '+');
+  test = "";
+  for (string item : items) {
+    eval::result hold = eval::statement(item);
+    if (hold.error == true) {
+      eval::result res;
+      res.error = true;
+      return res;
+    }
+    if (hold.thrown == true) {
+      eval::result res;
+      res.thrown = true;
+      return res;
+    }
+    if (hold.type == "list") {
+      cerr << utils::error("Nested lists are not supported in this "
+                           "context. \033[35m:3\033[0m\n");
+      // yes, I really had to put a colourful :3 in their. (UwU)
+      // I what future me will see that and suffer... So yeah...
+      eval::result res;
+      res.error = true;
+      return res;
+    }
+    test += hold.str;
+  }
+
+  eval::result res;
+  res.type = "bracket";
+  res.str = test;
+  return res;
+}
+vector<string> eval::list(string test, bool throwLazy) {
+
+  // mask and split
+  string mask = test;
+  mask = utils::blankWithinTokens(mask, "${", "}");
+  mask = utils::blankWithinTokens(mask, "(", ")");
+  vector<string> listItems = utils::splitStrByCharByFilterStr(test, mask, ' ');
+
+  // is list and cleanup
+  if (listItems.size() == 0) {
+    return {};
+  }
+  for (int i = 0; i < listItems.size(); i++) {
+    listItems[i] = utils::trim(listItems[i]);
+    if (listItems[i].size() == 0) {
+      listItems.erase(listItems.begin() + i);
+      i--;
+    }
+  }
+  if (listItems.size() == 0)
+    return {};
+  if (listItems.front() != "[" || listItems.back() != "]") {
+    return {};
+  }
+
+  listItems.erase(listItems.begin());
+  listItems.pop_back();
+
+  // throw lazy items
+  for (int i = 0; i < listItems.size(); i++) {
+    string listItem = listItems[i];
+
+    if (listItem.find("«") != string::npos ||
+        listItem.find("»") != string::npos) {
+      // is lazy item like «thunk» or «lambda @ ...» or «github:...»
+      if (throwLazy == false)
+        continue;
+      listItems.erase(listItems.begin() + i);
+      i--;
+      continue;
+    }
+  }
+  return listItems;
 }

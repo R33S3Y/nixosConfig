@@ -25,11 +25,17 @@ public:
   };
 
   static string removeComments(string fileStr);
-  static vector<string> list(string test, bool throwLazy = true);
 
   result statement(string test, bool canThrow = true);
   string path(string test);
   result attrsetKey(string test, bool canThrow);
+
+  // these ones are static simply because they can be,
+  // and it allow them to be used outside of this class with out having to do
+  // the very costly class init
+  // (which I will probs need to make multi-threaded).
+  static result bracket(string test);
+  static vector<string> list(string test, bool throwLazy = true);
 
 private:
   string flakePath;
