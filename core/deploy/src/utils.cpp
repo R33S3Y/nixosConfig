@@ -178,7 +178,9 @@ string utils::blankWithinTokens(string fileStr, string startToken,
     size_t endRight = endLeft + endToken.size();
 
     for (size_t i = startRight; i < endLeft; i++) {
-      fileStr[i] = blankChar;
+      if (fileStr[i] != '\n') {
+        fileStr[i] = blankChar;
+      }
     }
     holdStr += fileStr.substr(0, endRight);
     fileStr = fileStr.substr(endRight);
