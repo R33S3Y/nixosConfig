@@ -137,6 +137,7 @@ resolve::result resolve::resolveImportsStatements() {
 
     lineStr = utils::replaceAll(lineStr, "imports", "");
 
+    lineStr = utils::trim(lineStr);
     if (lineStr[0] !=
         '=') { // incase you end up with: thing = var.imports ++ [];
       continue;
