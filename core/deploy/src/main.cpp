@@ -139,16 +139,20 @@ int main(int argc, char const *argv[]) {
         error = true;
         break;
       }
-      imports.paths = filter(imports.paths, processedFiles);
-      unprocessedFiles = merge(imports.paths, unprocessedFiles);
+      if (imports.paths.size() != 0) {
+        imports.paths = filter(imports.paths, processedFiles);
+        unprocessedFiles = merge(imports.paths, unprocessedFiles);
+      }
 
       imports = r.resolveImportsStatements();
       if (imports.error) {
         error = true;
         break;
       }
-      imports.paths = filter(imports.paths, processedFiles);
-      unprocessedFiles = merge(imports.paths, unprocessedFiles);
+      if (imports.paths.size() != 0) {
+        imports.paths = filter(imports.paths, processedFiles);
+        unprocessedFiles = merge(imports.paths, unprocessedFiles);
+      }
     }
     cout << "\n";
     cout << "Still Unprocessed files: \n";
