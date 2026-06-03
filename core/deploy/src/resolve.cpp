@@ -99,7 +99,7 @@ size_t getValidStatementPos(string statement, string s) {
 }
 
 resolve::result resolve::resolveImportsStatements() {
-  string workingFileStr = fileStr;
+  string workingFileStr = resolve::fileStr;
 
   result res;
   // remove let in statement seeing as they are unable to contain a valid
@@ -132,6 +132,7 @@ resolve::result resolve::resolveImportsStatements() {
     size_t lineEnd = workingFileStr.find(";");
 
     string lineStr = workingFileStr.substr(0, lineEnd);
+    cout << lineStr + "\n";
     workingFileStr = workingFileStr.substr(lineEnd);
 
     lineStr = utils::replaceAll(lineStr, "imports", "");
