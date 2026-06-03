@@ -184,12 +184,10 @@ eval::result eval::statement(string test, bool canThrow) {
         return tmp;
       }
       if (hold.type == "list") {
-        cerr << utils::error("Nested lists are not supported");
-        eval::result tmp;
-        tmp.error = true;
-        return tmp;
+        res.list.insert(res.list.end(), hold.list.begin(), hold.list.end());
+      } else {
+        res.list.push_back(hold.str);
       }
-      res.list.push_back(hold.str);
     }
     res.type = "list";
     return res;
