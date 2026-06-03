@@ -185,7 +185,7 @@ resolve::result resolve::resolveImportsStatements() {
       if (tmp.type == "list") {
         cout << "\n";
         cout << "paths: \n";
-        for (string file : res.paths) {
+        for (string file : tmp.list) {
           cout << file + "\n";
         }
         res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
