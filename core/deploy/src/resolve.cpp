@@ -37,6 +37,10 @@ resolve::result resolve::resolveImportStatements() {
     if (pos == string::npos) {
       break;
     }
+    if (pos == workingFileStr.find("imports")) {
+      workingFileStr = workingFileStr.substr(pos + 7);
+      continue;
+    }
 
     workingFileStr = workingFileStr.substr(pos);
 
