@@ -14,7 +14,6 @@ public:
 
   struct result {
     bool error = false;
-    string str;
     vector<string> paths;
   };
 
