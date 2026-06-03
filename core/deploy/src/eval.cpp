@@ -428,6 +428,8 @@ vector<string> eval::list(string test, bool throwLazy) {
   for (int i = 0; i < listItems.size(); i++) {
     string listItem = listItems[i];
 
+    cout << "list items: " + listItem + "\n";
+
     if (listItem.find("«") != string::npos ||
         listItem.find("»") != string::npos) {
       // is lazy item like «thunk» or «lambda @ ...» or «github:...»
