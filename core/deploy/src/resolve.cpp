@@ -185,6 +185,7 @@ resolve::result resolve::resolveImportsStatements() {
         }
         res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
       } else {
+        cout << tmp.str + "\n";
         res.paths.push_back(tmp.str);
       }
     }
