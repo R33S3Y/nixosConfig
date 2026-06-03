@@ -158,8 +158,7 @@ resolve::result resolve::resolveImportsStatements() {
     }
     if (tmp.type == "list") {
       res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
-    } else {
-      cout << tmp.str + "\n";
+    } else if (tmp.str.size() != 0) {
       res.paths.push_back(tmp.str);
     }
   }
