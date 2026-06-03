@@ -175,9 +175,13 @@ resolve::result resolve::resolveImportsStatements() {
         // host no matter what be cause their is no longer any guaranty's as to
         // what files the host needs
         res.error = true;
-        break;
+        return res;
       }
-      cout << "??? /n";
+      if (tmp.thrown == true) {
+        continue;
+      }
+      cout << "??? \n";
+      cout << tmp.type + "\n";
       if (tmp.type == "list") {
         cout << "\n";
         cout << "paths: \n";
