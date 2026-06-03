@@ -290,21 +290,6 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       attrsetKey = hold.str;
     }
 
-    // resolve ( )
-    if (attrsetKey.front() == '(' && attrsetKey.back() == ')') {
-
-      eval::result hold = eval::bracket(attrsetKey);
-      if (hold.error == true) {
-        res.error = true;
-        return res;
-      }
-      if (hold.thrown == true) {
-        res.thrown = true;
-        return res;
-      }
-      attrsetKey = hold.str;
-    }
-
     attrset += attrsetKey + ".";
   }
   if (res.error == true) {
@@ -350,7 +335,6 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   }
   return hold;
 }
-
 eval::result eval::bracket(string test) {
   // input check
   if (test.front() != '(' && test.back() != ')') {
@@ -383,7 +367,8 @@ eval::result eval::bracket(string test) {
   vector<string> items = utils::splitStrByChar(test, '+');
   test = "";
   for (string item : items) {
-    eval::result hold = eval::statement(item);
+    cout << "bracket item: " + item + "\n";
+    eval::result hold = eval::statement(item, true);
     if (hold.error == true) {
       eval::result res;
       res.error = true;
