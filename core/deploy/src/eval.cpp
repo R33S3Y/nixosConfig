@@ -213,6 +213,7 @@ eval::result eval::statement(string test, bool canThrow) {
     res.error = true;
     return res;
   }
+
   cerr << "\n\033[31mError\033[0m : Failed to resolve the following in "
           "(\033[35m" +
               eval::flakeLink + eval::filePath + "\033[0m)\n";
@@ -357,7 +358,10 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
           return res;
         }
         if (hold.type == "list") {
-          cerr << utils::error("Nested lists are not supported");
+          cerr << utils::error("Nested lists are not supported in this "
+                               "context. \033[35m:3\033[0m\n");
+          // yes, I really had to put a colourful :3 in their. (UwU)
+          // I what future me will see that and suffer... So yeah...
           res.error = true;
           return res;
         }
@@ -371,11 +375,13 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     res.str = "";
     result res;
   }
+
   // remove trailing dot.
   if (attrset.back() == '.') {
     attrset = attrset.substr(0, attrset.size() - 1);
   }
 
+  // make cmd
   string cmd;
   if (resolveMap.count(attrsetKeys[0])) {
     cmd =
@@ -389,7 +395,6 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       return res;
     }
   }
-
   if (cmd == "") {
     res.error = true;
     return res;
@@ -408,8 +413,10 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     return res;
   }
   if (hold.type == "list") {
+    res.type = "list";
     res.list = hold.list;
   } else {
+    res.type = hold.type;
     res.str = hold.str;
   }
   res.error = false;
