@@ -102,6 +102,35 @@ vector<string> utils::splitStrByCharByFilterStr(string inputStr,
   output.push_back(currentStr);
   return output;
 }
+vector<string> utils::splitStrByCharsByFilterStr(string inputStr,
+                                                 string filterStr,
+                                                 vector<char> inputChars) {
+
+  if (inputStr.size() != filterStr.size()) {
+    cerr << utils::error(
+        "utils::splitStrByCharByFilterStr : inputStr and fileStr "
+        "does not match");
+    return {};
+  }
+
+  vector<string> output;
+
+  for (char inputChar : inputChars) {
+    string currentStr;
+
+    for (int i = 0; i < filterStr.size(); i++) {
+      if (filterStr[i] == inputChar) {
+        output.push_back(currentStr);
+        currentStr.clear();
+      } else {
+        currentStr += inputStr[i];
+      }
+    }
+    output.push_back(currentStr);
+  }
+
+  return output;
+}
 
 string utils::replace(string s, string from, string to) {
   size_t pos = s.find(from);

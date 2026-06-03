@@ -24,6 +24,9 @@ public:
                                         vector<char> inputChars);
   static vector<string>
   splitStrByCharByFilterStr(string inputStr, string filterStr, char inputChar);
+  static vector<string> splitStrByCharsByFilterStr(string inputStr,
+                                                   string filterStr,
+                                                   vector<char> inputChars);
 
   static string replace(string s, string from, string to);
   static string rReplace(string s, string from, string to);

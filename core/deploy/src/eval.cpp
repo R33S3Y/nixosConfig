@@ -397,17 +397,19 @@ eval::result eval::bracket(string test) {
   return res;
 }
 vector<string> eval::list(string test, bool throwLazy) {
-
+  cout << "test line: " + test + "\n";
   // mask and split
   string mask = test;
   mask = utils::blankWithinTokens(mask, "${", "}");
   mask = utils::blankWithinTokens(mask, "(", ")");
-  vector<string> listItems = utils::splitStrByCharByFilterStr(test, mask, ' ');
+  vector<string> listItems =
+      utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 
   // is list and cleanup
   if (listItems.size() == 0) {
     return {};
   }
+  // erase empty and trim
   for (int i = 0; i < listItems.size(); i++) {
     listItems[i] = utils::trim(listItems[i]);
     if (listItems[i].size() == 0) {
@@ -420,7 +422,6 @@ vector<string> eval::list(string test, bool throwLazy) {
   if (listItems.front() != "[" || listItems.back() != "]") {
     return {};
   }
-
   listItems.erase(listItems.begin());
   listItems.pop_back();
 
