@@ -214,9 +214,9 @@ eval::result eval::statement(string test, bool canThrow) {
     return res;
   }
 
-  cerr << "\n\033[31mError\033[0m : Failed to resolve the following in "
-          "(\033[35m" +
-              eval::flakeLink + eval::filePath + "\033[0m)\n";
+  cerr << "\n" + utils::error("Failed to resolve the following in "
+                              "(\033[35m" +
+                              eval::flakeLink + eval::filePath + "\033[0m)");
   string errorCode;
   vector<string> tokenTest = utils::splitStrByChar(test, '\n');
   for (int i = 0; i < eval::prettyFile.size(); i++) {
@@ -412,13 +412,5 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     res.error = true;
     return res;
   }
-  if (hold.type == "list") {
-    res.type = "list";
-    res.list = hold.list;
-  } else {
-    res.type = hold.type;
-    res.str = hold.str;
-  }
-  res.error = false;
-  return res;
+  return hold;
 }

@@ -142,50 +142,25 @@ resolve::result resolve::resolveImportsStatements() {
       continue;
     }
     lineStr = utils::replaceAll(lineStr, "=", "");
-    lineStr = utils::replaceAll(lineStr, "[", "");
-    lineStr = utils::replaceAll(lineStr, "]", "");
+    lineStr = utils::trim(lineStr);
 
-    vector<string> items = utils::splitStrByChars(lineStr, {' ', '\n'});
-    for (int i = 0; i < items.size(); i++) {
-      string item = items[i];
-
-      // input sanitization
-      item = utils::replaceAll(item, ";", "");
-      item = utils::trim(item);
-      if (item == "") {
-        continue;
-      }
-
-      // re-merge bracket statements
-      if (item.find("(") != string::npos && item.find(")") == string::npos) {
-        while (i + 1 < items.size() && items[i + 1].find(")") == string::npos) {
-          item += " " + utils::trim(items[i + 1]);
-          items.erase(items.begin() + i + 1);
-        }
-        if (i + 1 < items.size()) {
-          item += " " + utils::trim(items[i + 1]);
-          items.erase(items.begin() + i + 1);
-        }
-      }
-
-      eval::result tmp = ev.statement(item);
-      if (tmp.error == true) {
-        // errors for resolvekey only happen when it falls to resolve something.
-        // If we fail to resolve something then we will need to rebuild the
-        // host no matter what be cause their is no longer any guaranty's as to
-        // what files the host needs
-        res.error = true;
-        return res;
-      }
-      if (tmp.thrown == true) {
-        continue;
-      }
-      if (tmp.type == "list") {
-        res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
-      } else {
-        cout << tmp.str + "\n";
-        res.paths.push_back(tmp.str);
-      }
+    eval::result tmp = ev.statement(lineStr);
+    if (tmp.error == true) {
+      // errors for resolvekey only happen when it falls to resolve something.
+      // If we fail to resolve something then we will need to rebuild the
+      // host no matter what be cause their is no longer any guaranty's as to
+      // what files the host needs
+      res.error = true;
+      return res;
+    }
+    if (tmp.thrown == true) {
+      continue;
+    }
+    if (tmp.type == "list") {
+      res.paths.insert(res.paths.end(), tmp.list.begin(), tmp.list.end());
+    } else {
+      cout << tmp.str + "\n";
+      res.paths.push_back(tmp.str);
     }
   }
   return res;
