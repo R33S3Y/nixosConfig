@@ -46,15 +46,17 @@ vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
   return output;
 }
 
-template <typename key, typename valueIn, typename valueOut, typename argIn>
-map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
-                                            const int maxThreads) {
+template <typename keyType, typename valueIn, typename valueOut, typename argIn>
+map<keyType, valueIn> threading::paralleliseMap(map<keyType, valueIn> items,
+                                                argIn func,
+                                                const int maxThreads) {
   int totalThreads = maxThreads;
   if (items.size() < maxThreads)
     totalThreads = items.size();
 
-  vector<map<key, valueIn>> threadWorkIn = utils::splitMap(items, totalThreads);
-  vector<map<key, valueOut>> threadWorkOut;
+  vector<map<keyType, valueIn>> threadWorkIn =
+      utils::splitMap(items, totalThreads);
+  vector<map<keyType, valueOut>> threadWorkOut;
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
@@ -67,16 +69,16 @@ map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
     t.join();
   }
 
-  map<key, valueOut> output;
+  map<keyType, valueOut> output;
   for (int i = 0; i < totalThreads; i++) {
     output.insert(threadWorkOut[i].begin(), threadWorkOut[i].end());
   }
   return output;
 }
-template <typename key, typename valueIn, typename valueOut, typename argIn>
-map<key, valueOut> threading::workerMap(int id, map<key, valueIn> items,
-                                        argIn func) {
-  map<k, valueOut> output;
+template <typename keyType, typename valueIn, typename valueOut, typename argIn>
+map<keyType, valueOut> threading::workerMap(int id, map<keyType, valueIn> items,
+                                            argIn func) {
+  map<keyType, valueOut> output;
   for (const auto &[key, val] : items) {
     output[key] = func(val);
   }
