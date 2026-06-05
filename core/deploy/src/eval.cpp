@@ -28,7 +28,7 @@ eval::eval(const init &i) {
        {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
   };
   throwMap = {
-      {"builtins", {"nix eval --expr 'builtins", "'"}},
+      {"builtins", {"nix eval --expr '", "'"}},
       {"inputs",
        {"nix eval " + flakePath + "#nixosConfigurations." + host +
             "._module.specialArgs.",
@@ -120,7 +120,8 @@ eval::juniorInitWorker(map<string, eval::key> input) {
 
   if (!cmdOut.ok()) {
     ostringstream oss;
-    oss << utils::error("Failed to eval attrs of " + key);
+    oss << utils::error("Failed to eval attrs of: (\033[35m" + key +
+                        "\033[0m)");
     cerr << oss.str();
 
     return {{key, {}}};
