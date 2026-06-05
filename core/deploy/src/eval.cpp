@@ -52,7 +52,10 @@ eval::eval(const init &i) {
                       ""}}}}};
 
   map<string, map<string, vector<string>>> parallelOut =
-      threading::paralleliseMap(parallelWork, eval::seniorInitWorker);
+      threading::paralleliseMap<string, map<string, eval::key>,
+                                map<string, vector<string>>,
+                                decltype(&eval::juniorInitWorker)>(
+          parallelWork, eval::seniorInitWorker);
 
   bool canThrowModulesPath = false;
   if (parallelOut["modulesPath"]["modulesPath"][0].find("/nix/store/") !=
