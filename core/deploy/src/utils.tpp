@@ -1,8 +1,10 @@
-
+#include "utils.h"
+#include <map>
+#include <vector>
 
 using namespace std;
 
-template <typename type>
+// template <typename type>
 vector<vector<type>> utils::splitVector(vector<type> vec, int splits) {
   vector<vector<type>> chunks;
   int size = vec.size() / splits;
@@ -16,7 +18,7 @@ vector<vector<type>> utils::splitVector(vector<type> vec, int splits) {
   }
   return chunks;
 }
-template <typename key, typename value>
+// template <typename key, typename value>
 vector<map<key, value>> utils::splitMap(map<key, value> inputMap, int splits) {
   vector<map<key, value>> chunks;
   int size = inputMap.size() / splits;
