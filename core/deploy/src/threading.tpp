@@ -7,8 +7,8 @@
 using namespace std;
 
 template <typename typeIn, typename typeOut, typename argIn>
-vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
-                                             const int maxThreads) {
+vector<typeOut> paralleliseVector(vector<typeIn> items, argIn func,
+                                  int maxThreads) {
   int totalThreads = maxThreads;
   if (items.size() < maxThreads)
     totalThreads = items.size();
@@ -47,9 +47,8 @@ vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
 }
 
 template <typename keyType, typename valueIn, typename valueOut, typename argIn>
-map<keyType, valueIn> threading::paralleliseMap(map<keyType, valueIn> items,
-                                                argIn func,
-                                                const int maxThreads) {
+map<keyType, valueOut> paralleliseMap(map<keyType, valueIn> items, argIn func,
+                                      int maxThreads) {
   int totalThreads = maxThreads;
   if (items.size() < maxThreads)
     totalThreads = items.size();
