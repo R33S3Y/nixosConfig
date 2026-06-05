@@ -91,7 +91,10 @@ eval::seniorInitWorker(map<string, eval::key> input) {
       utils::splitMap(input, input.size());
 
   vector<map<string, vector<string>>> hold =
-      threading::paralleliseVector(mapVector, eval::juniorInitWorker);
+      threading::paralleliseVector<map<string, eval::key>,
+                                   map<string, vector<string>>,
+                                   decltype(&eval::juniorInitWorker)>(
+          mapVector, eval::juniorInitWorker);
 
   map<string, vector<string>> output;
   for (int i = 0; i < hold.size(); i++) {
