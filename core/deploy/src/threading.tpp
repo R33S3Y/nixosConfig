@@ -19,7 +19,7 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
-    threads.emplace_back([i, &threadWorkIn, func]() {
+    threads.emplace_back([i, &threadWorkIn, &threadWorkOut, func]() {
       threadWorkOut.push_back(
           threading::workerVector(i, threadWorkIn[i], func));
     });
@@ -60,7 +60,7 @@ map<keyType, valueIn> threading::paralleliseMap(map<keyType, valueIn> items,
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
-    threads.emplace_back([i, &threadWorkIn, func]() {
+    threads.emplace_back([i, &threadWorkIn, &threadWorkOut, func]() {
       threadWorkOut.push_back(threading::workerMap(i, threadWorkIn[i], func));
     });
   }
