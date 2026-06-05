@@ -1,6 +1,5 @@
 #pragma once
 
-#include "threading.tpp"
 #include <complex>
 #include <functional>
 #include <map>
@@ -27,3 +26,5 @@ private:
   static map<keyType, valueOut> workerMap(int id, map<keyType, valueIn> items,
                                           argIn func);
 };
+
+#include "threading.tpp"

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utils.tpp"
 #include <map>
 #include <string>
 #include <type_traits>
@@ -46,3 +45,5 @@ public:
   static vector<map<keyType, valueType>>
   splitMap(map<keyType, valueType> inputMap, int splits);
 };
+
+#include "utils.tpp"
