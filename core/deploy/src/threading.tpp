@@ -38,7 +38,7 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
 }
 template <typename typeIn, typename typeOut, typename argIn>
 vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
-                                        argIn func, ) {
+                                        argIn func) {
   vector<typeOut> output;
   for (int i = 0; i < items.size(); i++) {
     output.push_back(func(items[i]));
