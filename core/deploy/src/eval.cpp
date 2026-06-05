@@ -51,44 +51,36 @@ eval::eval(const init &i) {
                           "._module.",
                       ""}}}}};
 
-  threading::paralleliseMap(parallelWork, eval::seniorInitWorker);
+  map<string, map<string, vector<string>>> parallelOut =
+      threading::paralleliseMap(parallelWork, eval::seniorInitWorker);
 
-  // pretend like this doesn't exist
   bool canThrowModulesPath = false;
-  utils::result cmdOut;
-  cmdOut = utils::runCommand("nix eval " + flakePath + "#nixosConfigurations." +
-                             host + "._module.specialArgs.modulesPath");
-  if (!cmdOut.ok()) {
-    cerr << utils::error("Failed to eval special args");
-  }
-  if (cmdOut.output.find("/nix/store/") != string::npos)
+  if (parallelOut["modulesPath"]["modulesPath"][0].find("/nix/store/") !=
+      string::npos)
     canThrowModulesPath = true;
+  parallelWork.erase("modulesPath");
 
-  cmdOut = utils::runCommand("nix eval " + flakePath + "#nixosConfigurations." +
-                             host +
-                             "._module.specialArgs --apply builtins.attrNames");
-
-  if (!cmdOut.ok()) {
-    cerr << utils::error("Failed to eval special args");
-  }
-  vector<string> list = eval::list(cmdOut.output);
-  for (string item : list) {
-    item = utils::replaceAll(item, "\"", "");
-    if (item == "inputs")
-      continue;
-    if (canThrowModulesPath == true && item == "modulesPath") {
-      eval::throwMap.insert(
-          {item,
-           {"nix eval " + flakePath + "#nixosConfigurations." + host +
-                "._module.specialArgs.",
-            ""}});
-      continue;
+  for (auto &[keyTop, valueTop] : parallelWork) {
+    for (auto &[keyBottom, valueBottom] : valueTop) {
+      for (string item : parallelOut["specialArgs"]["specialArgs"]) {
+        if (item == "inputs")
+          continue;
+        if (canThrowModulesPath == true && item == "modulesPath" ||
+            keyTop == "throw") {
+          eval::throwMap.insert(
+              {item,
+               {"nix eval " + flakePath + "#nixosConfigurations." + host +
+                    "._module.specialArgs.",
+                ""}});
+          continue;
+        }
+        eval::resolveMap.insert(
+            {item,
+             {"nix eval " + flakePath + "#nixosConfigurations." + host +
+                  "._module.specialArgs.",
+              ""}});
+      }
     }
-    eval::resolveMap.insert(
-        {item,
-         {"nix eval " + flakePath + "#nixosConfigurations." + host +
-              "._module.specialArgs.",
-          ""}});
   }
 }
 
@@ -110,8 +102,12 @@ eval::juniorInitWorker(map<string, eval::key> input) {
   string key = input.begin()->first;
   eval::key value = input[key];
 
-  utils::result cmdOut = utils::runCommand(value.start + key + value.end +
-                                           "--apply builtins.attrNames");
+  string cmd = value.start + key + value.end;
+  if (key != "modulesPath") {
+    cmd = cmd + " --apply builtins.attrNames";
+  }
+
+  utils::result cmdOut = utils::runCommand(cmd);
 
   if (!cmdOut.ok()) {
     ostringstream oss;
@@ -119,6 +115,10 @@ eval::juniorInitWorker(map<string, eval::key> input) {
     cerr << oss.str();
 
     return {{key, {}}};
+  }
+
+  if (key == "modulesPath") {
+    return {{key, {cmdOut.output}}};
   }
 
   vector<string> list = eval::list(cmdOut.output);
