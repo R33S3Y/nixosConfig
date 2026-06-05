@@ -6,6 +6,7 @@
 #include <vector>
 using namespace std;
 
+template <typename typeIn, typename typeOut, typename argIn>
 vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
                                              const int maxThreads) {
   int totalThreads = maxThreads;
@@ -35,6 +36,7 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
   }
   return output;
 }
+template <typename typeIn, typename typeOut, typename argIn>
 vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
                                         argIn func, ) {
   vector<typeOut> output;
@@ -44,6 +46,7 @@ vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
   return output;
 }
 
+template <typename key, typename valueIn, typename valueOut, typename argIn>
 map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
                                             const int maxThreads) {
   int totalThreads = maxThreads;
@@ -70,6 +73,7 @@ map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
   }
   return output;
 }
+template <typename key, typename valueIn, typename valueOut, typename argIn>
 map<key, valueOut> threading::workerMap(int id, map<key, valueIn> items,
                                         argIn func) {
   map<k, valueOut> output;
