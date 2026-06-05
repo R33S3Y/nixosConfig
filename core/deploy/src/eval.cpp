@@ -86,14 +86,11 @@ eval::eval(const init &i) {
 map<string, vector<string>>
 eval::seniorInitWorker(map<string, eval::key> input) {
 
-  vector<map<string, eval::key>> mapVector =
-      utils::splitMap(input, input.size());
-
   vector<map<string, vector<string>>> hold =
       threading::paralleliseVector<map<string, eval::key>,
                                    map<string, vector<string>>,
                                    decltype(&eval::juniorInitWorker)>(
-          mapVector, eval::juniorInitWorker);
+          utils::splitMap(input, input.size()), eval::juniorInitWorker);
 
   map<string, vector<string>> output;
   for (int i = 0; i < hold.size(); i++) {
