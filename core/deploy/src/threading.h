@@ -1,12 +1,24 @@
 #pragma once
 
-#include <any>
+#include "threading.tpp"
+#include <complex>
 #include <functional>
+#include <map>
 #include <vector>
 using namespace std;
 
 class threading {
 public:
-  static vector<any> parallelise(vector<any> items, function<any(any)> func,
-                                 const int maxThreads = 10);
+  template <typename typeIn, typename typeOut, typename argIn>
+  static vector<typeOut> paralleliseVector(vector<typeIn> items, argIn func,
+                                           const int maxThreads = 8);
+
+  template <typename key, typename valueIn, typename valueOut, typename argIn>
+  static map<key, valueOut> paralleliseMap(map<key, valueIn> items, argIn func,
+                                           const int maxThreads = 8);
+
+private:
+  static vector<typeOut> workerVector(int id, vector<typeIn> items, argIn func);
+  static map<key, valueOut> workerMap(int id, map<key, valueIn> items,
+                                      argIn func);
 };

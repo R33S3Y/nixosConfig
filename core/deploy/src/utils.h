@@ -1,6 +1,9 @@
 #pragma once
 
+#include "utils.tpp"
+#include <map>
 #include <string>
+#include <type_traits>
 #include <vector>
 using namespace std;
 
@@ -36,4 +39,9 @@ public:
 
   static string blankWithinTokens(string fileStr, string startToken,
                                   string endToken = "", char blankChar = ' ');
+
+  template <typename type>
+  static vector<vector<type>> splitVector(vector<type> vec, int splits);
+  template <typename key, typename value>
+  static vector<map<key, value>> splitMap(map<key, value> inputMap, int splits);
 };

@@ -1,11 +1,14 @@
 #include "eval.h"
+#include "threading.h"
 #include "utils.h"
 #include <cstddef>
 #include <filesystem>
 #include <format>
 #include <iostream>
 #include <iterator>
+#include <map>
 #include <string>
+#include <syncstream>
 #include <vector>
 using namespace std;
 
@@ -32,7 +35,25 @@ eval::eval(const init &i) {
         ""}},
   };
 
-  // maybe this can be done in parallel
+  map<string, map<string, key>> parallelWork = {
+      {"resolve", resolveMap},
+      {"throw", throwMap},
+      {"modulesPath",
+       map<string, eval::key>{
+           {"modulesPath",
+            eval::key{"nix eval " + flakePath + "#nixosConfigurations." + host +
+                          "._module.specialArgs.",
+                      ""}}}},
+      {"specialArgs",
+       map<string, eval::key>{
+           {"specialArgs",
+            eval::key{"nix eval " + flakePath + "#nixosConfigurations." + host +
+                          "._module.",
+                      ""}}}}};
+
+  threading::paralleliseMap(parallelWork, eval::seniorInitWorker);
+
+  // pretend like this doesn't exist
   bool canThrowModulesPath = false;
   utils::result cmdOut;
   cmdOut = utils::runCommand("nix eval " + flakePath + "#nixosConfigurations." +
@@ -69,6 +90,43 @@ eval::eval(const init &i) {
               "._module.specialArgs.",
           ""}});
   }
+}
+
+map<string, vector<string>>
+eval::seniorInitWorker(map<string, eval::key> input) {
+
+  vector<map<string, vector<string>>> hold = threading::paralleliseVector(
+      utils::splitMap(input, input.size()), eval::juniorInitWorker);
+
+  map<string, vector<string>> output;
+  for (int i = 0; i < hold.size(); i++) {
+    output.insert(hold[i].begin(), hold[i].end());
+  }
+  return output;
+}
+
+map<string, vector<string>>
+eval::juniorInitWorker(map<string, eval::key> input) {
+  string key = input.begin()->first;
+  eval::key value = input[key];
+
+  utils::result cmdOut = utils::runCommand(value.start + key + value.end +
+                                           "--apply builtins.attrNames");
+
+  if (!cmdOut.ok()) {
+    ostringstream oss;
+    oss << utils::error("Failed to eval attrs of " + key);
+    cerr << oss.str();
+
+    return {{key, {}}};
+  }
+
+  vector<string> list = eval::list(cmdOut.output);
+  for (int i = 0; i < list.size(); i++) {
+    list[i] = utils::replaceAll(list[i], "\"", "");
+  }
+
+  return {{key, list}};
 }
 
 void eval::preProcessFile(string fileStr, string filePath) {
@@ -304,12 +362,13 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   // make cmd
   string cmd;
   if (resolveMap.count(attrsetKeys[0])) {
-    cmd =
-        resolveMap[attrsetKeys[0]][0] + attrset + resolveMap[attrsetKeys[0]][1];
+    cmd = resolveMap[attrsetKeys[0]].start + attrset +
+          resolveMap[attrsetKeys[0]].end;
   }
   if (throwMap.count(attrsetKeys[0])) {
     if (canThrow == false)
-      cmd = throwMap[attrsetKeys[0]][0] + attrset + throwMap[attrsetKeys[0]][1];
+      cmd = throwMap[attrsetKeys[0]].start + attrset +
+            throwMap[attrsetKeys[0]].end;
     else {
       res.thrown = true;
       return res;

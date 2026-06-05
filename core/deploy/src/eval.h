@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include <map>
 #include <string>
 #include <type_traits>
@@ -38,6 +39,10 @@ public:
   static vector<string> list(string test, bool throwLazy = true);
 
 private:
+  struct key {
+    string start;
+    string end;
+  };
   string flakePath;
   string flakeLink;
   string host;
@@ -47,6 +52,9 @@ private:
   string absoluteFilePath;
   vector<string> prettyFile;
 
-  map<string, vector<string>> resolveMap;
-  map<string, vector<string>> throwMap;
+  map<string, key> resolveMap;
+  map<string, key> throwMap;
+
+  static map<string, vector<string>> juniorInitWorker(map<string, key>);
+  static map<string, vector<string>> seniorInitWorker(map<string, key>);
 };

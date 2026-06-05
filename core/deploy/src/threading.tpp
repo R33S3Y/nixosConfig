@@ -1,0 +1,77 @@
+#include "threading.h"
+#include "utils.h"
+#include <functional>
+#include <map>
+#include <thread>
+#include <vector>
+using namespace std;
+
+vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
+                                             const int maxThreads) {
+  int totalThreads = maxThreads;
+  if (items.size() < maxThreads)
+    totalThreads = items.size();
+
+  vector<vector<typeIn>> threadWork = utils::splitVector(items, totalThreads);
+
+  vector<thread> threads;
+
+  for (int i = 0; i < totalThreads; i++) {
+    threads.emplace_back([i, &threadWork, func]() {
+      threadWork[i] = threading::workerVector(i, threadWork[i], func);
+    });
+  }
+
+  for (auto &t : threads) {
+    t.join();
+  }
+
+  vector<typeOut> output;
+  for (int i = 0; i < totalThreads; i++) {
+    output.insert(output.end(), threadWork[i].begin(), threadWork[i].end());
+  }
+  return output;
+}
+vector<typeOut> threading::workerVector(int id, vector<typeIn> items,
+                                        argIn func, ) {
+  vector<typeOut> output;
+  for (int i = 0; i < items.size(); i++) {
+    output.push_back(func(items[i]));
+  }
+  return output;
+}
+
+map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
+                                            const int maxThreads) {
+  int totalThreads = maxThreads;
+  if (items.size() < maxThreads)
+    totalThreads = items.size();
+
+  vector<map<key, valueIn>> threadWork = utils::splitMap(items, totalThreads);
+
+  vector<thread> threads;
+
+  for (int i = 0; i < totalThreads; i++) {
+    threads.emplace_back([i, &threadWork, func]() {
+      threadWork[i] = threading::workerMap(i, threadWork[i], func);
+    });
+  }
+
+  for (auto &t : threads) {
+    t.join();
+  }
+
+  map<key, valueOut> output;
+  for (int i = 0; i < totalThreads; i++) {
+    output.insert(threadWork[i].begin(), threadWork[i].end());
+  }
+  return output;
+}
+map<key, valueOut> threading::workerMap(int id, map<key, valueIn> items,
+                                        argIn func) {
+  map<k, valueOut> output;
+  for (const auto &[key, val] : items) {
+    output[key] = func(val);
+  }
+  return output;
+}
