@@ -12,13 +12,15 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
   if (items.size() < maxThreads)
     totalThreads = items.size();
 
-  vector<vector<typeIn>> threadWork = utils::splitVector(items, totalThreads);
+  vector<vector<typeIn>> threadWorkIn = utils::splitVector(items, totalThreads);
+  vector<vector<typeOut>> threadWorkOut;
 
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
-    threads.emplace_back([i, &threadWork, func]() {
-      threadWork[i] = threading::workerVector(i, threadWork[i], func);
+    threads.emplace_back([i, &threadWorkIn, func]() {
+      threadWorkOut.push_back(
+          threading::workerVector(i, threadWorkIn[i], func));
     });
   }
 
@@ -28,7 +30,8 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
 
   vector<typeOut> output;
   for (int i = 0; i < totalThreads; i++) {
-    output.insert(output.end(), threadWork[i].begin(), threadWork[i].end());
+    output.insert(output.end(), threadWorkOut[i].begin(),
+                  threadWorkOut[i].end());
   }
   return output;
 }
@@ -47,13 +50,13 @@ map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
   if (items.size() < maxThreads)
     totalThreads = items.size();
 
-  vector<map<key, valueIn>> threadWork = utils::splitMap(items, totalThreads);
-
+  vector<map<key, valueIn>> threadWorkIn = utils::splitMap(items, totalThreads);
+  vector<map<key, valueOut>> threadWorkOut;
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
-    threads.emplace_back([i, &threadWork, func]() {
-      threadWork[i] = threading::workerMap(i, threadWork[i], func);
+    threads.emplace_back([i, &threadWorkIn, func]() {
+      threadWorkOut.push_back(threading::workerMap(i, threadWorkIn[i], func));
     });
   }
 
@@ -63,7 +66,7 @@ map<key, valueIn> threading::paralleliseMap(map<key, valueIn> items, argIn func,
 
   map<key, valueOut> output;
   for (int i = 0; i < totalThreads; i++) {
-    output.insert(threadWork[i].begin(), threadWork[i].end());
+    output.insert(threadWorkOut[i].begin(), threadWorkOut[i].end());
   }
   return output;
 }

@@ -18,7 +18,9 @@ public:
                                            const int maxThreads = 8);
 
 private:
+  template <typename typeIn, typename typeOut, typename argIn>
   static vector<typeOut> workerVector(int id, vector<typeIn> items, argIn func);
+  template <typename key, typename valueIn, typename valueOut, typename argIn>
   static map<key, valueOut> workerMap(int id, map<key, valueIn> items,
                                       argIn func);
 };
