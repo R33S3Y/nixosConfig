@@ -42,6 +42,7 @@ public:
 
   template <typename type>
   static vector<vector<type>> splitVector(vector<type> vec, int splits);
-  template <typename key, typename value>
-  static vector<map<key, value>> splitMap(map<key, value> inputMap, int splits);
+  template <typename keyType, typename valueType>
+  static vector<map<keyType, valueType>>
+  splitMap(map<keyType, valueType> inputMap, int splits);
 };

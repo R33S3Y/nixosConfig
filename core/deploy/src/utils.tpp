@@ -18,16 +18,17 @@ vector<vector<type>> utils::splitVector(vector<type> vec, int splits) {
   }
   return chunks;
 }
-template <typename key, typename value>
-vector<map<key, value>> utils::splitMap(map<key, value> inputMap, int splits) {
-  vector<map<key, value>> chunks;
+template <typename keyType, typename valueType>
+vector<map<keyType, valueType>>
+utils::splitMap(map<keyType, valueType> inputMap, int splits) {
+  vector<map<keyType, valueType>> chunks;
   int size = inputMap.size() / splits;
   int remainder = inputMap.size() % splits;
 
   auto it = inputMap.begin();
   for (int i = 0; i < splits; i++) {
     int chunkSize = size + (i < remainder ? 1 : 0);
-    map<key, value> hold;
+    map<keyType, valueType> hold;
     for (int j = 0; j < chunkSize && it != inputMap.end(); j++, it++) {
       hold.insert(*it);
     }
