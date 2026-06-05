@@ -70,18 +70,14 @@ eval::eval(const init &i) {
           continue;
         if (canThrowModulesPath == true && item == "modulesPath" ||
             keyTop == "throw") {
-          eval::throwMap.insert(
-              {item,
-               {"nix eval " + flakePath + "#nixosConfigurations." + host +
-                    "._module.specialArgs.",
-                ""}});
+          eval::throwMap.insert({item,
+                                 {throwMap[keyBottom].start + keyBottom + ".",
+                                  throwMap[keyBottom].end}});
           continue;
         }
-        eval::resolveMap.insert(
-            {item,
-             {"nix eval " + flakePath + "#nixosConfigurations." + host +
-                  "._module.specialArgs.",
-              ""}});
+        eval::resolveMap.insert({item,
+                                 {resolveMap[keyBottom].start + keyBottom + ".",
+                                  resolveMap[keyBottom].end}});
       }
     }
   }
