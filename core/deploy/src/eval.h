@@ -54,7 +54,8 @@ private:
 
   map<string, key> resolveMap;
   map<string, key> throwMap;
+  map<string, map<string, key>> inheritMap;
 
-  static map<string, vector<string>> juniorInitWorker(map<string, key>);
-  static map<string, vector<string>> seniorInitWorker(map<string, key>);
+  static map<string, eval::key> juniorInitWorker(map<string, key>);
+  static map<string, map<string, eval::key>> seniorInitWorker(map<string, key>);
 };

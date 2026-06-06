@@ -52,42 +52,34 @@ eval::eval(const init &i) {
                           "._module.",
                       ""}}}}};
 
-  map<string, map<string, vector<string>>> parallelOut =
+  map<string, map<string, map<string, eval::key>>> parallelOut =
       threading::paralleliseMap<string, map<string, eval::key>,
-                                map<string, vector<string>>,
-                                decltype(&eval::juniorInitWorker)>(
+                                map<string, map<string, eval::key>>,
+                                decltype(&eval::seniorInitWorker)>(
           parallelWork, eval::seniorInitWorker);
 
   bool canThrowModulesPath = false;
-  if (parallelOut["modulesPath"]["modulesPath"][0].find("/nix/store/") !=
-      string::npos)
+  // yes really
+  if (parallelOut["modulesPath"]["modulesPath"]["modulesPath"].start.find(
+          "/nix/store/") != string::npos)
     canThrowModulesPath = true;
   parallelWork.erase("modulesPath");
 
-  for (auto &[keyTop, valueTop] : parallelWork) {
-    for (auto &[keyBottom, valueBottom] : valueTop) {
-      for (string item : parallelOut[keyTop][keyBottom]) {
-        if (item == "inputs")
-          continue;
-        if (canThrowModulesPath == true && item == "modulesPath" ||
-            keyTop == "throw") {
-          eval::throwMap.insert({item,
-                                 {throwMap[keyBottom].start + keyBottom + ".",
-                                  throwMap[keyBottom].end}});
-          continue;
+  for (auto &[itemsType, valueTop] : parallelOut) {
+    for (auto &[itemsParent, items] : valueTop) {
+      if (itemsParent == "specialArgs") {
+        for (auto &[item, cmd] : items) {
+          if (canThrowModulesPath == true && item == "modulesPath") {
+            eval::throwMap.insert({item, cmd});
+
+          } else {
+            eval::resolveMap.insert({item, cmd});
+          }
         }
-        if (keyTop == "specialArgs") {
-          eval::resolveMap.insert(
-              {item,
-               {"nix eval " + flakePath + "#nixosConfigurations." + host +
-                    "._module.specialArgs.",
-                ""}});
-          continue;
-        }
-        eval::resolveMap.insert({item,
-                                 {resolveMap[keyBottom].start + keyBottom + ".",
-                                  resolveMap[keyBottom].end}});
+        continue;
       }
+      // must be from throw or resolve at this point
+      eval::inheritMap.insert({itemsParent, items});
     }
   }
 
@@ -103,24 +95,21 @@ eval::eval(const init &i) {
   }
 }
 
-map<string, vector<string>>
+map<string, map<string, eval::key>>
 eval::seniorInitWorker(map<string, eval::key> input) {
 
-  vector<map<string, vector<string>>> hold =
-      threading::paralleliseVector<map<string, eval::key>,
-                                   map<string, vector<string>>,
-                                   decltype(&eval::juniorInitWorker)>(
-          utils::splitMap(input, input.size()), eval::juniorInitWorker);
-
-  map<string, vector<string>> output;
-  for (int i = 0; i < hold.size(); i++) {
-    output.insert(hold[i].begin(), hold[i].end());
+  map<string, map<string, eval::key>> hold;
+  for (auto &[key, value] : input) {
+    hold.insert({key, {{key, value}}});
   }
-  return output;
+
+  return threading::paralleliseMap<string, map<string, eval::key>,
+                                   map<string, eval::key>,
+                                   decltype(&eval::juniorInitWorker)>(
+      hold, eval::juniorInitWorker);
 }
 
-map<string, vector<string>>
-eval::juniorInitWorker(map<string, eval::key> input) {
+map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
   string key = input.begin()->first;
   eval::key value = input[key];
 
@@ -137,19 +126,23 @@ eval::juniorInitWorker(map<string, eval::key> input) {
                         "\033[0m)");
     cerr << oss.str();
 
-    return {{key, {}}};
+    return {};
   }
 
   if (key == "modulesPath") {
-    return {{key, {cmdOut.output}}};
+    return {{{key, {cmdOut.output, ""}}}};
   }
 
+  map<string, eval::key> output;
   vector<string> list = eval::list(cmdOut.output);
   for (int i = 0; i < list.size(); i++) {
     list[i] = utils::replaceAll(list[i], "\"", "");
+    if (list[i] == "inputs")
+      continue;
+    output.insert({list[i], {value.start + key + ".", value.end}});
   }
 
-  return {{key, list}};
+  return output;
 }
 
 void eval::preProcessFile(string fileStr, string filePath) {
