@@ -24,8 +24,9 @@ eval::eval(const init &i) {
        {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
       {"lib",
        {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
-      {"pkgs",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
+      //    {"pkgs",
+      //     {"nix eval " + flakePath + "#nixosConfigurations." + host + ".",
+      //     ""}},
   };
   throwMap = {
       {"builtins", {"nix eval --expr '", "'"}},
@@ -89,7 +90,7 @@ eval::eval(const init &i) {
   }
   cout << "\n\n\nthrowMap:\n";
   for (auto &[key, value] : throwMap) {
-    cout << "key: " + key + "; start: \"" + value.start + "\" end: \"" +
+    cout << "key: \"" + key + "\" start: \"" + value.start + "\" end: \"" +
                 value.end + "\"\n";
   }
 }
