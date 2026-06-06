@@ -65,7 +65,7 @@ eval::eval(const init &i) {
 
   for (auto &[keyTop, valueTop] : parallelWork) {
     for (auto &[keyBottom, valueBottom] : valueTop) {
-      for (string item : parallelOut["specialArgs"]["specialArgs"]) {
+      for (string item : parallelOut[keyTop][keyBottom]) {
         if (item == "inputs")
           continue;
         if (canThrowModulesPath == true && item == "modulesPath" ||
