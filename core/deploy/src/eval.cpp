@@ -67,7 +67,7 @@ eval::eval(const init &i) {
 
   for (auto &[itemsType, valueTop] : parallelOut) {
     for (auto &[itemsParent, items] : valueTop) {
-      if (itemsParent == "specialArgs") {
+      if (itemsType == "specialArgs") {
         for (auto &[item, cmd] : items) {
           if (canThrowModulesPath == true && item == "modulesPath") {
             eval::throwMap.insert({item, cmd});
