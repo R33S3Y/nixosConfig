@@ -79,6 +79,9 @@ eval::eval(const init &i) {
         continue;
       }
       // must be from throw or resolve at this point
+      if (itemsParent == "modulesPath") {
+        cout << itemsType + "\n";
+      }
       eval::inheritMap.insert({itemsParent, items});
     }
   }
