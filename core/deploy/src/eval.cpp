@@ -81,6 +81,17 @@ eval::eval(const init &i) {
       }
     }
   }
+
+  cout << "resolveMap:\n";
+  for (auto &[key, value] : resolveMap) {
+    cout << "key: " + key + "; start: \"" + value.start + "\" end: \"" +
+                value.end + "\"\n";
+  }
+  cout << "\n\n\nthrowMap:\n";
+  for (auto &[key, value] : throwMap) {
+    cout << "key: " + key + "; start: \"" + value.start + "\" end: \"" +
+                value.end + "\"\n";
+  }
 }
 
 map<string, vector<string>>
