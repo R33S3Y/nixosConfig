@@ -76,6 +76,14 @@ eval::eval(const init &i) {
                                   throwMap[keyBottom].end}});
           continue;
         }
+        if (keyTop == "specialArgs") {
+          eval::resolveMap.insert(
+              {item,
+               {"nix eval " + flakePath + "#nixosConfigurations." + host +
+                    "._module.specialArgs.",
+                ""}});
+          continue;
+        }
         eval::resolveMap.insert({item,
                                  {resolveMap[keyBottom].start + keyBottom + ".",
                                   resolveMap[keyBottom].end}});
@@ -336,8 +344,8 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   eval::result res;
   string attrset;
 
-  // does preproccessing to resolve funny statements like ${ } and ( ) and get
-  // a clean attrset Split
+  // does preproccessing to resolve funny statements like ${ } and ( ) and
+  // get a clean attrset Split
   string mask = test;
   mask = utils::blankWithinTokens(mask, "${", "}");
   mask = utils::blankWithinTokens(mask, "(", ")");
@@ -419,8 +427,8 @@ eval::result eval::bracket(string test) {
   test.erase(test.begin());
   test.pop_back();
 
-  // throw error on unsupported statements seeing as this isn't a real parser.
-  // (and I don't want it to be)
+  // throw error on unsupported statements seeing as this isn't a real
+  // parser. (and I don't want it to be)
   string mask = test;
   mask = utils::blankWithinTokens(mask, "\"", "\"");
   mask = utils::blankWithinTokens(mask, "(", ")");
