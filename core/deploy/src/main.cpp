@@ -157,12 +157,12 @@ int main(int argc, char const *argv[]) {
     cout << "\n";
     cout << "Still Unprocessed files: \n";
     for (string file : unprocessedFiles) {
-      cout << file + "\n";
+      cout << "\"" + file + "\"\n";
     }
     cout << "\n";
     cout << "Processed files: \n";
     for (string file : processedFiles) {
-      cout << file + "\n";
+      cout << "\"" + file + "\"\n";
     }
   }
 

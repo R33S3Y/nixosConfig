@@ -84,25 +84,6 @@ eval::eval(const init &i) {
       eval::inheritMap.insert({itemsParent, items});
     }
   }
-
-  cout << "resolveMap:\n";
-  for (auto &[key, value] : resolveMap) {
-    cout << "key: \"" + key + "\" start: \"" + value.start + "\" end: \"" +
-                value.end + "\"\n";
-  }
-  cout << "\nthrowMap:\n";
-  for (auto &[key, value] : throwMap) {
-    cout << "key: \"" + key + "\" start: \"" + value.start + "\" end: \"" +
-                value.end + "\"\n";
-  }
-  cout << "\ninheritMap:\n";
-  for (auto &[itemsParent, items] : eval::inheritMap) {
-    cout << "parent: \"" + itemsParent + "\"\n";
-    for (auto &[item, itemValue] : items) {
-      cout << "  key: \"" + item + "\" start: \"" + itemValue.start +
-                  "\" end: \"" + itemValue.end + "\"\n";
-    }
-  }
 }
 
 map<string, map<string, eval::key>>
