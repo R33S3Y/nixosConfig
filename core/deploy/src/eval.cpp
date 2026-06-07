@@ -378,6 +378,15 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       return res;
     }
   }
+  for (auto &[key, value] : inheritMap) {
+    if (value.count(attrsetKeys[0])) {
+      if (throwMap.count(key) && canThrow == true) {
+        res.thrown = true;
+        return res;
+      }
+      cmd = value[attrsetKeys[0]].start + attrset + value[attrsetKeys[0]].end;
+    }
+  }
   if (cmd == "") {
     res.error = true;
     return res;
