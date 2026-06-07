@@ -63,7 +63,7 @@ eval::eval(const init &i) {
   if (parallelOut["modulesPath"]["modulesPath"]["modulesPath"].start.find(
           "/nix/store/") != string::npos)
     canThrowModulesPath = true;
-  parallelWork.erase("modulesPath");
+  parallelOut.erase("modulesPath");
 
   for (auto &[itemsType, valueTop] : parallelOut) {
     for (auto &[itemsParent, items] : valueTop) {
