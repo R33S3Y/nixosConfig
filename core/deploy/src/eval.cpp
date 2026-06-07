@@ -85,7 +85,6 @@ eval::eval(const init &i) {
     }
   }
 }
-
 map<string, map<string, eval::key>>
 eval::seniorInitWorker(map<string, eval::key> input) {
 
@@ -99,7 +98,6 @@ eval::seniorInitWorker(map<string, eval::key> input) {
                                    decltype(&eval::juniorInitWorker)>(
       hold, eval::juniorInitWorker);
 }
-
 map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
   string key = input.begin()->first;
   eval::key value = input[key];
@@ -154,7 +152,6 @@ void eval::preProcessFile(string fileStr, string filePath) {
   }
   return;
 }
-
 string eval::removeComments(string fileStr) {
 
   // gets the things before the strings are moved
@@ -213,7 +210,7 @@ eval::result eval::statement(string test, bool canThrow) {
       }
       if (hold.type == "list") {
         res.list.insert(res.list.end(), hold.list.begin(), hold.list.end());
-      } else {
+      } else if (hold.str.size() != 0) {
         res.list.push_back(hold.str);
       }
     }

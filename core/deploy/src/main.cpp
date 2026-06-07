@@ -121,7 +121,7 @@ int main(int argc, char const *argv[]) {
     cout << "\n";
     cout << "Unprocessed files: \n";
     for (string file : unprocessedFiles) {
-      cout << file + "\n";
+      cout << "\"" + file + "\"\n";
     }
 
     resolve r(flakePath, flakeLink, host);
