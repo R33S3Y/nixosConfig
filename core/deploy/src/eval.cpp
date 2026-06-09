@@ -198,6 +198,8 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     }
   }
   if (candidates.size() > 1) {
+  }
+  if (candidates.size() > 1) {
     cerr << utils::error(
         "Mutiple candidates found for attrset (\033[35m" + attrset +
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
