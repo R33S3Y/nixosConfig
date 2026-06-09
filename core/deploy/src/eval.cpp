@@ -529,7 +529,7 @@ eval::result eval::makeCommandStr(string attrset, string topAttr,
     }
   }
   if (candidates.size() > 1) {
-    cerr << utils::error("mutiple candidates found for attrset (\033[35m" +
+    cerr << utils::error("Mutiple candidates found for attrset (\033[35m" +
                          attrset +
                          "\033[0m).\n Please implement lambda input parsing to "
                          "determine winning candidate. \033[35m:3\033[0m\n"

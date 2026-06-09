@@ -42,7 +42,12 @@ string utils::readFile(const string &path) {
 }
 
 string utils::error(string message) {
-  return "\n\033[31mError\033[0m : " + message + "\n";
+  vector<string> tokens = utils::splitStrByChar(message, '\n');
+  message = "";
+  for (string token : tokens) {
+    message += utils::trim(token) + "\n  ";
+  }
+  return "\n\033[31mError\033[0m : " + message;
 }
 
 vector<string> utils::splitStrByChar(string inputStr, char inputChar) {
