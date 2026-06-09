@@ -175,7 +175,9 @@ string eval::removeComments(string fileStr) {
 }
 eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
                                   bool canThrow) {
-
+  for (string attrsetKey : attrsetKeys) {
+    cout << attrsetKey + "\n";
+  }
   struct keyCandidate {
     string start;
     string end;
@@ -435,7 +437,6 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   eval::result res;
   string attrset;
 
-  cout << test + "\n";
   // does preprocessing to resolve funny statements like ${ } and ( ) and
   // get a clean attrset Split
   string mask = test;
