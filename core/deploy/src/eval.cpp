@@ -198,6 +198,22 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     }
   }
   if (candidates.size() > 1) {
+    vector<eval::candidate> testingCandidates;
+    for (keyCandidate candidate : candidates) {
+      testingCandidates.push_back(
+          {attrsetKeys, candidate.start + attrset + candidate.end});
+    }
+    vector<bool> validCandidates =
+        threading::paralleliseVector<eval::candidate, bool,
+                                     decltype(&eval::filterCandidate)>(
+            testingCandidates, eval::filterCandidate);
+    for (int i = 0; i < validCandidates.size(); i++) {
+      if (validCandidates[i] == true)
+        continue;
+      validCandidates.erase(validCandidates.begin() + i);
+      candidates.erase(candidates.begin() + i);
+      i--;
+    }
   }
   if (candidates.size() > 1) {
     cerr << utils::error(
@@ -240,16 +256,12 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     return true; // could be anything. So yes valid
   }
 
-  for (int i = 0; i > testingCandidate.attrsetKeys.size(); i++) {
+  for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
     utils::result cmdType =
         utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
     if (!cmdType.ok())
       return true; // if we are not sure assume valid
-
-    eval::result validType = eval::statement(cmdType.output, true);
-    if (validType.error == true || validType.thrown == true)
-      return true;
-    if (validType.type != "string" || validType.str != "set")
+    if (utils::trim(cmdType.output) == "\"set\"")
       return false;
 
     utils::result cmdItems =
@@ -257,14 +269,14 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     if (!cmdItems.ok())
       return true; // if we are not sure assume valid
 
-    eval::result setItems = eval::statement(cmdItems.output);
-    if (setItems.error == true || setItems.thrown == true)
-      return true;
-    if (setItems.type != "list" ||
-        find(setItems.list.begin(), setItems.list.end(),
-             testingCandidate.attrsetKeys[i]) == setItems.list.end())
+    vector<string> setList = eval::list(cmdItems.output);
+    bool found = false;
+    for (string setItem : setList) {
+      if (utils::trim(setItem) == "\"" + testingCandidate.attrsetKeys[i] + "\"")
+        found = true;
+    }
+    if (found == false)
       return false;
-
     testingCandidate.cmd += testingCandidate.attrsetKeys[i] + ".";
   }
   return true;

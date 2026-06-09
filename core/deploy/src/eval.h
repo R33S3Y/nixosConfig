@@ -67,5 +67,5 @@ private:
 
   result makeCommandStr(string attrset, vector<string> attrsetKeys,
                         bool canThrow);
-  bool filterCandidate(candidate testingCandidate);
+  static bool filterCandidate(candidate testingCandidate);
 };
