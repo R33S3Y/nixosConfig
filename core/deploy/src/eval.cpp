@@ -435,6 +435,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   eval::result res;
   string attrset;
 
+  cout << test + "\n";
   // does preprocessing to resolve funny statements like ${ } and ( ) and
   // get a clean attrset Split
   string mask = test;
