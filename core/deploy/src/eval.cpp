@@ -260,7 +260,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return true; // if we are not sure assume valid
     cout << testingCandidate.cmd + "\n";
     cout << cmdType.output + "\n";
-    if (utils::trim(cmdType.output) == "\"set\"")
+    if (utils::trim(cmdType.output) != "\"set\"")
       return false;
 
     utils::result cmdItems =
