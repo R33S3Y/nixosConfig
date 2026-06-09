@@ -196,8 +196,8 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
   }
   for (auto &[key, value] : eval::inheritMap) {
     if (value.count(attrsetKeys[0])) {
-      candidates.push_back({value[attrsetKeys[0]].start,
-                            value[attrsetKeys[0]].end, attrsetKeys[0] = key});
+      candidates.push_back(
+          {value[attrsetKeys[0]].start, value[attrsetKeys[0]].end, key});
     }
   }
   if (candidates.size() > 1) {
