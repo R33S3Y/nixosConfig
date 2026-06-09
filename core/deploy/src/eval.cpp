@@ -533,7 +533,7 @@ eval::result eval::makeCommandStr(string attrset, string topAttr,
         "Mutiple candidates found for attrset (\033[35m" + attrset +
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
-        "( translation: screw you, sincerely past Reesey \033[35m:3\033[0m )");
+        "( translation: screw you, sincerely past Reesey ) \033[35m:3\033[0m");
     eval::result res;
     res.error = true;
     return res;
