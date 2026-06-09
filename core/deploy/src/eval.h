@@ -31,6 +31,7 @@ public:
   string path(string test);
   result attrsetKey(string test, bool canThrow);
   result bracket(string test);
+  result lambdaCall(string test, bool canThrow);
 
   // these ones are static simply because they can be,
   // and it allow them to be used outside of this class with out having to do
@@ -43,6 +44,7 @@ private:
     string start;
     string end;
   };
+
   string flakePath;
   string flakeLink;
   string host;
@@ -58,4 +60,6 @@ private:
 
   static map<string, eval::key> juniorInitWorker(map<string, key>);
   static map<string, map<string, eval::key>> seniorInitWorker(map<string, key>);
+
+  result makeCommandStr(string attrset, string topAttr, bool canThrow);
 };

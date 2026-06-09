@@ -325,7 +325,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   eval::result res;
   string attrset;
 
-  // does preproccessing to resolve funny statements like ${ } and ( ) and
+  // does preprocessing to resolve funny statements like ${ } and ( ) and
   // get a clean attrset Split
   string mask = test;
   mask = utils::blankWithinTokens(mask, "${", "}");
@@ -363,46 +363,18 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     attrset = attrset.substr(0, attrset.size() - 1);
   }
 
-  // make cmd
-  string cmd;
-  if (resolveMap.count(attrsetKeys[0])) {
-    cmd = resolveMap[attrsetKeys[0]].start + attrset +
-          resolveMap[attrsetKeys[0]].end;
+  // get cmd str
+  eval::result cmdStr = eval::makeCommandStr(attrset, attrsetKeys[0], canThrow);
+  if (cmdStr.thrown == true || cmdStr.error == true) {
+    return {cmdStr.error, cmdStr.thrown};
   }
-  if (throwMap.count(attrsetKeys[0])) {
-    if (canThrow == false)
-      cmd = throwMap[attrsetKeys[0]].start + attrset +
-            throwMap[attrsetKeys[0]].end;
-    else {
-      res.thrown = true;
-      return res;
-    }
-  }
-  if (cmd == "") {
-    for (auto &[key, value] : inheritMap) {
-      if (value.count(attrsetKeys[0])) {
-        if (throwMap.count(key) && canThrow == true) {
-          res.thrown = true;
-          return res;
-        }
-        cmd = value[attrsetKeys[0]].start + attrset + value[attrsetKeys[0]].end;
-        break;
-      }
-    }
-  }
-  if (cmd == "") {
-    res.error = true;
-    return res;
-  }
-
-  utils::result cmdOut = utils::runCommand(cmd);
+  // run cmd (nix eval)
+  utils::result cmdOut = utils::runCommand(cmdStr.str);
   if (!cmdOut.ok()) {
-    res.error = true;
-    return res;
+    return {true};
   }
-
+  // parse output
   eval::result hold = eval::statement(cmdOut.output, false);
-
   if (hold.error == true) {
     res.error = true;
     return res;
@@ -454,7 +426,7 @@ eval::result eval::bracket(string test) {
     }
     if (hold.type == "list") {
       cerr << utils::error("Nested lists are not supported in this "
-                           "context. \033[35m:3\033[0m\n");
+                           "context. \033[35m:3\033[0m");
       // yes, I really had to put a colourful :3 in their. (UwU)
       // I what future me will see that and suffer... So yeah...
       eval::result res;
@@ -512,4 +484,79 @@ vector<string> eval::list(string test, bool throwLazy) {
     }
   }
   return listItems;
+}
+eval::result eval::lambdaCall(string test, bool canThrow) {
+  string mask = test;
+  mask = utils::blankWithinTokens(mask, "{", "}");
+  mask = utils::blankWithinTokens(mask, "(", ")");
+  mask = utils::blankWithinTokens(mask, "[", "]");
+
+  vector<string> tokens =
+      utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
+
+  eval::result cmdStr = eval::makeCommandStr(tokens[0], tokens[0], canThrow);
+  if (cmdStr.thrown == true || cmdStr.error == true) {
+    return {cmdStr.error, cmdStr.thrown};
+  }
+
+  cerr << utils::error(
+      "Function cannot be thrown. Please implement function processing");
+  return {true};
+}
+
+eval::result eval::makeCommandStr(string attrset, string topAttr,
+                                  bool canThrow) {
+
+  struct keyCandidate {
+    string start;
+    string end;
+    string topAttr;
+  };
+  vector<keyCandidate> candidates;
+
+  if (eval::resolveMap.count(topAttr)) {
+    candidates.push_back(
+        {eval::resolveMap[topAttr].start, eval::resolveMap[topAttr].end});
+  }
+  if (eval::throwMap.count(topAttr)) {
+    candidates.push_back(
+        {eval::throwMap[topAttr].start, eval::throwMap[topAttr].end, topAttr});
+  }
+  for (auto &[key, value] : eval::inheritMap) {
+    if (value.count(topAttr)) {
+      candidates.push_back(
+          {value[topAttr].start, value[topAttr].end, topAttr = key});
+    }
+  }
+  if (candidates.size() > 1) {
+    cerr << utils::error("mutiple candidates found for attrset (\033[35m" +
+                         attrset +
+                         "\033[0m).\n Please implement lambda input parsing to "
+                         "determine winning candidate. \033[35m:3\033[0m\n"
+                         "(translation: screw you, sincerely past Reesey )");
+    eval::result res;
+    res.error = true;
+    return res;
+  }
+
+  keyCandidate candidate = candidates[0];
+
+  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
+    eval::result res;
+    res.thrown = true;
+    return res;
+  }
+  if (candidates.size() == 0) {
+    cerr << utils::error("no candidates found for Attrset (\033[35m" + attrset +
+                         "\033[0m)\n Please implement more parsing for maps. "
+                         "It is currently missing parsing for let ... in.");
+    eval::result res;
+    res.error = true;
+    return res;
+  }
+
+  eval::result res;
+  res.type = "command";
+  res.str = candidate.start + attrset + candidate.end;
+  return res;
 }
