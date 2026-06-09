@@ -252,6 +252,9 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   if (testingCandidate.attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
   }
+  for (string attrsetKey : testingCandidate.attrsetKeys) {
+    cout << attrsetKey + "\n";
+  }
 
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
     utils::result cmdType =
