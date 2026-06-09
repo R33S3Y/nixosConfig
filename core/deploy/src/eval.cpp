@@ -221,9 +221,6 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
         "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
-    for (keyCandidate candidate : candidates) {
-      cout << candidate.start + attrset + candidate.end + "\n";
-    }
 
     eval::result res;
     res.error = true;
@@ -261,6 +258,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
         utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
     if (!cmdType.ok())
       return true; // if we are not sure assume valid
+    cout << testingCandidate.cmd;
+    cout << cmdType.output + "\n";
     if (utils::trim(cmdType.output) == "\"set\"")
       return false;
 
