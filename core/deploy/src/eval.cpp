@@ -529,11 +529,11 @@ eval::result eval::makeCommandStr(string attrset, string topAttr,
     }
   }
   if (candidates.size() > 1) {
-    cerr << utils::error("Mutiple candidates found for attrset (\033[35m" +
-                         attrset +
-                         "\033[0m).\n Please implement lambda input parsing to "
-                         "determine winning candidate. \033[35m:3\033[0m\n"
-                         "(translation: screw you, sincerely past Reesey )");
+    cerr << utils::error(
+        "Mutiple candidates found for attrset (\033[35m" + attrset +
+        "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
+        "determine the\033[94m winning candidate\033[0m. \033[35m:3\033[0m\n"
+        "(translation: screw you, sincerely past Reesey )");
     eval::result res;
     res.error = true;
     return res;
