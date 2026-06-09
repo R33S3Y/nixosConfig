@@ -178,6 +178,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
   for (string attrsetKey : attrsetKeys) {
     cout << attrsetKey + "\n";
   }
+  cout << "\n";
   struct keyCandidate {
     string start;
     string end;
