@@ -173,6 +173,100 @@ string eval::removeComments(string fileStr) {
   }
   return output;
 }
+eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
+                                  bool canThrow) {
+
+  struct keyCandidate {
+    string start;
+    string end;
+    string topAttr;
+  };
+  vector<keyCandidate> candidates;
+
+  if (eval::resolveMap.count(attrsetKeys[0])) {
+    candidates.push_back({eval::resolveMap[attrsetKeys[0]].start,
+                          eval::resolveMap[attrsetKeys[0]].end});
+  }
+  if (eval::throwMap.count(attrsetKeys[0])) {
+    candidates.push_back({eval::throwMap[attrsetKeys[0]].start,
+                          eval::throwMap[attrsetKeys[0]].end, attrsetKeys[0]});
+  }
+  for (auto &[key, value] : eval::inheritMap) {
+    if (value.count(attrsetKeys[0])) {
+      candidates.push_back({value[attrsetKeys[0]].start,
+                            value[attrsetKeys[0]].end, attrsetKeys[0] = key});
+    }
+  }
+  if (candidates.size() > 1) {
+    cerr << utils::error(
+        "Mutiple candidates found for attrset (\033[35m" + attrset +
+        "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
+        "determine the\033[94m winning candidate\033[0m. \n"
+        "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
+    for (keyCandidate candidate : candidates) {
+      cout << candidate.start + attrset + candidate.end + "\n";
+    }
+
+    eval::result res;
+    res.error = true;
+    return res;
+  }
+
+  keyCandidate candidate = candidates[0];
+
+  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
+    eval::result res;
+    res.thrown = true;
+    return res;
+  }
+  if (candidates.size() == 0) {
+    cerr << utils::error("no candidates found for Attrset (\033[35m" + attrset +
+                         "\033[0m)\n Please implement more parsing for maps. "
+                         "It is currently missing parsing for let ... in.");
+    eval::result res;
+    res.error = true;
+    return res;
+  }
+
+  eval::result res;
+  res.type = "command";
+  res.str = candidate.start + attrset + candidate.end;
+  return res;
+}
+bool eval::filterCandidate(eval::candidate testingCandidate) {
+  if (testingCandidate.attrsetKeys.size() <= 1) {
+    return true; // could be anything. So yes valid
+  }
+
+  for (int i = 0; i > testingCandidate.attrsetKeys.size(); i++) {
+    utils::result cmdType =
+        utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
+    if (!cmdType.ok())
+      return true; // if we are not sure assume valid
+
+    eval::result validType = eval::statement(cmdType.output, true);
+    if (validType.error == true || validType.thrown == true)
+      return true;
+    if (validType.type != "string" || validType.str != "set")
+      return false;
+
+    utils::result cmdItems =
+        utils::runCommand(testingCandidate.cmd + " --apply builtins.attrNames");
+    if (!cmdItems.ok())
+      return true; // if we are not sure assume valid
+
+    eval::result setItems = eval::statement(cmdItems.output);
+    if (setItems.error == true || setItems.thrown == true)
+      return true;
+    if (setItems.type != "list" ||
+        find(setItems.list.begin(), setItems.list.end(),
+             testingCandidate.attrsetKeys[i]) == setItems.list.end())
+      return false;
+
+    testingCandidate.cmd += testingCandidate.attrsetKeys[i] + ".";
+  }
+  return true;
+}
 
 eval::result eval::statement(string test, bool canThrow) {
 
@@ -364,7 +458,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   }
 
   // get cmd str
-  eval::result cmdStr = eval::makeCommandStr(attrset, attrsetKeys[0], canThrow);
+  eval::result cmdStr = eval::makeCommandStr(attrset, attrsetKeys, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {
     return {cmdStr.error, cmdStr.thrown};
   }
@@ -494,7 +588,7 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   vector<string> tokens =
       utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 
-  eval::result cmdStr = eval::makeCommandStr(tokens[0], tokens[0], canThrow);
+  eval::result cmdStr = eval::makeCommandStr(tokens[0], tokens, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {
     return {cmdStr.error, cmdStr.thrown};
   }
@@ -502,65 +596,4 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   cerr << utils::error(
       "Function cannot be thrown. Please implement function processing");
   return {true};
-}
-
-eval::result eval::makeCommandStr(string attrset, string topAttr,
-                                  bool canThrow) {
-
-  struct keyCandidate {
-    string start;
-    string end;
-    string topAttr;
-  };
-  vector<keyCandidate> candidates;
-
-  if (eval::resolveMap.count(topAttr)) {
-    candidates.push_back(
-        {eval::resolveMap[topAttr].start, eval::resolveMap[topAttr].end});
-  }
-  if (eval::throwMap.count(topAttr)) {
-    candidates.push_back(
-        {eval::throwMap[topAttr].start, eval::throwMap[topAttr].end, topAttr});
-  }
-  for (auto &[key, value] : eval::inheritMap) {
-    if (value.count(topAttr)) {
-      candidates.push_back(
-          {value[topAttr].start, value[topAttr].end, topAttr = key});
-    }
-  }
-  if (candidates.size() > 1) {
-    cerr << utils::error(
-        "Mutiple candidates found for attrset (\033[35m" + attrset +
-        "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
-        "determine the\033[94m winning candidate\033[0m. \n"
-        "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
-    for (keyCandidate candidate : candidates) {
-      cout << candidate.start + attrset + candidate.end + "\n";
-    }
-
-    eval::result res;
-    res.error = true;
-    return res;
-  }
-
-  keyCandidate candidate = candidates[0];
-
-  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
-    eval::result res;
-    res.thrown = true;
-    return res;
-  }
-  if (candidates.size() == 0) {
-    cerr << utils::error("no candidates found for Attrset (\033[35m" + attrset +
-                         "\033[0m)\n Please implement more parsing for maps. "
-                         "It is currently missing parsing for let ... in.");
-    eval::result res;
-    res.error = true;
-    return res;
-  }
-
-  eval::result res;
-  res.type = "command";
-  res.str = candidate.start + attrset + candidate.end;
-  return res;
 }

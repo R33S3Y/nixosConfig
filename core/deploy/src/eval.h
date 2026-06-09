@@ -44,6 +44,10 @@ private:
     string start;
     string end;
   };
+  struct candidate {
+    vector<string> attrsetKeys;
+    string cmd;
+  }
 
   string flakePath;
   string flakeLink;
@@ -61,5 +65,7 @@ private:
   static map<string, eval::key> juniorInitWorker(map<string, key>);
   static map<string, map<string, eval::key>> seniorInitWorker(map<string, key>);
 
-  result makeCommandStr(string attrset, string topAttr, bool canThrow);
+  result makeCommandStr(string attrset, vector<string> attrsetKeys,
+                        bool canThrow);
+  bool filterCandidate(candidate testingCandidate);
 };
