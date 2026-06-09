@@ -534,6 +534,10 @@ eval::result eval::makeCommandStr(string attrset, string topAttr,
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
         "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
+    for (keyCandidate candidate : candidates) {
+      cout << candidate.start + attrset + candidate.end + "\n";
+    }
+
     eval::result res;
     res.error = true;
     return res;
