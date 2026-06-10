@@ -453,7 +453,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       attrsetKey = utils::rReplace(attrsetKey, "}", "");
 
       eval::result hold = eval::statement(attrsetKey, false);
-      cout << hold.str + "/n";
+      cout << hold.str + "\n";
       if (hold.error == true) {
         res.error = true;
         break;
