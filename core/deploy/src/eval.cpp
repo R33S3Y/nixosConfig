@@ -255,16 +255,20 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
 
     utils::result cmdType = utils::runCommand(cmd + " --apply builtins.typeOf");
     if (cmdType.exitCode != 0 &&
-        cmdType.error.find("evaluation warning:") == string::npos)
+        cmdType.error.find("evaluation warning:") == string::npos) {
       return true; // if we are not sure assume valid
-    if (utils::trim(cmdType.output) != "\"set\"")
+    }
+    if (utils::trim(cmdType.output) != "\"set\"") {
+      cout << "throw: " + cmd + "\n";
       return false;
+    }
 
     utils::result cmdItems =
         utils::runCommand(cmd + " --apply builtins.attrNames");
     if (cmdItems.exitCode != 0 &&
-        cmdType.error.find("evaluation warning:") == string::npos)
+        cmdType.error.find("evaluation warning:") == string::npos) {
       return true; // if we are not sure assume valid
+    }
 
     vector<string> setList = eval::list(cmdItems.output);
     bool found = false;
@@ -272,8 +276,9 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       if (utils::trim(setItem) == "\"" + testingCandidate.attrsetKeys[i] + "\"")
         found = true;
     }
-    if (found == false)
+    if (found == false) {
       return false;
+    }
     attrsetPath += "." + testingCandidate.attrsetKeys[i];
   }
   return true;
