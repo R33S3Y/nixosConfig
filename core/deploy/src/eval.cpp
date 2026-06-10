@@ -182,6 +182,10 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
   };
   vector<keyCandidate> candidates;
 
+  for (string attrsetKey : attrsetKeys) {
+    cout << attrsetKey + "\n";
+  }
+
   if (eval::resolveMap.count(attrsetKeys[0])) {
     candidates.push_back({eval::resolveMap[attrsetKeys[0]].start,
                           eval::resolveMap[attrsetKeys[0]].end});
