@@ -253,13 +253,12 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   }
 
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
+    cout << testingCandidate.cmd + "\n";
     utils::result cmdType =
         utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
     if (cmdType.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos)
       return true; // if we are not sure assume valid
-    cout << testingCandidate.cmd + "\n";
-    cout << cmdType.output + "\n";
     if (utils::trim(cmdType.output) != "\"set\"")
       return false;
 
