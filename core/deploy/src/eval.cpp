@@ -241,11 +241,8 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     res.error = true;
     return res;
   }
-
-  eval::result res;
-  res.type = "command";
-  res.str = candidate.start + attrset + candidate.end;
-  return res;
+  cout << candidate.start + attrset + candidate.end + "\n";
+  return {.type = "command", .str = candidate.start + attrset + candidate.end};
 }
 bool eval::filterCandidate(eval::candidate testingCandidate) {
   if (testingCandidate.attrsetKeys.size() <= 1) {
@@ -255,7 +252,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   string attrsetPath = testingCandidate.attrsetKeys[0];
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
     string cmd = testingCandidate.start + attrsetPath + testingCandidate.end;
-    cout << cmd + "\n";
+
     utils::result cmdType = utils::runCommand(cmd + " --apply builtins.typeOf");
     if (cmdType.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos)
@@ -263,7 +260,6 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     if (utils::trim(cmdType.output) != "\"set\"")
       return false;
 
-    cout << cmd + "\n";
     utils::result cmdItems =
         utils::runCommand(cmd + " --apply builtins.attrNames");
     if (cmdItems.exitCode != 0 &&
