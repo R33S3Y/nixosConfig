@@ -47,7 +47,7 @@ string utils::error(string message) {
   for (string token : tokens) {
     message += utils::trim(token) + "\n  ";
   }
-  return "\n\033[31mError\033[0m : " + utils::trim(message) + "\n";
+  return "\n\033[31merror:\033[0m " + utils::trim(message) + "\n";
 }
 
 vector<string> utils::splitStrByChar(string inputStr, char inputChar) {
