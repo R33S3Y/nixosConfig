@@ -263,6 +263,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     if (utils::trim(cmdType.output) != "\"set\"")
       return false;
 
+    cout << cmd + "\n";
     utils::result cmdItems =
         utils::runCommand(cmd + " --apply builtins.attrNames");
     if (cmdItems.exitCode != 0 &&
