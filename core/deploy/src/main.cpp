@@ -16,7 +16,7 @@ vector<string> getFlakeInputs(string flakeLink) {
   string cmd = "nix flake show " + flakeLink + " --json";
   utils::result cmdOut = utils::runCommand(cmd);
 
-  if (!cmdOut.ok()) {
+  if (cmdOut.exitCode != 0) {
     return {};
   }
   auto json = nlohmann::json::parse(cmdOut.output);
@@ -34,7 +34,7 @@ vector<string> getNixFiles(string flakeLink, string host) {
 
   utils::result cmdOut = utils::runCommand(cmd);
 
-  if (!cmdOut.ok()) {
+  if (cmdOut.exitCode != 0) {
     cerr << utils::error("Failed to eval for nix files");
     return {};
   }
@@ -85,7 +85,7 @@ int main(int argc, char const *argv[]) {
   }
   utils::result cmdOut = utils::runCommand("nix flake clone " + flakeLink +
                                            " --dest " + flakePath);
-  if (!cmdOut.ok()) {
+  if (cmdOut.exitCode != 0) {
     cerr << utils::error("failed to get flake (\033[35m" + flakeLink +
                          "\033[0m)");
     return 1;

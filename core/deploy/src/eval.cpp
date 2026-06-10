@@ -109,7 +109,7 @@ map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
 
   utils::result cmdOut = utils::runCommand(cmd);
 
-  if (!cmdOut.ok()) {
+  if (cmdOut.exitCode != 0) {
     ostringstream oss;
     oss << utils::error("Failed to eval attrs of: (\033[35m" + key +
                         "\033[0m)");
@@ -175,10 +175,6 @@ string eval::removeComments(string fileStr) {
 }
 eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
                                   bool canThrow) {
-  for (string attrsetKey : attrsetKeys) {
-    cout << attrsetKey + "\n";
-  }
-  cout << "\n";
   struct keyCandidate {
     string start;
     string end;
@@ -202,10 +198,6 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
   }
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
-    for (string attrsetKey : attrsetKeys) {
-      cout << attrsetKey + "\n";
-    }
-    cout << "\n";
     for (keyCandidate candidate : candidates) {
       testingCandidates.push_back(
           {attrsetKeys, candidate.start + attrset + candidate.end});
@@ -259,14 +251,12 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   if (testingCandidate.attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
   }
-  for (string attrsetKey : testingCandidate.attrsetKeys) {
-    cout << attrsetKey + "\n";
-  }
 
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
     utils::result cmdType =
         utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
-    if (!cmdType.ok())
+    if (cmdType.exitCode != 0 &&
+        cmdType.error.find("evaluation warning:") == string::npos)
       return true; // if we are not sure assume valid
     cout << testingCandidate.cmd + "\n";
     cout << cmdType.output + "\n";
@@ -275,7 +265,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
 
     utils::result cmdItems =
         utils::runCommand(testingCandidate.cmd + " --apply builtins.attrNames");
-    if (!cmdItems.ok())
+    if (cmdItems.exitCode != 0 &&
+        cmdType.error.find("evaluation warning:") == string::npos)
       return true; // if we are not sure assume valid
 
     vector<string> setList = eval::list(cmdItems.output);
@@ -487,7 +478,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   }
   // run cmd (nix eval)
   utils::result cmdOut = utils::runCommand(cmdStr.str);
-  if (!cmdOut.ok()) {
+  if (cmdOut.exitCode != 0) {
     return {true};
   }
   // parse output

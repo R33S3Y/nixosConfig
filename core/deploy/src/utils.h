@@ -12,7 +12,6 @@ public:
     string output;
     int exitCode;
     string error;
-    bool ok() const { return exitCode == 0; }
   };
 
   static result runCommand(string cmd);
