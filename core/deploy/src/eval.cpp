@@ -193,6 +193,9 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
           {value[attrsetKeys[0]].start, value[attrsetKeys[0]].end, key});
     }
   }
+  for (keyCandidate candidate : candidates) {
+    cout << candidate.start + "\n";
+  }
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
