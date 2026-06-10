@@ -209,6 +209,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     for (int i = 0; i < validCandidates.size(); i++) {
       if (validCandidates[i] == true)
         continue;
+      cout << "thrown: \"" + candidates[i].start + "\" item \"" + "\"\n";
       validCandidates.erase(validCandidates.begin() + i);
       candidates.erase(candidates.begin() + i);
       i--;
