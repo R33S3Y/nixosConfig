@@ -453,11 +453,10 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       attrsetKey = utils::rReplace(attrsetKey, "}", "");
 
       eval::result hold = eval::statement(attrsetKey, false);
-      cout << hold.str + "\n";
       if (hold.error == true) {
-        res.error = true;
-        break;
+        return {true};
       }
+      cout << hold.str + "\n";
       attrsetKey = hold.str;
     }
 
@@ -480,7 +479,8 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   }
   // run cmd (nix eval)
   utils::result cmdOut = utils::runCommand(cmdStr.str);
-  if (cmdOut.exitCode != 0) {
+  if (cmdOut.exitCode != 0 &&
+      cmdOut.error.find("evaluation warning:") == string::npos) {
     return {true};
   }
   // parse output
