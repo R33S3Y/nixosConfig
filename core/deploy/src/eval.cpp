@@ -194,7 +194,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     }
   }
   for (keyCandidate candidate : candidates) {
-    cout << candidate.start + "\n";
+    cout << "can: " + candidate.start + "\n";
   }
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
@@ -241,7 +241,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     res.error = true;
     return res;
   }
-  cout << candidate.start + attrset + candidate.end + "\n";
+  cout << "final: " + candidate.start + attrset + candidate.end + "\n";
   return {.type = "command", .str = candidate.start + attrset + candidate.end};
 }
 bool eval::filterCandidate(eval::candidate testingCandidate) {
