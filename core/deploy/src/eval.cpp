@@ -200,7 +200,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     vector<eval::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
       testingCandidates.push_back(
-          {attrsetKeys, candidate.start + attrset + candidate.end});
+          {attrsetKeys, candidate.start, candidate.end});
     }
     vector<bool> validCandidates =
         threading::paralleliseVector<eval::candidate, bool,
@@ -252,10 +252,11 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     return true; // could be anything. So yes valid
   }
 
+  string attrsetPath = testingCandidate.attrsetKeys[0];
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
-    cout << testingCandidate.cmd + "\n";
-    utils::result cmdType =
-        utils::runCommand(testingCandidate.cmd + " --apply builtins.typeOf");
+    string cmd = testingCandidate.start + attrsetPath + testingCandidate.end;
+    cout << cmd + "\n";
+    utils::result cmdType = utils::runCommand(cmd + " --apply builtins.typeOf");
     if (cmdType.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos)
       return true; // if we are not sure assume valid
@@ -263,7 +264,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return false;
 
     utils::result cmdItems =
-        utils::runCommand(testingCandidate.cmd + " --apply builtins.attrNames");
+        utils::runCommand(cmd + " --apply builtins.attrNames");
     if (cmdItems.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos)
       return true; // if we are not sure assume valid
@@ -276,7 +277,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     }
     if (found == false)
       return false;
-    testingCandidate.cmd += testingCandidate.attrsetKeys[i] + ".";
+    attrsetPath += "." + testingCandidate.attrsetKeys[i];
   }
   return true;
 }

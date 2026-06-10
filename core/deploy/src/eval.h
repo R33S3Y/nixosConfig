@@ -46,7 +46,8 @@ private:
   };
   struct candidate {
     vector<string> attrsetKeys;
-    string cmd;
+    string start;
+    string end;
   };
 
   string flakePath;
