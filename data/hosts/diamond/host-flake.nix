@@ -167,7 +167,7 @@ let
 
       r2modman
       super-slicer-beta
-      openscad
+      #openscad
       blender
       # freecad
 
