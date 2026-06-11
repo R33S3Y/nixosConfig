@@ -260,7 +260,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return true; // if we are not sure assume valid
     }
     if (utils::trim(cmdType.output) != "\"set\"") {
-      cout << "thrown1: \"" + testingCandidate.start + "\"\n";
+      cout << "thrown1: \"" + testingCandidate.start + "\" item \"" +
+                  testingCandidate.attrsetKeys[i] + "\"\n";
       return false;
     }
 
@@ -278,7 +279,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
         found = true;
     }
     if (found == false) {
-      cout << "thrown2: \"" + testingCandidate.start + "\"\n";
+      cout << "thrown2: \"" + testingCandidate.start + "\" item \"" +
+                  testingCandidate.attrsetKeys[i] + "\"\n";
       return false;
     }
     attrsetPath += "." + testingCandidate.attrsetKeys[i];
