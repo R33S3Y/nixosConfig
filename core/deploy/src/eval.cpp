@@ -463,7 +463,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
       }
       attrsetKey = hold.str;
     }
-
+    attrsetKeys[i] = attrsetKey;
     attrset += attrsetKey + ".";
   }
   if (res.error == true) {
