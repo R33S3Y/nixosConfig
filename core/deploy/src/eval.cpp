@@ -209,7 +209,6 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     for (int i = 0; i < validCandidates.size(); i++) {
       if (validCandidates[i] == true)
         continue;
-      cout << "thrown: \"" + candidates[i].start + "\" item \"" + "\"\n";
       validCandidates.erase(validCandidates.begin() + i);
       candidates.erase(candidates.begin() + i);
       i--;
@@ -246,6 +245,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
   return {.type = "command", .str = candidate.start + attrset + candidate.end};
 }
 bool eval::filterCandidate(eval::candidate testingCandidate) {
+  // returns trues if this thing we know the thing is valid.
   if (testingCandidate.attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
   }
@@ -260,6 +260,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return true; // if we are not sure assume valid
     }
     if (utils::trim(cmdType.output) != "\"set\"") {
+      cout << "thrown1: \"" + testingCandidate.start + "\"\n";
       return false;
     }
 
@@ -277,6 +278,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
         found = true;
     }
     if (found == false) {
+      cout << "thrown2: \"" + testingCandidate.start + "\"\n";
       return false;
     }
     attrsetPath += "." + testingCandidate.attrsetKeys[i];
