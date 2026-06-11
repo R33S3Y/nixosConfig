@@ -55,14 +55,14 @@ map<keyType, valueOut> threading::paralleliseMap(map<keyType, valueIn> items,
 
   vector<map<keyType, valueIn>> threadWorkIn =
       utils::splitMap(items, totalThreads);
-  vector<map<keyType, valueOut>> threadWorkOut;
+  vector<map<keyType, valueOut>> threadWorkOut(totalThreads);
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
     threads.emplace_back([i, &threadWorkIn, &threadWorkOut, func]() {
-      threadWorkOut.push_back(
+      threadWorkOut[i] =
           threading::workerMap<keyType, valueIn, valueOut, argIn>(
-              i, threadWorkIn[i], func));
+              i, threadWorkIn[i], func);
     });
   }
 
