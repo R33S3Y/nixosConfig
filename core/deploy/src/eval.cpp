@@ -193,9 +193,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
           {value[attrsetKeys[0]].start, value[attrsetKeys[0]].end, key});
     }
   }
-  for (keyCandidate candidate : candidates) {
-    cout << "can: " + candidate.start + "\n";
-  }
+
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
@@ -260,7 +258,6 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return true; // if we are not sure assume valid
     }
     if (utils::trim(cmdType.output) != "\"set\"") {
-      cout << "throw: " + cmd + "\n";
       return false;
     }
 

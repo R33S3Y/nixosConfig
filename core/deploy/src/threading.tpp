@@ -14,14 +14,14 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
     totalThreads = items.size();
 
   vector<vector<typeIn>> threadWorkIn = utils::splitVector(items, totalThreads);
-  vector<vector<typeOut>> threadWorkOut;
+  vector<vector<typeOut>> threadWorkOut(totalThreads);
 
   vector<thread> threads;
 
   for (int i = 0; i < totalThreads; i++) {
     threads.emplace_back([i, &threadWorkIn, &threadWorkOut, func]() {
-      threadWorkOut.push_back(threading::workerVector<typeIn, typeOut, argIn>(
-          i, threadWorkIn[i], func));
+      threadWorkOut[i] = threading::workerVector<typeIn, typeOut, argIn>(
+          i, threadWorkIn[i], func);
     });
   }
 
