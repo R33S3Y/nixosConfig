@@ -608,7 +608,7 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   vector<string> tokens =
       utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 
-  eval::result cmdStr = eval::makeCommandStr(tokens[0], tokens, canThrow);
+  eval::result cmdStr = eval::makeCommandStr(tokens[0], {tokens[0]}, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {
     return {cmdStr.error, cmdStr.thrown};
   }
