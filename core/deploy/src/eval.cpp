@@ -341,8 +341,15 @@ eval::result eval::statement(string test, bool canThrow) {
     res.error = false;
     return res;
   }
+  eval::result hold = eval::lambdaCall(test, canThrow);
+  if (hold.type != "skip") {
+    return hold;
+  }
 
-  eval::result hold = eval::attrsetKey(test, canThrow);
+  cout << "skipped\n";
+
+  hold = {};
+  hold = eval::attrsetKey(test, canThrow);
   if (hold.error == false) {
     return hold;
   }
@@ -601,12 +608,17 @@ vector<string> eval::list(string test, bool throwLazy) {
 }
 eval::result eval::lambdaCall(string test, bool canThrow) {
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "{", "}");
-  mask = utils::blankWithinTokens(mask, "(", ")");
-  mask = utils::blankWithinTokens(mask, "[", "]");
+  mask = utils::blankWithinTokens(mask, "{", "}", '.');
+  mask = utils::blankWithinTokens(mask, "(", ")", '.');
+  mask = utils::blankWithinTokens(mask, "[", "]", '.');
 
+  cout << "test: " + test + "\n";
   vector<string> tokens =
       utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
+
+  if (tokens.size() <= 1) {
+    return {.type = "skip"};
+  }
 
   eval::result cmdStr = eval::makeCommandStr(tokens[0], {tokens[0]}, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {

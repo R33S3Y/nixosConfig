@@ -8,5 +8,5 @@
   stylix.targets.grub.enable = true;
   stylix.targets.grub.useWallpaper = true;
 
-  #boot.loader.timeout = 0;
+  boot.loader.timeout = 0;
 }
