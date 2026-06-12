@@ -347,7 +347,7 @@ eval::result eval::statement(string test, bool canThrow) {
   }
 
   cout << "skipped\n";
-  cout << "segfault?" << endl;
+
   hold = {};
   hold = eval::attrsetKey(test, canThrow);
   if (hold.error == false) {
@@ -619,6 +619,8 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   if (tokens.size() <= 1) {
     return {.type = "skip"};
   }
+
+  cout << "segfault?" << endl;
 
   eval::result cmdStr = eval::makeCommandStr(tokens[0], {tokens[0]}, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {
