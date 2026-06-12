@@ -347,7 +347,7 @@ eval::result eval::statement(string test, bool canThrow) {
   }
 
   cout << "skipped\n";
-
+  cout << "segfault" << endl;
   hold = {};
   hold = eval::attrsetKey(test, canThrow);
   if (hold.error == false) {
