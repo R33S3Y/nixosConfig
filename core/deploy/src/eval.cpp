@@ -195,7 +195,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
           {value[attrsetKeys[0]].start, value[attrsetKeys[0]].end, key});
     }
   }
-
+  cout << "segfault??" << endl;
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
@@ -619,8 +619,6 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   if (tokens.size() <= 1) {
     return {.type = "skip"};
   }
-
-  cout << "segfault?" << endl;
 
   eval::result cmdStr = eval::makeCommandStr(tokens[0], {tokens[0]}, canThrow);
   if (cmdStr.thrown == true || cmdStr.error == true) {
