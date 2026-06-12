@@ -225,20 +225,21 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     res.error = true;
     return res;
   }
-  cout << "segfault????" << endl;
-  keyCandidate candidate = candidates[0];
 
-  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
-    eval::result res;
-    res.thrown = true;
-    return res;
-  }
   if (candidates.size() == 0) {
     cerr << utils::error("no candidates found for Attrset (\033[35m" + attrset +
                          "\033[0m)\n Please implement more parsing for maps. "
                          "It is currently missing parsing for let ... in.");
     eval::result res;
     res.error = true;
+    return res;
+  }
+
+  keyCandidate candidate = candidates[0];
+
+  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
+    eval::result res;
+    res.thrown = true;
     return res;
   }
   cout << "final: " + candidate.start + attrset + candidate.end + "\n";
