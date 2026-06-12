@@ -347,8 +347,6 @@ eval::result eval::statement(string test, bool canThrow) {
     return hold;
   }
 
-  cout << "skipped\n";
-
   hold = {};
   hold = eval::attrsetKey(test, canThrow);
   if (hold.error == false) {
@@ -613,7 +611,6 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
   mask = utils::blankWithinTokens(mask, "(", ")", '!');
   mask = utils::blankWithinTokens(mask, "[", "]", '!');
 
-  cout << "test: " + test + "\n";
   vector<string> tokens =
       utils::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
 
