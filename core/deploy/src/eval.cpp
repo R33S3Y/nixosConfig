@@ -177,6 +177,8 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     string end;
     string topAttr;
   };
+
+  cout << "file: " + eval::filePath + "\n";
   cout << "attrset: " + attrset + "\n";
 
   vector<keyCandidate> candidates;
