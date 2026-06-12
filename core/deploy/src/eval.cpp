@@ -206,8 +206,10 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
                                      decltype(&eval::filterCandidate)>(
             testingCandidates, eval::filterCandidate);
     for (int i = 0; i < validCandidates.size(); i++) {
-      if (validCandidates[i] == true)
+      if (validCandidates[i] == true) {
+        cout << "thing: " + candidates[i].start + "\n";
         continue;
+      }
       validCandidates.erase(validCandidates.begin() + i);
       candidates.erase(candidates.begin() + i);
       i--;
