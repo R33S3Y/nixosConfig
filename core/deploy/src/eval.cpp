@@ -195,7 +195,6 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
           {value[attrsetKeys[0]].start, value[attrsetKeys[0]].end, key});
     }
   }
-  cout << "segfault??" << endl;
   if (candidates.size() > 1) {
     vector<eval::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
@@ -214,6 +213,7 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
       i--;
     }
   }
+  cout << "segfault???" << endl;
   if (candidates.size() > 1) {
     cerr << utils::error(
         "Mutiple candidates found for attrset (\033[35m" + attrset +
