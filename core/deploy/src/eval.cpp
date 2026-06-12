@@ -170,16 +170,30 @@ string eval::removeComments(string fileStr) {
   }
   return output;
 }
-eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
-                                  bool canThrow) {
+eval::result eval::makeCommandStr(const string attrset,
+                                  const vector<string> attrsetKeys,
+                                  const bool canThrow) {
+
+  cout << "file: " + eval::filePath + "\n";
+  cout << "attrset: " + attrset + "\n";
+
+  // it doesn't matter that the commandcache is per class / per thread (each
+  // thread has it's own class) cause cmd are mostly unique between hosts.
+  for (eval::commandStrCache cacheItem : eval::commandCache) {
+    if (cacheItem.attrset != attrset || cacheItem.attrsetKeys != attrsetKeys)
+      continue;
+    cout << "pulled from cache \n";
+    if (cacheItem.throwable == true && canThrow == true)
+      return {.thrown = true};
+
+    return {.type = "command", .str = cacheItem.command};
+  }
+
   struct keyCandidate {
     string start;
     string end;
     string topAttr;
   };
-
-  cout << "file: " + eval::filePath + "\n";
-  cout << "attrset: " + attrset + "\n";
 
   vector<keyCandidate> candidates;
 
@@ -209,7 +223,6 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
             testingCandidates, eval::filterCandidate);
     for (int i = 0; i < validCandidates.size(); i++) {
       if (validCandidates[i] == true) {
-        cout << "thing: " + candidates[i].start + "\n";
         continue;
       }
       validCandidates.erase(validCandidates.begin() + i);
@@ -224,6 +237,12 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
         "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
+    // if you ever run into this error and fix this properly then you should
+    // drop the filterCandidate thing and the commandCache thing. As the are
+    // very compute expensive ways of trying to avoid solving this issue for
+    // real. (as shown by the fact theirs a cache). If you do this for real I
+    // expect that it will be pure string manipulation that in comparison to nix
+    // eval is blazing fast.
 
     eval::result res;
     res.error = true;
@@ -241,12 +260,18 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
 
   keyCandidate candidate = candidates[0];
 
-  if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
+  bool throwable = false;
+  if (eval::throwMap.count(candidate.topAttr)) {
+    throwable = true;
+  }
+  eval::commandCache.push_back({attrset, attrsetKeys, throwable,
+                                candidate.start + attrset + candidate.end});
+  if (throwable == true && canThrow == true) {
     eval::result res;
     res.thrown = true;
     return res;
   }
-  cout << "final: " + candidate.start + attrset + candidate.end + "\n";
+
   return {.type = "command", .str = candidate.start + attrset + candidate.end};
 }
 bool eval::filterCandidate(eval::candidate testingCandidate) {

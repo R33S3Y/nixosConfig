@@ -66,8 +66,15 @@ private:
   static map<string, eval::key> juniorInitWorker(map<string, key>);
   static map<string, map<string, eval::key>> seniorInitWorker(map<string, key>);
 
-  result makeCommandStr(string attrset, vector<string> attrsetKeys,
-                        bool canThrow);
+  struct commandStrCache {
+    string attrset;
+    vector<string> attrsetKeys;
+    bool throwable;
+    string command;
+  };
+  vector<commandStrCache> commandCache;
+  result makeCommandStr(const string attrset, const vector<string> attrsetKeys,
+                        const bool canThrow);
   static bool filterCandidate(candidate testingCandidate);
   static vector<string> tokenize(const string thing);
 };
