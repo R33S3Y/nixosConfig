@@ -17,7 +17,7 @@ using namespace std;
 utils::result utils::runCommand(string cmd) {
   result res;
 
-  FILE *pipe = popen(cmd.c_str(), "r");
+  FILE *pipe = popen((cmd + " 2>&1").c_str(), "r");
   if (!pipe) {
     res.exitCode = -1;
     res.error = strerror(errno);
