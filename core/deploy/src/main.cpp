@@ -118,12 +118,6 @@ int main(int argc, char const *argv[]) {
     vector<string> processedFiles;
     processedFiles.push_back("/flake.lock");
 
-    cout << "\n";
-    cout << "Unprocessed files: \n";
-    for (string file : unprocessedFiles) {
-      cout << "\"" + file + "\"\n";
-    }
-
     resolve r(flakePath, flakeLink, host);
 
     while (unprocessedFiles.size() != 0 && error == false) {
@@ -153,11 +147,6 @@ int main(int argc, char const *argv[]) {
         imports.paths = filter(imports.paths, processedFiles);
         unprocessedFiles = merge(imports.paths, unprocessedFiles);
       }
-    }
-    cout << "\n";
-    cout << "Still Unprocessed files: \n";
-    for (string file : unprocessedFiles) {
-      cout << "\"" + file + "\"\n";
     }
     cout << "\n";
     cout << "Processed files: \n";
