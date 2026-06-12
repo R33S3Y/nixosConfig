@@ -609,13 +609,13 @@ vector<string> eval::list(string test, bool throwLazy) {
 }
 eval::result eval::lambdaCall(string test, bool canThrow) {
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "{", "}", '.');
-  mask = utils::blankWithinTokens(mask, "(", ")", '.');
-  mask = utils::blankWithinTokens(mask, "[", "]", '.');
+  mask = utils::blankWithinTokens(mask, "{", "}", '!');
+  mask = utils::blankWithinTokens(mask, "(", ")", '!');
+  mask = utils::blankWithinTokens(mask, "[", "]", '!');
 
   cout << "test: " + test + "\n";
   vector<string> tokens =
-      utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
+      utils::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
 
   if (tokens.size() <= 1) {
     return {.type = "skip"};
