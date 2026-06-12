@@ -225,9 +225,9 @@ eval::result eval::makeCommandStr(string attrset, vector<string> attrsetKeys,
     res.error = true;
     return res;
   }
-
-  keyCandidate candidate = candidates[0];
   cout << "segfault????" << endl;
+  keyCandidate candidate = candidates[0];
+
   if (eval::throwMap.count(candidate.topAttr) && canThrow == true) {
     eval::result res;
     res.thrown = true;
