@@ -174,15 +174,11 @@ eval::result eval::makeCommandStr(const string attrset,
                                   const vector<string> attrsetKeys,
                                   const bool canThrow) {
 
-  cout << "file: " + eval::filePath + "\n";
-  cout << "attrset: " + attrset + "\n";
-
   // it doesn't matter that the commandcache is per class / per thread (each
   // thread has it's own class) cause cmd are mostly unique between hosts.
   for (eval::commandStrCache cacheItem : eval::commandCache) {
     if (cacheItem.attrset != attrset || cacheItem.attrsetKeys != attrsetKeys)
       continue;
-    cout << "pulled from cache \n";
     if (cacheItem.throwable == true && canThrow == true)
       return {.thrown = true};
 
