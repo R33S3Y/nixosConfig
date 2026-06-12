@@ -288,6 +288,18 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   }
   return true;
 }
+vector<string> eval::tokenize(const string test) {
+  string mask = test;
+  mask = utils::blankWithinTokens(mask, "${", "}", '!');
+  mask = utils::blankWithinTokens(mask, "{", "}", '!');
+  mask = utils::blankWithinTokens(mask, "(", ")", '!');
+  mask = utils::blankWithinTokens(mask, "[", "]", '!');
+
+  vector<string> tokens =
+      utils::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
+
+  return tokens;
+}
 
 eval::result eval::statement(string test, bool canThrow) {
 
@@ -448,13 +460,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
 
   // does preprocessing to resolve funny statements like ${ } and ( ) and
   // get a clean attrset Split
-  string mask = test;
-  mask = utils::blankWithinTokens(mask, "${", "}");
-  mask = utils::blankWithinTokens(mask, "(", ")");
-  mask = utils::blankWithinTokens(mask, "[", "]");
-  vector<string> attrsetKeys =
-      utils::splitStrByCharByFilterStr(test, mask, '.');
-
+  vector<string> attrsetKeys = eval::tokenize(test);
   // go though key by key and resolve thing like ${ }
   for (int i = 0; i < attrsetKeys.size(); i++) {
     string attrsetKey = utils::trim(attrsetKeys[i]);
@@ -607,13 +613,7 @@ vector<string> eval::list(string test, bool throwLazy) {
   return listItems;
 }
 eval::result eval::lambdaCall(string test, bool canThrow) {
-  string mask = test;
-  mask = utils::blankWithinTokens(mask, "{", "}", '!');
-  mask = utils::blankWithinTokens(mask, "(", ")", '!');
-  mask = utils::blankWithinTokens(mask, "[", "]", '!');
-
-  vector<string> tokens =
-      utils::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
+  vector<string> tokens = eval::tokenize(test);
 
   if (tokens.size() <= 1) {
     return {.type = "skip"};
