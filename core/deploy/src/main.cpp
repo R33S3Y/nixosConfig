@@ -74,7 +74,7 @@ vector<string> merge(vector<string> imports, vector<string> unprocessedFiles) {
 }
 int main(int argc, char const *argv[]) {
 
-  string flakeLink = "/home/reese/Projects/nixos-config";
+  string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/currentConfig";
 
   filesystem::create_directories(flakePath);
