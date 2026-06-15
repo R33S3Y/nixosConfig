@@ -17,7 +17,7 @@
       ];
 
       buildPhase = ''
-        g++ main.cpp utils.cpp resolve.cpp eval.cpp -o deploy \
+        g++ main.cpp utils/utils.cpp utils/split.cpp utils/strings.cpp resolve.cpp eval.cpp -o deploy \
           -std=c++23 \
           -g \
           -I${pkgs.nlohmann_json}/include
