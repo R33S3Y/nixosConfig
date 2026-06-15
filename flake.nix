@@ -120,8 +120,9 @@
         cinnabar = mkHost "cinnabar";
         diamond = mkHost "diamond";
         ghostQuartz = mkHost "ghostQuartz";
-        obsidian = mkHost "obsidian";
         morganite = mkHost "morganite";
+        neptunite = mkHost "neptunite";
+        obsidian = mkHost "obsidian";
         #template = mkHost "template";
       };
     };
