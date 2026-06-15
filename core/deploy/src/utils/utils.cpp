@@ -1,4 +1,6 @@
 #include "utils.h"
+#include "split.h"
+#include "strings.h"
 #include <cerrno>
 #include <cstddef>
 #include <cstdio>
@@ -75,12 +77,12 @@ string utils::readFile(const string &path) {
   return ss.str();
 }
 string utils::error(string message) {
-  vector<string> tokens = utils::splitStrByChar(message, '\n');
+  vector<string> tokens = split::splitStrByChar(message, '\n');
   message = "";
   for (string token : tokens) {
-    message += utils::trim(token) + "\n  ";
+    message += strings::trim(token) + "\n  ";
   }
-  return "\n\033[31merror:\033[0m " + utils::trim(message) + "\n";
+  return "\n\033[31merror:\033[0m " + strings::trim(message) + "\n";
 }
 string utils::blankWithinTokens(string fileStr, string startToken,
                                 string endToken, char blankChar) {
