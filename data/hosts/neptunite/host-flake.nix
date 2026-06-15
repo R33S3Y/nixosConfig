@@ -2,7 +2,6 @@
   inputs,
   home-manager,
   nur,
-  nix-minecraft,
 }:
 
 let
@@ -16,7 +15,7 @@ let
       inputs.stylix.nixosModules.stylix
       home-manager.nixosModules.home-manager
       nur.modules.nixos.default
-      inputs.nix-minecraft.nixosModules.minecraft-servers
+      #inputs.nix-minecraft.nixosModules.minecraft-servers
 
       # CORE
 
