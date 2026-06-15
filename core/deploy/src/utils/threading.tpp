@@ -1,5 +1,5 @@
+#include "split.h"
 #include "threading.h"
-#include "utils.h"
 #include <functional>
 #include <map>
 #include <thread>
@@ -13,7 +13,7 @@ vector<typeOut> threading::paralleliseVector(vector<typeIn> items, argIn func,
   if (items.size() < maxThreads)
     totalThreads = items.size();
 
-  vector<vector<typeIn>> threadWorkIn = utils::splitVector(items, totalThreads);
+  vector<vector<typeIn>> threadWorkIn = split::splitVector(items, totalThreads);
   vector<vector<typeOut>> threadWorkOut(totalThreads);
 
   vector<thread> threads;
@@ -54,7 +54,7 @@ map<keyType, valueOut> threading::paralleliseMap(map<keyType, valueIn> items,
     totalThreads = items.size();
 
   vector<map<keyType, valueIn>> threadWorkIn =
-      utils::splitMap(items, totalThreads);
+      split::splitMap(items, totalThreads);
   vector<map<keyType, valueOut>> threadWorkOut(totalThreads);
   vector<thread> threads;
 

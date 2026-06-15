@@ -1,14 +1,15 @@
 #include "eval.h"
-#include "threading.h"
-#include "utils.h"
+#include "utils/split.h"
+#include "utils/strings.h"
+#include "utils/threading.h"
+#include "utils/utils.h"
+#include <algorithm>
 #include <cstddef>
 #include <filesystem>
 #include <format>
 #include <iostream>
-#include <iterator>
 #include <map>
 #include <string>
-#include <syncstream>
 #include <vector>
 using namespace std;
 
@@ -122,7 +123,7 @@ map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
   map<string, eval::key> output;
   vector<string> list = eval::list(cmdOut.output);
   for (int i = 0; i < list.size(); i++) {
-    list[i] = utils::replaceAll(list[i], "\"", "");
+    list[i] = strings::replaceAll(list[i], "\"", "");
     if (list[i] == "inputs")
       continue;
     output.insert({list[i], {value.start + key + ".", value.end}});
@@ -138,7 +139,7 @@ void eval::preProcessFile(string fileStr, string filePath) {
   eval::absoluteFilePath = flakePath + filePath;
 
   // make pretty string for error logs
-  vector<string> lineFile = utils::splitStrByChar(fileStr, '\n');
+  vector<string> lineFile = split::splitStrByChar(fileStr, '\n');
 
   eval::prettyFile = {};
   for (int i = 0; i < lineFile.size(); i++) {
@@ -152,14 +153,14 @@ void eval::preProcessFile(string fileStr, string filePath) {
 string eval::removeComments(string fileStr) {
 
   // gets the things before the strings are moved
-  vector<string> lineFile = utils::splitStrByChar(fileStr, '\n');
+  vector<string> lineFile = split::splitStrByChar(fileStr, '\n');
 
   // removes the contents inside str
   fileStr = utils::blankWithinTokens(fileStr, "\"");
   fileStr = utils::blankWithinTokens(fileStr, "''");
 
   // removes  comments from filestr so it can be useful
-  vector<string> stringlessLineFile = utils::splitStrByChar(fileStr, '\n');
+  vector<string> stringlessLineFile = split::splitStrByChar(fileStr, '\n');
   string output;
   for (int i = 0; i < lineFile.size(); i++) {
     string line = lineFile[i];
@@ -285,7 +286,7 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
         cmdType.error.find("evaluation warning:") == string::npos) {
       return true; // if we are not sure assume valid
     }
-    if (utils::trim(cmdType.output) != "\"set\"") {
+    if (strings::trim(cmdType.output) != "\"set\"") {
       return false;
     }
 
@@ -299,7 +300,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
     vector<string> setList = eval::list(cmdItems.output);
     bool found = false;
     for (string setItem : setList) {
-      if (utils::trim(setItem) == "\"" + testingCandidate.attrsetKeys[i] + "\"")
+      if (strings::trim(setItem) ==
+          "\"" + testingCandidate.attrsetKeys[i] + "\"")
         found = true;
     }
     if (found == false) {
@@ -317,14 +319,14 @@ vector<string> eval::tokenize(const string test) {
   mask = utils::blankWithinTokens(mask, "[", "]", '!');
 
   vector<string> tokens =
-      utils::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
+      split::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
 
   return tokens;
 }
 
 eval::result eval::statement(string test, bool canThrow) {
 
-  test = utils::trim(test);
+  test = strings::trim(test);
 
   if (test.front() == '\"' && test.back() == '\"') {
     // is string
@@ -397,7 +399,7 @@ eval::result eval::statement(string test, bool canThrow) {
                               "(\033[35m" +
                               eval::flakeLink + eval::filePath + "\033[0m)");
   string errorCode;
-  vector<string> tokenTest = utils::splitStrByChar(test, '\n');
+  vector<string> tokenTest = split::splitStrByChar(test, '\n');
   for (int i = 0; i < eval::prettyFile.size(); i++) {
 
     if (eval::prettyFile[i].find(tokenTest[0]) == string::npos) {
@@ -408,7 +410,7 @@ eval::result eval::statement(string test, bool canThrow) {
       string line = eval::prettyFile[j];
 
       if (i == j) {
-        line = utils::replace(line, "\n", "");
+        line = strings::replace(line, "\n", "");
 
         line += "    \033[31m<---\033[0m\n";
       }
@@ -417,7 +419,7 @@ eval::result eval::statement(string test, bool canThrow) {
     }
   }
   if (errorCode.size() == 0) {
-    errorCode = utils::trim(test) + "\n";
+    errorCode = strings::trim(test) + "\n";
   }
   cerr << errorCode;
   result res;
@@ -432,11 +434,11 @@ string eval::path(string test) {
   if (test[0] == '/') {
     // is absolute file path
     if (test.rfind(eval::flakePath, 0) == 0) {
-      test = utils::replace(test, eval::flakePath, "");
+      test = strings::replace(test, eval::flakePath, "");
       return test;
     }
     if (test.rfind(eval::flakeLink, 0) == 0) {
-      test = utils::replace(test, eval::flakeLink, "");
+      test = strings::replace(test, eval::flakeLink, "");
       return test;
     }
   }
@@ -465,7 +467,7 @@ string eval::path(string test) {
               .string();
 
       if (path.rfind(eval::flakePath, 0) == 0) {
-        path = utils::replace(path, eval::flakePath, "");
+        path = strings::replace(path, eval::flakePath, "");
         return path;
       }
       if (path.rfind(eval::flakeLink, 0) == 0) {
@@ -484,12 +486,12 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
   vector<string> attrsetKeys = eval::tokenize(test);
   // go though key by key and resolve thing like ${ }
   for (int i = 0; i < attrsetKeys.size(); i++) {
-    string attrsetKey = utils::trim(attrsetKeys[i]);
+    string attrsetKey = strings::trim(attrsetKeys[i]);
 
     // resolve ${ }
     if (attrsetKey.find("${") != string::npos && attrsetKey.back() == '}') {
-      attrsetKey = utils::replace(attrsetKey, "${", "");
-      attrsetKey = utils::rReplace(attrsetKey, "}", "");
+      attrsetKey = strings::replace(attrsetKey, "${", "");
+      attrsetKey = strings::rReplace(attrsetKey, "}", "");
 
       eval::result hold = eval::statement(attrsetKey, false);
       if (hold.error == true) {
@@ -558,7 +560,7 @@ eval::result eval::bracket(string test) {
   }
 
   // process into str
-  vector<string> items = utils::splitStrByChar(test, '+');
+  vector<string> items = split::splitStrByChar(test, '+');
   test = "";
   for (string item : items) {
     eval::result hold = eval::statement(item, true);
@@ -595,7 +597,7 @@ vector<string> eval::list(string test, bool throwLazy) {
   mask = utils::blankWithinTokens(mask, "${", "}", '.');
   mask = utils::blankWithinTokens(mask, "(", ")", '.');
   vector<string> listItems =
-      utils::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
+      split::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 
   // is list and cleanup
   if (listItems.size() == 0) {
@@ -603,7 +605,7 @@ vector<string> eval::list(string test, bool throwLazy) {
   }
   // erase empty and trim
   for (int i = 0; i < listItems.size(); i++) {
-    listItems[i] = utils::trim(listItems[i]);
+    listItems[i] = strings::trim(listItems[i]);
     if (listItems[i].size() == 0) {
       listItems.erase(listItems.begin() + i);
       i--;

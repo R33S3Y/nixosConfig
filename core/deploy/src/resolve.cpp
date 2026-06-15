@@ -1,6 +1,8 @@
 #include "resolve.h"
 #include "eval.h"
 #include "utils.h"
+#include "utils/split.h"
+#include "utils/strings.h"
 #include <algorithm>
 #include <cctype>
 #include <iostream>
@@ -19,7 +21,7 @@ void resolve::preprocessFile(const string &filePath) {
   resolve::absoluteFilePath = flakePath + filePath;
 
   string rawFileStr = utils::readFile(flakePath + filePath);
-  vector<string> lineFile = utils::splitStrByChar(rawFileStr, '\n');
+  vector<string> lineFile = split::splitStrByChar(rawFileStr, '\n');
 
   resolve::fileStr = eval::removeComments(rawFileStr);
 
@@ -48,9 +50,9 @@ resolve::result resolve::resolveImportStatements() {
     string lineStr = workingFileStr.substr(0, lineEnd);
     workingFileStr = workingFileStr.substr(lineEnd);
 
-    lineStr = utils::replace(lineStr, "import ", "");
-    lineStr = utils::replaceAll(lineStr, ";", "");
-    lineStr = utils::trim(lineStr);
+    lineStr = strings::replace(lineStr, "import ", "");
+    lineStr = strings::replaceAll(lineStr, ";", "");
+    lineStr = strings::trim(lineStr);
 
     eval::result tmp = ev.statement(lineStr);
     if (tmp.error == true) {
@@ -144,15 +146,15 @@ resolve::result resolve::resolveImportsStatements() {
     string lineStr = workingFileStr.substr(0, lineEnd);
     workingFileStr = workingFileStr.substr(lineEnd);
 
-    lineStr = utils::replaceAll(lineStr, "imports", "");
+    lineStr = strings::replaceAll(lineStr, "imports", "");
 
-    lineStr = utils::trim(lineStr);
+    lineStr = strings::trim(lineStr);
     if (lineStr[0] !=
         '=') { // incase you end up with: thing = var.imports ++ [];
       continue;
     }
-    lineStr = utils::replaceAll(lineStr, "=", "");
-    lineStr = utils::trim(lineStr);
+    lineStr = strings::replaceAll(lineStr, "=", "");
+    lineStr = strings::trim(lineStr);
 
     eval::result tmp = ev.statement(lineStr);
     if (tmp.error == true) {

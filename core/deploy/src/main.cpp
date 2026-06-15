@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "resolve.h"
-#include "utils.h"
+#include "utils/strings.h"
+#include "utils/utils.h"
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
@@ -44,8 +45,8 @@ vector<string> getNixFiles(string flakeLink, string host) {
   vector<string> output;
   for (string currentStr : list) {
     if (currentStr.find(flakeLink) != string::npos) {
-      currentStr = utils::replace(currentStr, flakeLink, "");
-      currentStr = utils::trim(currentStr);
+      currentStr = strings::replace(currentStr, flakeLink, "");
+      currentStr = strings::trim(currentStr);
 
       if (currentStr != "") {
         output.push_back(currentStr);
