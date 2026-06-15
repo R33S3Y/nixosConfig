@@ -20,7 +20,7 @@ let
       # CORE
 
       # boot
-      ../../../core/boot/bios-nix.nix
+      #../../../core/boot/bios-nix.nix
       ../../../core/boot/uefi-nix.nix
       ../../../core/boot/style-nix.nix
       # btop
