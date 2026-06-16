@@ -13,7 +13,7 @@
   };
   programs.ssh = {
     enable = true;
-    matchBlocks = {
+    settings = {
       "github.com" = {
         hostname = "github.com";
         user = "git";
