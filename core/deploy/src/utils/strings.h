@@ -11,4 +11,7 @@ public:
   static string replaceAll(string s, string from, string to);
 
   static string trim(string s);
+
+  static string blankWithinTokens(string fileStr, string startToken,
+                                  string endToken = "", char blankChar = ' ');
 };

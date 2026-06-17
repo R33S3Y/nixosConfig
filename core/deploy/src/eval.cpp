@@ -2,6 +2,7 @@
 #include "utils/split.h"
 #include "utils/strings.h"
 #include "utils/threading.h"
+#include "utils/ttyHelper.h"
 #include "utils/utils.h"
 #include <algorithm>
 #include <cstddef>
@@ -109,8 +110,8 @@ map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
 
   if (cmdOut.exitCode != 0) {
     ostringstream oss;
-    oss << utils::error("Failed to eval attrs of: (\033[35m" + key +
-                        "\033[0m)");
+    oss << ttyHelper::error("Failed to eval attrs of: (\033[35m" + key +
+                            "\033[0m)");
     cerr << oss.str();
 
     return {};
@@ -156,8 +157,8 @@ string eval::removeComments(string fileStr) {
   vector<string> lineFile = split::splitStrByChar(fileStr, '\n');
 
   // removes the contents inside str
-  fileStr = utils::blankWithinTokens(fileStr, "\"");
-  fileStr = utils::blankWithinTokens(fileStr, "''");
+  fileStr = strings::blankWithinTokens(fileStr, "\"");
+  fileStr = strings::blankWithinTokens(fileStr, "''");
 
   // removes  comments from filestr so it can be useful
   vector<string> stringlessLineFile = split::splitStrByChar(fileStr, '\n');
@@ -229,7 +230,7 @@ eval::result eval::makeCommandStr(const string attrset,
   }
 
   if (candidates.size() > 1) {
-    cerr << utils::error(
+    cerr << ttyHelper::error(
         "Mutiple candidates found for attrset (\033[35m" + attrset +
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
@@ -247,9 +248,10 @@ eval::result eval::makeCommandStr(const string attrset,
   }
 
   if (candidates.size() == 0) {
-    cerr << utils::error("no candidates found for Attrset (\033[35m" + attrset +
-                         "\033[0m)\n Please implement more parsing for maps. "
-                         "It is currently missing parsing for let ... in.");
+    cerr << ttyHelper::error(
+        "no candidates found for Attrset (\033[35m" + attrset +
+        "\033[0m)\n Please implement more parsing for maps. "
+        "It is currently missing parsing for let ... in.");
     eval::result res;
     res.error = true;
     return res;
@@ -313,10 +315,10 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
 }
 vector<string> eval::tokenize(const string test) {
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "${", "}", '!');
-  mask = utils::blankWithinTokens(mask, "{", "}", '!');
-  mask = utils::blankWithinTokens(mask, "(", ")", '!');
-  mask = utils::blankWithinTokens(mask, "[", "]", '!');
+  mask = strings::blankWithinTokens(mask, "${", "}", '!');
+  mask = strings::blankWithinTokens(mask, "{", "}", '!');
+  mask = strings::blankWithinTokens(mask, "(", ")", '!');
+  mask = strings::blankWithinTokens(mask, "[", "]", '!');
 
   vector<string> tokens =
       split::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
@@ -395,9 +397,10 @@ eval::result eval::statement(string test, bool canThrow) {
     res.error = true;
     return res;
   }
-  cerr << "\n" + utils::error("Failed to resolve the following in "
-                              "(\033[35m" +
-                              eval::flakeLink + eval::filePath + "\033[0m)");
+  cerr << "\n" +
+              ttyHelper::error("Failed to resolve the following in "
+                               "(\033[35m" +
+                               eval::flakeLink + eval::filePath + "\033[0m)");
   string errorCode;
   vector<string> tokenTest = split::splitStrByChar(test, '\n');
   for (int i = 0; i < eval::prettyFile.size(); i++) {
@@ -534,7 +537,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
 eval::result eval::bracket(string test) {
   // input check
   if (test.front() != '(' && test.back() != ')') {
-    cerr << utils::error(
+    cerr << ttyHelper::error(
         "Non bracket has been inserted into the bracket function");
   }
 
@@ -545,14 +548,14 @@ eval::result eval::bracket(string test) {
   // throw error on unsupported statements seeing as this isn't a real
   // parser. (and I don't want it to be)
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "\"", "\"");
-  mask = utils::blankWithinTokens(mask, "(", ")");
-  mask = utils::blankWithinTokens(mask, "[", "]");
+  mask = strings::blankWithinTokens(mask, "\"", "\"");
+  mask = strings::blankWithinTokens(mask, "(", ")");
+  mask = strings::blankWithinTokens(mask, "[", "]");
   vector<string> operators = {"-", "?", "++", "*",  "!",  "//",
                               "<", ">", "==", "!=", "&&", "||"};
   for (string value : operators) {
     if (mask.find(value) != string::npos) {
-      cerr << utils::error("Bracket has unsupported operators");
+      cerr << ttyHelper::error("Bracket has unsupported operators");
       eval::result res;
       res.error = true;
       return res;
@@ -575,8 +578,8 @@ eval::result eval::bracket(string test) {
       return res;
     }
     if (hold.type == "list") {
-      cerr << utils::error("Nested lists are not supported in this "
-                           "context. \033[35m:3\033[0m");
+      cerr << ttyHelper::error("Nested lists are not supported in this "
+                               "context. \033[35m:3\033[0m");
       // yes, I really had to put a colourful :3 in their. (UwU)
       // I what future me will see that and suffer... So yeah...
       eval::result res;
@@ -594,8 +597,8 @@ eval::result eval::bracket(string test) {
 vector<string> eval::list(string test, bool throwLazy) {
   // mask and split
   string mask = test;
-  mask = utils::blankWithinTokens(mask, "${", "}", '.');
-  mask = utils::blankWithinTokens(mask, "(", ")", '.');
+  mask = strings::blankWithinTokens(mask, "${", "}", '.');
+  mask = strings::blankWithinTokens(mask, "(", ")", '.');
   vector<string> listItems =
       split::splitStrByCharsByFilterStr(test, mask, {' ', '\n'});
 
@@ -647,7 +650,7 @@ eval::result eval::lambdaCall(string test, bool canThrow) {
     return {cmdStr.error, cmdStr.thrown};
   }
 
-  cerr << utils::error(
+  cerr << ttyHelper::error(
       "Function cannot be thrown. Please implement function processing");
   return {true};
 }

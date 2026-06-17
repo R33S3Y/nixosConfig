@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "resolve.h"
 #include "utils/strings.h"
+#include "utils/ttyHelper.h"
 #include "utils/utils.h"
 #include <algorithm>
 #include <filesystem>
@@ -35,7 +36,7 @@ vector<string> getNixFiles(string flakeLink, string host) {
   utils::result cmdOut = utils::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
-    cerr << utils::error("Failed to eval for nix files");
+    cerr << ttyHelper::error("Failed to eval for nix files");
     return {};
   }
 
@@ -79,22 +80,22 @@ int main(int argc, char const *argv[]) {
 
   filesystem::create_directories(flakePath);
   if (filesystem::is_empty(flakePath) == false) {
-    cerr << utils::error("flakePath (\033[35m" + flakePath +
-                         "\033[0m) is not empty");
+    cerr << ttyHelper::error("flakePath (\033[35m" + flakePath +
+                             "\033[0m) is not empty");
     return 1;
   }
   utils::result cmdOut = utils::runCommand("nix flake clone " + flakeLink +
                                            " --dest " + flakePath);
   if (cmdOut.exitCode != 0) {
-    cerr << utils::error("failed to get flake (\033[35m" + flakeLink +
-                         "\033[0m)");
+    cerr << ttyHelper::error("failed to get flake (\033[35m" + flakeLink +
+                             "\033[0m)");
     return 1;
   }
 
   vector<string> hosts = getFlakeInputs(flakePath);
   if (hosts.size() == 0) {
-    cerr << utils::error("flake does not contain any hosts or no "
-                         "hosts could be found");
+    cerr << ttyHelper::error("flake does not contain any hosts or no "
+                             "hosts could be found");
     return 1;
   }
 

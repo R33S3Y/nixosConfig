@@ -43,7 +43,7 @@ vector<string> split::splitStrByCharByFilterStr(string inputStr,
                                                 char inputChar) {
 
   if (inputStr.size() != filterStr.size()) {
-    cerr << utils::error(
+    cerr << ttyHelper::error(
         "utils::splitStrByCharByFilterStr : inputStr and fileStr "
         "does not match");
     return {};
@@ -68,7 +68,7 @@ vector<string> split::splitStrByCharsByFilterStr(string inputStr,
                                                  vector<char> inputChars) {
 
   if (inputStr.size() != filterStr.size()) {
-    cerr << utils::error(
+    cerr << ttyHelper::error(
         "utils::splitStrByCharByFilterStr : inputStr and fileStr "
         "does not match");
     return {};

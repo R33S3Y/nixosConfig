@@ -16,9 +16,4 @@ public:
 
   static result runCommand(string cmd);
   static string readFile(const string &path);
-
-  static string error(string message);
-
-  static string blankWithinTokens(string fileStr, string startToken,
-                                  string endToken = "", char blankChar = ' ');
 };
