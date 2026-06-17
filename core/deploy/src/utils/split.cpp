@@ -1,6 +1,6 @@
 
 #include "split.h"
-#include "utils.h"
+#include "ttyHelper.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
