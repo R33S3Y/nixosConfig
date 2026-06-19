@@ -1,8 +1,8 @@
-#include "eval.h"
+
 #include "resolve.h"
 #include "utils/strings.h"
+#include "utils/system.h"
 #include "utils/ttyHelper.h"
-#include "utils/utils.h"
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
@@ -15,7 +15,7 @@ using namespace std;
 
 vector<string> getFlakeInputs(string flakeLink) {
   string cmd = "nix flake show " + flakeLink + " --json";
-  utils::result cmdOut = utils::runCommand(cmd);
+  system::result cmdOut = system::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
     return {};
@@ -33,7 +33,7 @@ vector<string> getNixFiles(string flakeLink, string host) {
   string cmd = "nix eval " + flakeLink + "#nixosConfigurations." + host +
                "._module.args.modules";
 
-  utils::result cmdOut = utils::runCommand(cmd);
+  system::result cmdOut = system::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("Failed to eval for nix files");
@@ -84,8 +84,8 @@ int main(int argc, char const *argv[]) {
                              "\033[0m) is not empty");
     return 1;
   }
-  utils::result cmdOut = utils::runCommand("nix flake clone " + flakeLink +
-                                           " --dest " + flakePath);
+  system::result cmdOut = system::runCommand("nix flake clone " + flakeLink +
+                                             " --dest " + flakePath);
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("failed to get flake (\033[35m" + flakeLink +
                              "\033[0m)");

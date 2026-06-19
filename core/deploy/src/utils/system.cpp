@@ -1,7 +1,5 @@
-#include "utils.h"
+#include "system.h"
 #include <cerrno>
-#include <cstddef>
-#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -12,7 +10,7 @@
 
 using namespace std;
 
-utils::result utils::runCommand(string cmd) {
+system::result system::runCommand(string cmd) {
   result res;
 
   int stdout_pipe[2], stderr_pipe[2];
@@ -65,7 +63,7 @@ utils::result utils::runCommand(string cmd) {
   res.exitCode = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
   return res;
 }
-string utils::readFile(const string &path) {
+string system::readFile(const string &path) {
   ifstream file(path);
   if (!file.is_open())
     throw runtime_error("Failed to open file: " + path);

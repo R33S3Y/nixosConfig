@@ -106,7 +106,7 @@ map<string, eval::key> eval::juniorInitWorker(map<string, eval::key> input) {
     cmd = cmd + " --apply builtins.attrNames";
   }
 
-  utils::result cmdOut = utils::runCommand(cmd);
+  system::result cmdOut = system::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
     ostringstream oss;
@@ -283,7 +283,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
   for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
     string cmd = testingCandidate.start + attrsetPath + testingCandidate.end;
 
-    utils::result cmdType = utils::runCommand(cmd + " --apply builtins.typeOf");
+    system::result cmdType =
+        system::runCommand(cmd + " --apply builtins.typeOf");
     if (cmdType.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos) {
       return true; // if we are not sure assume valid
@@ -292,8 +293,8 @@ bool eval::filterCandidate(eval::candidate testingCandidate) {
       return false;
     }
 
-    utils::result cmdItems =
-        utils::runCommand(cmd + " --apply builtins.attrNames");
+    system::result cmdItems =
+        system::runCommand(cmd + " --apply builtins.attrNames");
     if (cmdItems.exitCode != 0 &&
         cmdType.error.find("evaluation warning:") == string::npos) {
       return true; // if we are not sure assume valid
@@ -521,7 +522,7 @@ eval::result eval::attrsetKey(string test, bool canThrow) {
     return {cmdStr.error, cmdStr.thrown};
   }
   // run cmd (nix eval)
-  utils::result cmdOut = utils::runCommand(cmdStr.str);
+  system::result cmdOut = system::runCommand(cmdStr.str);
   if (cmdOut.exitCode != 0 &&
       cmdOut.error.find("evaluation warning:") == string::npos) {
     return {true};

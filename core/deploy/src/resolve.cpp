@@ -19,7 +19,7 @@ void resolve::preprocessFile(const string &filePath) {
   resolve::filePath = filePath;
   resolve::absoluteFilePath = flakePath + filePath;
 
-  string rawFileStr = utils::readFile(flakePath + filePath);
+  string rawFileStr = system::readFile(flakePath + filePath);
   vector<string> lineFile = split::splitStrByChar(rawFileStr, '\n');
 
   resolve::fileStr = eval::removeComments(rawFileStr);
