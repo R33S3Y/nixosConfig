@@ -1,4 +1,4 @@
-#include "system.h"
+#include "systemHelper.h"
 #include <cerrno>
 #include <cstring>
 #include <fstream>
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-system::result system::runCommand(string cmd) {
+systemHelper::result systemHelper::runCommand(string cmd) {
   result res;
 
   int stdout_pipe[2], stderr_pipe[2];
@@ -63,7 +63,7 @@ system::result system::runCommand(string cmd) {
   res.exitCode = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
   return res;
 }
-string system::readFile(const string &path) {
+string systemHelper::readFile(const string &path) {
   ifstream file(path);
   if (!file.is_open())
     throw runtime_error("Failed to open file: " + path);

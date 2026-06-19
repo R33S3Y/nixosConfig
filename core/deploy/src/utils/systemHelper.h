@@ -6,7 +6,7 @@
 #include <vector>
 using namespace std;
 
-class system {
+class systemHelper {
 public:
   struct result {
     string output;

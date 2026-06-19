@@ -1,6 +1,6 @@
 #pragma once
 
-#include "eval.h"
+#include "nixEval.h"
 #include <map>
 #include <shared_mutex>
 #include <string>
@@ -22,7 +22,7 @@ public:
   result resolveImportsStatements();
 
 private:
-  eval ev;
+  nixEval ev;
   string flakePath;
   string flakeLink;
   string absoluteFilePath;

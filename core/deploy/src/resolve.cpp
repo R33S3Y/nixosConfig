@@ -1,8 +1,9 @@
 #include "resolve.h"
-#include "eval.h"
+#include "nixEval.h"
+#include "nixEvalStatic.h"
 #include "utils/split.h"
 #include "utils/strings.h"
-#include "utils/system.h"
+#include "utils/systemHelper.h"
 #include <algorithm>
 #include <cctype>
 #include <string>
@@ -19,10 +20,10 @@ void resolve::preprocessFile(const string &filePath) {
   resolve::filePath = filePath;
   resolve::absoluteFilePath = flakePath + filePath;
 
-  string rawFileStr = system::readFile(flakePath + filePath);
+  string rawFileStr = systemHelper::readFile(flakePath + filePath);
   vector<string> lineFile = split::splitStrByChar(rawFileStr, '\n');
 
-  resolve::fileStr = eval::removeComments(rawFileStr);
+  resolve::fileStr = nixEvalStatic::removeComments(rawFileStr);
 
   ev.preProcessFile(rawFileStr, filePath);
 
@@ -53,7 +54,7 @@ resolve::result resolve::resolveImportStatements() {
     lineStr = strings::replaceAll(lineStr, ";", "");
     lineStr = strings::trim(lineStr);
 
-    eval::result tmp = ev.statement(lineStr);
+    nixEval::result tmp = ev.statement(lineStr);
     if (tmp.error == true) {
       // see the imports statements func for why we break
       res.error = true;
@@ -155,7 +156,7 @@ resolve::result resolve::resolveImportsStatements() {
     lineStr = strings::replaceAll(lineStr, "=", "");
     lineStr = strings::trim(lineStr);
 
-    eval::result tmp = ev.statement(lineStr);
+    nixEval::result tmp = ev.statement(lineStr);
     if (tmp.error == true) {
       // errors for resolvekey only happen when it falls to resolve something.
       // If we fail to resolve something then we will need to rebuild the

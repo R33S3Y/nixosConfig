@@ -1,10 +1,10 @@
-
+#include "nixEval.h"
 #include "resolve.h"
 #include "utils/strings.h"
-#include "utils/system.h"
+#include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
 #include <algorithm>
-#include <filesystem>
+#include <filesystemHelper>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <set>
@@ -15,7 +15,7 @@ using namespace std;
 
 vector<string> getFlakeInputs(string flakeLink) {
   string cmd = "nix flake show " + flakeLink + " --json";
-  system::result cmdOut = system::runCommand(cmd);
+  systemHelper::result cmdOut = systemHelper::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
     return {};
@@ -33,14 +33,14 @@ vector<string> getNixFiles(string flakeLink, string host) {
   string cmd = "nix eval " + flakeLink + "#nixosConfigurations." + host +
                "._module.args.modules";
 
-  system::result cmdOut = system::runCommand(cmd);
+  systemHelper::result cmdOut = systemHelper::runCommand(cmd);
 
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("Failed to eval for nix files");
     return {};
   }
 
-  vector<string> list = eval::list(cmdOut.output);
+  vector<string> list = nixEval::list(cmdOut.output);
 
   vector<string> output;
   for (string currentStr : list) {
@@ -78,14 +78,14 @@ int main(int argc, char const *argv[]) {
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/currentConfig";
 
-  filesystem::create_directories(flakePath);
-  if (filesystem::is_empty(flakePath) == false) {
+  filesystemHelper::create_directories(flakePath);
+  if (filesystemHelper::is_empty(flakePath) == false) {
     cerr << ttyHelper::error("flakePath (\033[35m" + flakePath +
                              "\033[0m) is not empty");
     return 1;
   }
-  system::result cmdOut = system::runCommand("nix flake clone " + flakeLink +
-                                             " --dest " + flakePath);
+  systemHelper::result cmdOut = systemHelper::runCommand(
+      "nix flake clone " + flakeLink + " --dest " + flakePath);
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("failed to get flake (\033[35m" + flakeLink +
                              "\033[0m)");
@@ -156,7 +156,7 @@ int main(int argc, char const *argv[]) {
     }
   }
 
-  filesystem::remove_all(flakePath);
+  filesystemHelper::remove_all(flakePath);
 
   return 0;
 }
