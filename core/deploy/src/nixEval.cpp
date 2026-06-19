@@ -38,25 +38,26 @@ nixEval::nixEval(const init &i) {
         ""}},
   };
 
-  map<string, map<string, key>> parallelWork = {
+  map<string, map<string, nixEvalStatic::key>> parallelWork = {
       {"resolve", resolveMap},
       {"throw", throwMap},
       {"modulesPath",
-       map<string, nixEval::key>{
+       map<string, nixEvalStatic::key>{
            {"modulesPath",
-            nixEval::key{"nix eval " + flakePath + "#nixosConfigurations." +
-                             host + "._module.specialArgs.",
-                         ""}}}},
+            nixEvalStatic::key{"nix eval " + flakePath +
+                                   "#nixosConfigurations." + host +
+                                   "._module.specialArgs.",
+                               ""}}}},
       {"specialArgs",
-       map<string, nixEval::key>{
+       map<string, nixEvalStatic::key>{
            {"specialArgs",
-            nixEval::key{"nix eval " + flakePath + "#nixosConfigurations." +
-                             host + "._module.",
-                         ""}}}}};
+            nixEvalStatic::key{"nix eval " + flakePath +
+                                   "#nixosConfigurations." + host + "._module.",
+                               ""}}}}};
 
-  map<string, map<string, map<string, nixEval::key>>> parallelOut =
-      threading::paralleliseMap<string, map<string, nixEval::key>,
-                                map<string, map<string, nixEval::key>>,
+  map<string, map<string, map<string, nixEvalStatic::key>>> parallelOut =
+      threading::paralleliseMap<string, map<string, nixEvalStatic::key>,
+                                map<string, map<string, nixEvalStatic::key>>,
                                 decltype(&nixEvalStatic::seniorInitWorker)>(
           parallelWork, nixEvalStatic::seniorInitWorker);
 

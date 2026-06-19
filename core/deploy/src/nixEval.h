@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nixEvalStatic.h"
 #include <any>
 #include <map>
 #include <string>
@@ -32,11 +33,6 @@ public:
   result lambdaCall(string test, bool canThrow);
 
 private:
-  struct key {
-    string start;
-    string end;
-  };
-
   string flakePath;
   string flakeLink;
   string host;
@@ -46,9 +42,9 @@ private:
   string absoluteFilePath;
   vector<string> prettyFile;
 
-  map<string, key> resolveMap;
-  map<string, key> throwMap;
-  map<string, map<string, key>> inheritMap;
+  map<string, nixEvalStatic::key> resolveMap;
+  map<string, nixEvalStatic::key> throwMap;
+  map<string, map<string, nixEvalStatic::key>> inheritMap;
 
   struct commandStrCache {
     string attrset;
