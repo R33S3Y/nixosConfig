@@ -145,7 +145,7 @@ let
     lapisLazuli = {
       mount = "/home/reese/lapis_lazuli";
       share = "lapis_lazuli";
-      credentials = "~/Projects/nixosConfig/secrets/diamond-user-access";
+      credentials = "/home/reese/Projects/nixosConfig/secrets/diamond-user-access";
     };
 
     programs = with pkgs; [
