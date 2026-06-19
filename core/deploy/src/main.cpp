@@ -4,7 +4,7 @@
 #include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
 #include <algorithm>
-#include <filesystemHelper>
+#include <filesystem>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <set>
@@ -78,8 +78,8 @@ int main(int argc, char const *argv[]) {
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/currentConfig";
 
-  filesystemHelper::create_directories(flakePath);
-  if (filesystemHelper::is_empty(flakePath) == false) {
+  filesystem::create_directories(flakePath);
+  if (filesystem::is_empty(flakePath) == false) {
     cerr << ttyHelper::error("flakePath (\033[35m" + flakePath +
                              "\033[0m) is not empty");
     return 1;
@@ -156,7 +156,7 @@ int main(int argc, char const *argv[]) {
     }
   }
 
-  filesystemHelper::remove_all(flakePath);
+  filesystem::remove_all(flakePath);
 
   return 0;
 }

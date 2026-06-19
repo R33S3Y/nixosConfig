@@ -7,7 +7,7 @@
 #include "utils/ttyHelper.h"
 #include <algorithm>
 #include <cstddef>
-#include <filesystemHelper>
+#include <filesystem>
 #include <format>
 #include <iostream>
 #include <map>
@@ -331,8 +331,7 @@ string nixEval::path(string test) {
   string absoluteFolderPath =
       nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
   vector<string> folders;
-  for (auto &entry :
-       std::filesystemHelper::directory_iterator(absoluteFolderPath)) {
+  for (auto &entry : std::filesystem::directory_iterator(absoluteFolderPath)) {
     if (entry.is_directory())
       folders.push_back(entry.path().string());
   }
@@ -346,11 +345,11 @@ string nixEval::path(string test) {
         find(folders.begin(), folders.end(), firstItem) != folders.end()) {
       // relative file path
 
-      std::filesystemHelper::path declaredIn = absoluteFilePath;
-      std::filesystemHelper::path relative = test;
-      string path = filesystemHelper::weakly_canonical(
-                        declaredIn.parent_path() / relative)
-                        .string();
+      std::filesystem::path declaredIn = absoluteFilePath;
+      std::filesystem::path relative = test;
+      string path =
+          filesystem::weakly_canonical(declaredIn.parent_path() / relative)
+              .string();
 
       if (path.rfind(nixEval::flakePath, 0) == 0) {
         path = strings::replace(path, nixEval::flakePath, "");
