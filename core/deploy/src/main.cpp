@@ -1,4 +1,5 @@
 #include "nixEval.h"
+#include "nixEvalStatic.h"
 #include "resolve.h"
 #include "utils/strings.h"
 #include "utils/systemHelper.h"
@@ -40,7 +41,7 @@ vector<string> getNixFiles(string flakeLink, string host) {
     return {};
   }
 
-  vector<string> list = nixEval::list(cmdOut.output);
+  vector<string> list = nixEvalStatic::list(cmdOut.output);
 
   vector<string> output;
   for (string currentStr : list) {
