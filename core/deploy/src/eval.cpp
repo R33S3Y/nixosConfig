@@ -1,9 +1,9 @@
 #include "eval.h"
 #include "utils/split.h"
 #include "utils/strings.h"
+#include "utils/system.h"
 #include "utils/threading.h"
 #include "utils/ttyHelper.h"
-#include "utils/utils.h"
 #include <algorithm>
 #include <cstddef>
 #include <filesystem>
