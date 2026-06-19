@@ -1,6 +1,4 @@
 #include "utils.h"
-#include "split.h"
-#include "strings.h"
 #include <cerrno>
 #include <cstddef>
 #include <cstdio>
@@ -11,7 +9,6 @@
 #include <stdexcept>
 #include <string>
 #include <sys/wait.h>
-#include <vector>
 
 using namespace std;
 
