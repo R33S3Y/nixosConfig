@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  version = "1.69";
+  version = "0.1";
 in
 {
   environment.systemPackages = [
