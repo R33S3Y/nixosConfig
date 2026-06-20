@@ -21,15 +21,17 @@ Remotely Rebuilds the system as specified.
 
 **-a**, **--all**
 : Rebuilds all hosts, Even if not necessary.
+
 **-d**, **--dynamic**
 : Skip hosts if none of the files touched are affected
+
 **-f flakeRef**, **--flake=flakeRef**
 : The flake to deploy.
 
 # EXAMPLE
 
+Deploying to 3 hosts from a github repo
+
 ```
 deploy -a -f github:you/repo host1 host2 host3
 ```
-
-Deploying to 3 hosts from a github repo
