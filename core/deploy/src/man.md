@@ -2,6 +2,7 @@
 title: DEPLOY
 section: 1
 date: 2026-06-20
+version: 1.0
 ---
 
 # NAME
