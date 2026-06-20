@@ -25,7 +25,7 @@ in
           -g \
           -I${pkgs.nlohmann_json}/include
 
-        sed -i "s/version/${version}/" man.md
+        sed -i 's/version/\"${version}\"/' man.md
         pandoc man.md -s -t man -o deploy.1
       '';
 
