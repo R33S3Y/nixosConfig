@@ -3,6 +3,7 @@ title: DEPLOY
 section: 1
 date: 2026-06-20
 version: 1.0.0
+header: R33S3Y/nixosConfig Manual
 ---
 
 # NAME
@@ -31,5 +32,9 @@ Remotely Rebuilds the system as specified.
 
 # EXAMPLE
 
-Deploying to 3 hosts from a github repo
-`deploy -a -f github:you/repo host1 host2 host3`
+Deploying to 3 hosts from a github repo:
+
+```
+deploy -a -f github:you/repo host1 host2 host3
+
+```
