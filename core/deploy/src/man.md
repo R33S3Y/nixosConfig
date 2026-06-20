@@ -31,7 +31,4 @@ Remotely Rebuilds the system as specified.
 # EXAMPLE
 
 Deploying to 3 hosts from a github repo
-
-```
-deploy -a -f github:you/repo host1 host2 host3
-```
+`deploy -a -f github:you/repo host1 host2 host3`
