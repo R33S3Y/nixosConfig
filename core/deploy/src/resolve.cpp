@@ -72,67 +72,10 @@ resolve::result resolve::resolveImportStatements() {
 
   return res;
 }
-
-size_t getValidStatementPos(string statement, string s) {
-
-  while (s.find(statement) != string::npos) {
-    size_t pos = s.find(statement);
-
-    s.replace(pos, statement.size(), statement.size(), '.');
-
-    vector<char> validChars = {'(', ')', '{', '}'};
-    bool validStart = false;
-    if (pos == 0) {
-      validStart = true;
-    } else {
-      if (isspace(s[pos - 1]) || find(validChars.begin(), validChars.end(),
-                                      s[pos - 1]) != validChars.end()) {
-        validStart = true;
-      }
-    }
-
-    bool validEnd = false;
-    if (pos + statement.size() >= s.size()) {
-      validEnd = true;
-    } else {
-      if (isspace(s[pos + statement.size()]) ||
-          find(validChars.begin(), validChars.end(),
-               s[pos + statement.size()]) != validChars.end()) {
-        validEnd = true;
-      }
-    }
-
-    if (validEnd && validStart) {
-      return pos;
-    }
-  }
-
-  return string::npos;
-}
-
 resolve::result resolve::resolveImportsStatements() {
-  string workingFileStr = resolve::fileStr;
+  string workingFileStr = nixEvalStatic::removeLetIn(resolve::fileStr);
 
   result res;
-  // remove let in statement seeing as they are unable to contain a valid
-  // imports statement
-  size_t letPos = getValidStatementPos("let", workingFileStr);
-  size_t inPos = string::npos;
-  if (letPos != string::npos) {
-    inPos = getValidStatementPos("in", workingFileStr.substr(letPos)) + letPos;
-  }
-
-  while (letPos != string::npos && inPos != string::npos) {
-    workingFileStr =
-        workingFileStr.substr(0, letPos) + workingFileStr.substr(inPos + 2);
-
-    letPos = getValidStatementPos("let", workingFileStr);
-    inPos = string::npos;
-    if (letPos != string::npos) {
-      inPos =
-          getValidStatementPos("in", workingFileStr.substr(letPos)) + letPos;
-    }
-  }
 
   while (workingFileStr.length() > 0) {
     size_t pos = workingFileStr.find("imports");

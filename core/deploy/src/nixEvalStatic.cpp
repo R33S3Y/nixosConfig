@@ -83,6 +83,63 @@ string nixEvalStatic::removeComments(string fileStr) {
   }
   return output;
 }
+
+size_t getValidStatementPos(string statement, string s) {
+
+  while (s.find(statement) != string::npos) {
+    size_t pos = s.find(statement);
+
+    s.replace(pos, statement.size(), statement.size(), '.');
+
+    vector<char> validChars = {'(', ')', '{', '}'};
+    bool validStart = false;
+    if (pos == 0) {
+      validStart = true;
+    } else {
+      if (isspace(s[pos - 1]) || find(validChars.begin(), validChars.end(),
+                                      s[pos - 1]) != validChars.end()) {
+        validStart = true;
+      }
+    }
+
+    bool validEnd = false;
+    if (pos + statement.size() >= s.size()) {
+      validEnd = true;
+    } else {
+      if (isspace(s[pos + statement.size()]) ||
+          find(validChars.begin(), validChars.end(),
+               s[pos + statement.size()]) != validChars.end()) {
+        validEnd = true;
+      }
+    }
+
+    if (validEnd && validStart) {
+      return pos;
+    }
+  }
+
+  return string::npos;
+}
+string nixEvalStatic::removeLetIn(string fileStr) {
+
+  size_t letPos = getValidStatementPos("let", fileStr);
+  size_t inPos = string::npos;
+  if (letPos != string::npos) {
+    inPos = getValidStatementPos("in", fileStr.substr(letPos)) + letPos;
+  }
+
+  while (letPos != string::npos && inPos != string::npos) {
+    fileStr = fileStr.substr(0, letPos) + fileStr.substr(inPos + 2);
+
+    letPos = getValidStatementPos("let", fileStr);
+    inPos = string::npos;
+    if (letPos != string::npos) {
+      inPos = getValidStatementPos("in", fileStr.substr(letPos)) + letPos;
+    }
+  }
+  return fileStr;
+}
+
 vector<string> nixEvalStatic::list(string test, bool throwLazy) {
   // mask and split
   string mask = test;
