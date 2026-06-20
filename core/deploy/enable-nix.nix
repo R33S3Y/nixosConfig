@@ -14,6 +14,7 @@
 
       nativeBuildInputs = [
         pkgs.gcc
+        pkgs.pandoc
       ];
 
       buildPhase = ''
@@ -21,11 +22,16 @@
           -std=c++23 \
           -g \
           -I${pkgs.nlohmann_json}/include
+
+        pandoc man.md -s -t man -o deploy.1
       '';
 
       installPhase = ''
         mkdir -p $out/bin
         cp deploy $out/bin/
+
+        mkdir -p $out/share/man/man1
+        cp deploy.1 $out/share/man/man1
       '';
     })
   ];
