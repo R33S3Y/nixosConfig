@@ -2,7 +2,7 @@
 title: DEPLOY
 section: 1
 date: 2026-06-20
-footer: 1.0.0
+footer: { { version } }
 header: R33S3Y/nixosConfig Manual
 ---
 

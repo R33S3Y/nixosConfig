@@ -1,10 +1,12 @@
 { pkgs, ... }:
-
+let
+  version = "1.69";
+in
 {
   environment.systemPackages = [
     (pkgs.stdenv.mkDerivation {
       pname = "deploy";
-      version = "1.0";
+      version = version;
 
       src = ./src;
 
@@ -23,6 +25,7 @@
           -g \
           -I${pkgs.nlohmann_json}/include
 
+        sid -i 's/version/${version}/' man.md
         pandoc man.md -s -t man -o deploy.1
       '';
 
