@@ -19,13 +19,13 @@ Remotely Rebuilds the system as specified.
 
 # OPTIONS
 
-**-a**, **---all**
+**-a**, **\-\-all**
 : Rebuilds all hosts, Even if not necessary.
 
 **-d**, **\-\-dynamic**
 : Skip hosts if none of the files touched are affected
 
-**-f flakeRef**, **--flake=flakeRef**
+**-f flakeRef**, **\-\-flake=flakeRef**
 : The flake to deploy.
 
 # EXAMPLE
