@@ -8,7 +8,7 @@ header: R33S3Y/nixosConfig Manual
 
 # NAME
 
-deploy - A utility cmd for nixos rebuilds
+deploy - A utility cmd for remote nixos rebuilds
 
 # SYNOPSIS
 
@@ -17,7 +17,7 @@ deploy - A utility cmd for nixos rebuilds
 
 # DESCRIPTION
 
-Remotely Rebuilds the system as specified.
+Deploy is a commandline utility for remotely rebuilding managing Nixos Rebuilds. Allowing you to manage and test dozen's of hosts at once.
 
 # OPTIONS
 
@@ -32,7 +32,7 @@ Remotely Rebuilds the system as specified.
 
 # EXAMPLE
 
-Deploying to 3 hosts from a github repo:
+Deploying to 3 hosts from a github repo:<!-- prettier-ignore -->
 
 ```
 deploy -a -f github:you/repo host1 host2 host3
