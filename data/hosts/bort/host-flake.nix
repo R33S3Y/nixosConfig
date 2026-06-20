@@ -17,43 +17,17 @@ let
       home-manager.nixosModules.home-manager
       inputs.nix-minecraft.nixosModules.minecraft-servers
 
-      # CORE
+      # Core
+      ../../../core/core-nix.nix
 
-      # boot
-      ../../../core/boot/bios-nix.nix
-      #../../../core/boot/uefi-nix.nix
-      ../../../core/boot/style-nix.nix
-      # btop
-      ../../../core/btop/enable-nix.nix
-      # Fast Fetch
-      ../../../core/fastfetch/enable-nix.nix # Fastfetch  -  You got to show something in that cmd for your reddit posts
-      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
-      ../../../core/lazyUpdate/enable-nix.nix
-      # PCmanFM
-      ../../../desktop/pcmanfm/enable-nix.nix
-      # Rofi
-      ../../../core/rofi/enable-nix.nix
-      # Style
-      ../../../core/style/stylix-nix.nix # stylix  -  this repo expects stylix
-      # Other
-      ../../../core/other/cmd-nix.nix # CMD  -  Programs that are still needed. But don't need there own section
-      ../../../core/home/home-nix.nix # home
-      ../../../core/other/journald-nix.nix # journald  -  adds a fix that explicity limits how much storage logs are allow to take at 2GB
-      ../../../core/other/local-nix.nix # Local settings
-      ../../../core/other/networking-nix.nix
-      ../../../core/other/nix-nix.nix # Nix settings  -  enable flakes, state nix version, etc
-      ../../../core/other/programs-nix.nix # Install all programs in the programs var
-      ../../../core/other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
-      ../../../core/other/sudo-nix.nix # sudo  -  Sudo settings
-      ../../../core/other/user-nix.nix # user  -  Adds a user
-
-      # Services
-
-      # (servers)
+      # Minecraft
       ../../../services/minecraft/minecraft-nix.nix
       ../../../services/minecraft/minecraftBackup-nix.nix
 
       # OTHER
+      # boot
+      ../../../other/boot/bios-nix.nix
+      ../../../other/boot/style-nix.nix
 
       # LapisLazuli
       ../../../other/lapisLazuli/nfs-nix.nix # Lapis  -  NAS
@@ -63,15 +37,7 @@ let
     ];
     homeImports = [
       # CORE
-
-      # btop
-      ../../../core/btop/style-home.nix
-      # Fast Fetch
-      ../../../core/fastfetch/settings-home.nix # Fastfetch  -  run on bash init
-      # Rofi
-      ../../../core/rofi/style-home.nix # Styles
-      # Other
-      ../../../core/other/xdgMime-home.nix # Sets default apps
+      ../../../core/core-home.nix
     ];
 
     user = "reese";

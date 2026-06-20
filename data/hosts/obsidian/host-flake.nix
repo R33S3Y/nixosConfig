@@ -11,55 +11,25 @@ let
       inputs.stylix.nixosModules.stylix
       home-manager.nixosModules.home-manager
 
-      # CORE
-
-      # boot
-      ../../../core/boot/bios-nix.nix
-      #../../../core/boot/uefi-nix.nix
-      ../../../core/boot/style-nix.nix
-      # btop
-      ../../../core/btop/enable-nix.nix
-      # Fast Fetch
-      ../../../core/fastfetch/enable-nix.nix # Fastfetch  -  You got to show something in that cmd for your reddit posts
-      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
-      ../../../core/lazyUpdate/enable-nix.nix
-      # PCmanFM
-      ../../../desktop/pcmanfm/enable-nix.nix
-      # Rofi
-      ../../../core/rofi/enable-nix.nix
-      # Style
-      ../../../core/style/stylix-nix.nix # stylix  -  this repo expects stylix
-      # Other
-      ../../../core/other/cmd-nix.nix # CMD  -  Programs that are still needed. But don't need there own section
-      ../../../core/home/home-nix.nix # home
-      ../../../core/other/journald-nix.nix # journald  -  adds a fix that explicity limits how much storage logs are allow to take at 2GB
-      ../../../core/other/local-nix.nix # Local settings
-      ../../../core/other/nix-nix.nix # Nix settings  -  enable flakes, state nix version, etc
-      ../../../core/other/networking-nix.nix
-      ../../../core/other/programs-nix.nix # Install all programs in the programs var
-      ../../../core/other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
-      ../../../core/other/sudo-nix.nix # sudo  -  Sudo settings
-      ../../../core/other/user-nix.nix # user  -  Adds a user
+      # Core
+      ../../../core/core-nix.nix
 
       # Services
 
-      # (servers)
+      # pihole
       ../../../services/pihole/pihole-nix.nix
+
+      # OTHER
+      # boot
+      ../../../other/boot/bios-nix.nix
+      ../../../other/boot/style-nix.nix
 
       # My stuff
       ./hardware-configuration.nix # hardware  -  your hardware settings
     ];
     homeImports = [
       # CORE
-
-      # btop
-      ../../../core/btop/style-home.nix
-      # Fast Fetch
-      ../../../core/fastfetch/settings-home.nix # Fastfetch  -  run on bash init
-      # Rofi
-      ../../../core/rofi/style-home.nix # Styles
-      # Other
-      ../../../core/other/xdgMime-home.nix # Sets default apps
+      ../../../core/core-home.nix
     ];
 
     user = "reese";

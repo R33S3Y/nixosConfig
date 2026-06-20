@@ -2,7 +2,6 @@
   inputs,
   home-manager,
   nur,
-  nix-minecraft,
 }:
 
 let
@@ -18,37 +17,8 @@ let
       nur.modules.nixos.default
       inputs.nix-minecraft.nixosModules.minecraft-servers
 
-      # CORE
-
-      # boot
-      ../../../core/boot/bios-nix.nix
-      ../../../core/boot/uefi-nix.nix
-      ../../../core/boot/style-nix.nix
-      # btop
-      ../../../core/btop/enable-nix.nix
-      # Deploy
-      ../../../core/deploy/enable-nix.nix
-      # Fast Fetch
-      ../../../core/fastfetch/enable-nix.nix # Fastfetch  -  You got to show something in that cmd for your reddit posts
-      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
-      ../../../core/lazyUpdate/enable-nix.nix
-      # PCmanFM
-      ../../../desktop/pcmanfm/enable-nix.nix
-      # Rofi
-      ../../../core/rofi/enable-nix.nix
-      # Style
-      ../../../core/style/stylix-nix.nix # stylix  -  this repo expects stylix
-      # Other
-      ../../../core/other/cmd-nix.nix # CMD  -  Programs that are still needed. But don't need there own section
-      ../../../core/home/home-nix.nix # home
-      ../../../core/other/journald-nix.nix # journald  -  adds a fix that explicity limits how much storage logs are allow to take at 2GB
-      ../../../core/other/local-nix.nix # Local settings
-      ../../../core/other/nix-nix.nix # Nix settings  -  enable flakes, state nix version, etc
-      ../../../core/other/networking-nix.nix
-      ../../../core/other/programs-nix.nix # Install all programs in the programs var
-      ../../../core/other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
-      ../../../core/other/sudo-nix.nix # sudo  -  Sudo settings
-      ../../../core/other/user-nix.nix # user  -  Adds a user
+      # Core
+      ../../../core/core-nix.nix
 
       # Desktop
       # You can comment and uncomment these as needed
@@ -63,10 +33,14 @@ let
       ../../../desktop/hyprpanel/enable-nix.nix
       # Kitty
       ../../../desktop/kitty/enable-nix.nix
-      # vencord
-      ../../../desktop/vencord/enable-nix.nix
+      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
+      ../../../desktop/lazyUpdate/enable-nix.nix
       # obsidian
       ../../../desktop/obsidian/enable-nix.nix
+      # PCmanFM
+      ../../../desktop/pcmanfm/enable-nix.nix
+      # Rofi
+      ../../../desktop/rofi/enable-nix.nix
       # SDDM
       ../../../desktop/sddm/enable-nix.nix
       # Sound
@@ -75,6 +49,8 @@ let
       ../../../desktop/steam/enable-nix.nix
       # Strawberry
       ../../../desktop/strawberry/enable-nix.nix # Music player
+      # vencord
+      ../../../desktop/vencord/enable-nix.nix
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
@@ -102,6 +78,10 @@ let
       ../../../services/pihole/pihole-nix.nix
 
       # OTHER
+      # boot
+      ../../../other/boot/bios-nix.nix
+      ../../../other/boot/uefi-nix.nix
+      ../../../other/boot/style-nix.nix
 
       # LapisLazuli
       ../../../other/lapisLazuli/home-nix.nix # Lapis  -  Mount NAS to home
@@ -110,17 +90,7 @@ let
     ];
     homeImports = [
       # CORE
-
-      # btop
-      ../../../core/btop/style-home.nix
-      # Fast Fetch
-      ../../../core/fastfetch/settings-home.nix # Fastfetch  -  run on bash init
-      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
-      ../../../core/lazyUpdate/run-home.nix
-      # Rofi
-      ../../../core/rofi/style-home.nix # Styles
-      # Other
-      ../../../core/other/xdgMime-home.nix # Sets default apps
+      ../../../core/core-home.nix
 
       # DESKTOP
       # You can comment and uncomment these as needed
@@ -142,10 +112,14 @@ let
       ../../../desktop/kitty/bind-home.nix # Key binds
       ../../../desktop/kitty/style-home.nix # Styles  -  You should be fine to get away with disabling this
       ../../../desktop/kitty/settings-home.nix # Settings
+      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
+      ../../../desktop/lazyUpdate/run-home.nix
       # vencord
       ../../../desktop/vencord/settings-home.nix
       # obsidian
       ../../../desktop/obsidian/settings-home.nix
+      # Rofi
+      ../../../desktop/rofi/style-home.nix # Styles
       # Sound
       ../../../desktop/sound/sound-home.nix
       # steam
