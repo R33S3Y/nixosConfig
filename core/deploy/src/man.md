@@ -32,7 +32,7 @@ Deploy is a commandline utility for remotely rebuilding managing Nixos Rebuilds.
 
 # EXAMPLE
 
-Deploying to 3 hosts from a github repo:<!-- prettier-ignore -->
+Deploying to 3 hosts from a github repo:
 
 ```
 deploy -a -f github:you/repo host1 host2 host3
