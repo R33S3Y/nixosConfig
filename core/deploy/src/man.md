@@ -12,7 +12,8 @@ deploy - A utility cmd for remote nixos rebuilds
 
 # SYNOPSIS
 
-**deploy** [deploy options] \-\-flake=flakeRef host...\n
+**deploy** [deploy options] \-\-flake=flakeRef host...
+
 **deploy** [deploy options] -f flakeRef host...
 
 # DESCRIPTION
@@ -33,8 +34,4 @@ Deploy is a commandline utility for remotely rebuilding managing Nixos Rebuilds.
 # EXAMPLE
 
 Deploying to 3 hosts from a github repo:
-
-```
-deploy -a -f github:you/repo host1 host2 host3
-
-```
+: deploy -a -f github:your/repo host1 host2 host3
