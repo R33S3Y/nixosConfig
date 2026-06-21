@@ -13,7 +13,6 @@ deploy - A utility cmd for remote nixos rebuilds
 # SYNOPSIS
 
 **deploy** [deploy options] \-\-flake=flakeRef host...
-
 **deploy** [deploy options] -f flakeRef host...
 
 # DESCRIPTION
