@@ -56,8 +56,7 @@ vector<string> merge(vector<string> imports, vector<string> unprocessedFiles) {
 bool rebuild(string host, string flakePath, string flakeLink,
              vector<strings> gitDiff) {
 
-  const vector<strings> skippableFiles = {"LICENSE"
-                                          "README"};
+  const vector<strings> skippableFiles = {"LICENSE", "README"};
 
   for (string diffItem : gitDiff) {
     if (diffItem.ends_with(".nix") == true) {
