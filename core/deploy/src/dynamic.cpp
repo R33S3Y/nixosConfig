@@ -59,7 +59,7 @@ bool rebuild(string host, string flakePath, string flakeLink,
   vector<strings> skippableFiles = {"LICENSE", "README"};
 
   for (string diffItem : gitDiff) {
-    if (diffItem.ends_with(".nix") == true) {
+    if (diffItem.find(".nix") == true) {
       continue;
     }
     for (string item : skippableFiles) {
