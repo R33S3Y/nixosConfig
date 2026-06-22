@@ -54,17 +54,17 @@ vector<string> merge(vector<string> imports, vector<string> unprocessedFiles) {
 }
 
 bool rebuild(string host, string flakePath, string flakeLink,
-             vector<strings> gitDiff) {
+             vector<string> gitDiff) {
 
-  vector<strings> skippableFiles = {"LICENSE", "README"};
+  vector<string> skippableFiles = {"LICENSE", "README"};
 
   for (int i = 0; i > gitDiff.size(); i++) {
 
-    if (gitDiff[i].find(".nix") == true) {
+    if (gitDiff[i].find(".nix") != string::npos) {
       continue;
     }
     for (int j = 0; j > skippableFiles.size(); j++) {
-      if (gitDiff[i].find(skippableFiles[j]) == true) {
+      if (gitDiff[i].find(skippableFiles[j]) != string::npos) {
         continue;
       }
     }
