@@ -1,3 +1,4 @@
+#include "dynamic.h"
 #include "nixEvalStatic.h"
 #include "resolve.h"
 #include "utils/strings.h"
@@ -8,7 +9,8 @@
 #include <set>
 #include <string>
 #include <vector>
-vector<string> getNixFiles(string flakeLink, string host) {
+vector<string> dynamic::getNixFiles(const string &flakePath,
+                                    const string host) {
   string cmd = "nix eval " + flakeLink + "#nixosConfigurations." + host +
                "._module.args.modules";
 
@@ -35,7 +37,8 @@ vector<string> getNixFiles(string flakeLink, string host) {
 
   return output;
 }
-vector<string> filter(vector<string> imports, vector<string> processedFiles) {
+vector<string> dynamic::filter(vector<string> imports,
+                               vector<string> processedFiles) {
   imports.erase(remove_if(imports.begin(), imports.end(),
                           [&](const string &f) {
                             return find(processedFiles.begin(),
@@ -46,15 +49,16 @@ vector<string> filter(vector<string> imports, vector<string> processedFiles) {
 
   return imports;
 }
-vector<string> merge(vector<string> imports, vector<string> unprocessedFiles) {
+vector<string> dynamic::merge(vector<string> imports,
+                              vector<string> unprocessedFiles) {
   set<string> pending(unprocessedFiles.begin(), unprocessedFiles.end());
   pending.insert(imports.begin(), imports.end());
   unprocessedFiles.assign(pending.begin(), pending.end());
   return unprocessedFiles;
 }
 
-bool rebuild(string host, string flakePath, string flakeLink,
-             vector<string> gitDiff) {
+bool dynamic::rebuild(const string &host, const string &flakePath,
+                      const string &flakeLink, const vector<string> &gitDiff) {
 
   vector<string> skippableFiles = {"LICENSE", "README"};
 

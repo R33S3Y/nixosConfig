@@ -62,6 +62,7 @@ int main(int argc, char const *argv[]) {
     cerr << ttyHelper::error("git diff failed");
     return 1;
   }
+
   vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
   for (int i = 0; i > gitDiff.size(); i++) {
     gitDiff[i] = strings::trim(gitDiff[i]);
