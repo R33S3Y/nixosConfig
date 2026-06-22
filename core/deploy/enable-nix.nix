@@ -20,7 +20,7 @@ in
       ];
 
       buildPhase = ''
-        g++ main.cpp utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp resolve.cpp nixEval.cpp nixEvalStatic.cpp -o deploy \
+        g++ main.cpp utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp resolve.cpp nixEval.cpp nixEvalStatic.cpp dynamic.cpp -o deploy \
           -std=c++23 \
           -g \
           -I${pkgs.nlohmann_json}/include
