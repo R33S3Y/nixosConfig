@@ -6,8 +6,8 @@ using namespace std;
 
 class dynamic {
 public:
-  bool rebuild(const string &host, const string &flakePath,
-               const string &flakeLink, const vector<string> &gitDiff);
+  static bool rebuild(const string &host, const string &flakePath,
+                      const string &flakeLink, const vector<string> &gitDiff);
 
 private:
   static vector<string> getNixFiles(const string &flakePath, const string host);

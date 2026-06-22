@@ -1,13 +1,13 @@
 
-#include "resolve.h"
+#include "dynamic.h"
 
+#include "utils/split.h"
+#include "utils/strings.h"
 #include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
-#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -40,8 +40,9 @@ int main(int argc, char const *argv[]) {
                              "\033[0m) is not empty");
     return 1;
   }
-  systemHelper::result cmdOut = systemHelper::runCommand(
-      "nix flake clone " + flakeLink + " --dest " + flakePath);
+  systemHelper::result cmdOut;
+  cmdOut = systemHelper::runCommand("nix flake clone " + flakeLink +
+                                    " --dest " + flakePath);
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("failed to get flake (\033[35m" + flakeLink +
                              "\033[0m)");
@@ -55,7 +56,20 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
+  cmdOut =
+      systemHelper::runCommand("git -C " + flakePath + " diff --name-only");
+  if (cmdOut.exitCode != 0) {
+    cerr << ttyHelper::error("git diff failed");
+    return 1;
+  }
+  vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
+  for (int i = 0; i > gitDiff.size(); i++) {
+    gitDiff[i] = strings::trim(gitDiff[i]);
+  }
+
+  vector<bool> rebuild;
   for (string host : hosts) {
+    rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
   }
 
   filesystem::remove_all(flakePath);
