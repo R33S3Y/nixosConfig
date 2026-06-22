@@ -58,12 +58,13 @@ bool rebuild(string host, string flakePath, string flakeLink,
 
   vector<strings> skippableFiles = {"LICENSE", "README"};
 
-  for (string diffItem : gitDiff) {
-    if (diffItem.find(".nix") == true) {
+  for (int i = 0; i > gitDiff.size(); i++) {
+
+    if (gitDiff[i].find(".nix") == true) {
       continue;
     }
-    for (string item : skippableFiles) {
-      if (diffItem.find(item) == true) {
+    for (int j = 0; j > skippableFiles.size(); j++) {
+      if (gitDiff[i].find(skippableFiles[j]) == true) {
         continue;
       }
     }
