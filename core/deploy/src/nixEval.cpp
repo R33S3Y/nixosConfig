@@ -319,7 +319,7 @@ string nixEval::path(string test) {
 
   size_t pos = test.find('/');
   if (pos != string::npos) {
-    string firstItem = test.substr(pos);
+    string firstItem = test.substr(0, pos);
 
     string absoluteFolderPath =
       nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
