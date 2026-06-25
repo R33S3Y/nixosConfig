@@ -336,7 +336,6 @@ string nixEval::path(string test) {
     if (ranges::contains(folders, firstItem)) {
       // for relative filepaths like folder/file
       test = absoluteFolderPath + "/" + test;
-      cout << test + "\n";
     }
   }
 
