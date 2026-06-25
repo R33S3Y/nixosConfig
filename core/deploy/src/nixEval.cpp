@@ -11,6 +11,7 @@
 #include <format>
 #include <iostream>
 #include <map>
+#include <ranges>
 #include <string>
 #include <vector>
 using namespace std;
@@ -321,15 +322,20 @@ string nixEval::path(string test) {
   if (pos != string::npos) {
     string firstItem = test.substr(0, pos);
 
-    string absoluteFolderPath =
-      nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
+    string absoluteFolderPath = nixEval::absoluteFilePath.substr(
+        0, nixEval::absoluteFilePath.rfind('/'));
 
-      cout << absoluteFolderPath + "\n";
+    cout << absoluteFolderPath + "\n";
+    cout << firstItem + "\n";
 
     vector<string> folders;
-    for (const filesystem::directory_entry &entry : filesystem::directory_iterator(absoluteFolderPath)) {
-      if (entry.is_directory())
+    for (const filesystem::directory_entry &entry :
+         filesystem::directory_iterator(absoluteFolderPath)) {
+      if (entry.is_directory()) {
+        cout << entry.path();
+        cout << "\n";
         folders.push_back(entry.path().string());
+      }
     }
 
     if (ranges::contains(folders, firstItem)) {
