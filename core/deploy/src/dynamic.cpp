@@ -11,7 +11,7 @@
 #include <vector>
 vector<string> dynamic::getNixFiles(const string &flakePath,
                                     const string host) {
-  string cmd = "nix eval " + flakeLink + "#nixosConfigurations." + host +
+  string cmd = "nix eval " + flakePath + "#nixosConfigurations." + host +
                "._module.args.modules";
 
   systemHelper::result cmdOut = systemHelper::runCommand(cmd);
@@ -25,8 +25,8 @@ vector<string> dynamic::getNixFiles(const string &flakePath,
 
   vector<string> output;
   for (string currentStr : list) {
-    if (currentStr.find(flakeLink) != string::npos) {
-      currentStr = strings::replace(currentStr, flakeLink, "");
+    if (currentStr.find(flakePath) != string::npos) {
+      currentStr = strings::replace(currentStr, flakePath, "");
       currentStr = strings::trim(currentStr);
 
       if (currentStr != "") {
