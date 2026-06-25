@@ -325,15 +325,10 @@ string nixEval::path(string test) {
     string absoluteFolderPath = nixEval::absoluteFilePath.substr(
         0, nixEval::absoluteFilePath.rfind('/'));
 
-    cout << absoluteFolderPath + "\n";
-    cout << firstItem + "\n";
-
     vector<string> folders;
     for (const filesystem::directory_entry &entry :
          filesystem::directory_iterator(absoluteFolderPath)) {
       if (entry.is_directory()) {
-        cout << entry.path().filename().string();
-        cout << "\n";
         folders.push_back(entry.path().filename().string());
       }
     }
