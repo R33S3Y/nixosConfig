@@ -329,6 +329,9 @@ string nixEval::path(string test) {
     }
   }
 
+  cout << filePath + "\n";
+  cout << absoluteFilePath + "\n";
+
   string absoluteFolderPath =
       nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
   vector<string> folders;
