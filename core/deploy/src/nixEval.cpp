@@ -317,6 +317,25 @@ string nixEval::path(string test) {
     test = test.substr(0, test.find(" "));
   }
 
+  size_t pos = test.find('/');
+  if (pos != string::npos) {
+    string firstItem = test.substr(pos);
+
+    string absoluteFolderPath =
+      nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
+    vector<string> folders;
+    for (const filesystem::directory_entry &entry : filesystem::directory_iterator(absoluteFolderPath)) {
+      if (entry.is_directory())
+        folders.push_back(entry.path().string());
+    }
+
+    if (ranges::contains(folders, firstItem)) {
+      // for relative filepaths like folder/file
+      test = absoluteFolderPath + "/" + test;
+      cout << test + "\n";
+    }
+  }
+
   if (test[0] == '/') {
     // is absolute file path
     if (test.rfind(nixEval::flakePath, 0) == 0) {
@@ -329,26 +348,8 @@ string nixEval::path(string test) {
     }
   }
 
-  cout << filePath + "\n";
-  cout << absoluteFilePath + "\n";
-
-  string absoluteFolderPath =
-      nixEval::absoluteFilePath.substr(0, nixEval::absoluteFilePath.rfind('/'));
-  vector<string> folders;
-  for (auto &entry : std::filesystem::directory_iterator(absoluteFolderPath)) {
-    if (entry.is_directory())
-      folders.push_back(entry.path().string());
-  }
-
-  cout << absoluteFolderPath + "\n";
-
-  size_t pos = test.find('/');
   if (pos != string::npos) {
-
-    string firstItem = test.substr(pos);
-
-    if (test[0] == '.' ||
-        find(folders.begin(), folders.end(), firstItem) != folders.end()) {
+    if (test[0] == '.') {
       // relative file path
 
       std::filesystem::path declaredIn = absoluteFilePath;
