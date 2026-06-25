@@ -6,9 +6,11 @@
 #include "utils/ttyHelper.h"
 #include <algorithm>
 #include <iostream>
+#include <ranges>
 #include <set>
 #include <string>
 #include <vector>
+
 vector<string> dynamic::getNixFiles(const string &flakePath,
                                     const string host) {
   string cmd = "nix eval " + flakePath + "#nixosConfigurations." + host +
@@ -113,7 +115,7 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
 
     imports = r.resolveImportsStatements();
     if (imports.error) {
-      return false;
+      return true;
     }
     if (imports.paths.size() != 0) {
       imports.paths = filter(imports.paths, processedFiles);
@@ -121,5 +123,11 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
     }
   }
 
-  return true;
+  for (string file : processedFiles) {
+    if (ranges::contains(gitDiff, file)) {
+      return true;
+    }
+  }
+
+  return false;
 }

@@ -72,6 +72,7 @@ int main(int argc, char const *argv[]) {
   for (string host : hosts) {
     cout << host + "\n";
     rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
+    cout << rebuild.back();
   }
 
   filesystem::remove_all(flakePath);
