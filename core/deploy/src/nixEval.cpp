@@ -340,6 +340,8 @@ string nixEval::path(string test) {
       folders.push_back(entry.path().string());
   }
 
+  cout << absoluteFolderPath + "\n";
+
   size_t pos = test.find('/');
   if (pos != string::npos) {
 
