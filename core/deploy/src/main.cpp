@@ -70,6 +70,7 @@ int main(int argc, char const *argv[]) {
 
   vector<bool> rebuild;
   for (string host : hosts) {
+    cout << host + "\n";
     rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
   }
 
