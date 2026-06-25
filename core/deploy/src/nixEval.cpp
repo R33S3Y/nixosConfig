@@ -332,9 +332,9 @@ string nixEval::path(string test) {
     for (const filesystem::directory_entry &entry :
          filesystem::directory_iterator(absoluteFolderPath)) {
       if (entry.is_directory()) {
-        cout << entry.path();
+        cout << entry.path().filename().string();
         cout << "\n";
-        folders.push_back(entry.path().string());
+        folders.push_back(entry.path().filename().string());
       }
     }
 
