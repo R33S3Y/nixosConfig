@@ -33,6 +33,7 @@ int main(int argc, char const *argv[]) {
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/currentConfig";
+  bool dynamicBuild = true;
 
   filesystem::create_directories(flakePath);
   if (filesystem::is_empty(flakePath) == false) {
@@ -64,12 +65,26 @@ int main(int argc, char const *argv[]) {
   }
 
   vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
-  for (int i = 0; i > gitDiff.size(); i++) {
-    gitDiff[i] = strings::trim(gitDiff[i]);
+  for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
+       it++) {
+    *it = strings::trim(*it);
+    cout << *it + "\n";
+    if (*it == "") {
+      gitDiff.erase(it);
+    }
+  }
+  if (gitDiff.size() == 0) {
+    dynamicBuild = false;
+    cerr << ttyHelper::error(
+        "no changed items found. Skipping dynamic rebuild");
   }
 
   vector<bool> rebuild;
   for (string host : hosts) {
+    if (dynamicBuild == false) {
+      rebuild.push_back(true);
+      continue;
+    }
     cout << host + "\n";
     rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
     cout << rebuild.back();
