@@ -124,6 +124,8 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
   }
 
   for (string file : processedFiles) {
+    cout << file + "\n";
+
     if (ranges::contains(gitDiff, file)) {
       return true;
     }
