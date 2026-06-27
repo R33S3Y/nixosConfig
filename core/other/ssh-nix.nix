@@ -7,7 +7,7 @@
     settings = {
       PasswordAuthentication = true;
       AllowUsers = [
-        system.users.${system.user}.name
+        system.user
         "rebuild"
       ];
       PermitRootLogin = "no";

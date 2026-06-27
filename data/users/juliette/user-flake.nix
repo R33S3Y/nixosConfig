@@ -2,13 +2,13 @@
 
 let
   user = {
-    uid = 1004;
-    prettyName = "Reese";
+    uid = 1000;
+    prettyName = "Juliette";
 
     profile = ./profile.png;
-    theme = "diamond";
+    theme = "amethyst";
 
-    email = "r3es3y@gmail.com";
+    email = "";
 
     screenshotFolder = "~/Pictures";
 

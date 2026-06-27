@@ -10,7 +10,7 @@
     fsType = "cifs";
     options = [
       "credentials=${system.hosts.${system.host}.lapisLazuli.credentials}"
-      "uid=${system.users.${system.user}.name}"
+      "uid=${system.user}"
       "gid=users"
       "iocharset=utf8"
     ];

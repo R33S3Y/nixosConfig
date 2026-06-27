@@ -106,9 +106,15 @@
         reese = import ./data/users/reese/user-flake.nix {
           inherit inputs;
         };
+        juliette = import ./data/users/juliette/user-flake.nix {
+          inherit inputs;
+        };
       };
       themes = {
         diamond = import ./data/themes/diamond/theme-flake.nix {
+          inherit inputs;
+        };
+        amethyst = import ./data/themes/amethyst/theme-flake.nix {
           inherit inputs;
         };
       };

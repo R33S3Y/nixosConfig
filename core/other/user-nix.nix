@@ -1,21 +1,20 @@
 { system, ... }:
 let
-  username = system.users.${system.user}.name;
+  users = builtins.mapAttrs (name: value: {
+    isNormalUser = true;
+    uid = value.uid;
+    description = name;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "jellyfin"
+      "cms"
+      "render"
+    ];
+  }) system.users;
 in
 {
-  users.users = {
-    ${username} = {
-      isNormalUser = true;
-      uid = 1000;
-      description = "${username}";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "jellyfin"
-        "cms"
-        "render"
-      ];
-    };
+  users.users = users ++ {
     rebuild = {
       isNormalUser = true;
       uid = 1001;
