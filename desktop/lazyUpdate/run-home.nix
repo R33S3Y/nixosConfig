@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   nixSnowflake = pkgs.writeTextFile {
     name = "nixSnowflake.svg";
@@ -200,13 +205,14 @@ let
       notify-send -i ${config.home.homeDirectory}/.config/hypr/nixSnowflake.svg "NixOS Auto Rebuild" "Starting rebuild for $HOSTNAME..."
       rm -rf /tmp/config_current
       mkdir -p /tmp/config_current
-      git clone https://github.com/R33S3Y/nixos-config /tmp/config_current
+      git clone https://github.com/R33S3Y/nixosConfig /tmp/config_current
       sudo nixos-rebuild switch --flake /tmp/config_current/#$HOSTNAME && \
         notify-send -i ${config.home.homeDirectory}/.config/hypr/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild complete!" || \
         notify-send -i ${config.home.homeDirectory}/.config/hypr/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild failed!"
     '';
   };
-in {
+in
+{
   home.activation.makeLazyUpdatesFiles = lib.mkAfter ''
     mkdir -p ${config.home.homeDirectory}/.config/hypr
     if [ -f ${config.home.homeDirectory}/.config/hypr/nixSnowflake.svg ]; then
