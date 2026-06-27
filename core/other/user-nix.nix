@@ -14,7 +14,7 @@ let
   }) system.users;
 in
 {
-  users.users = users ++ {
+  users.users = users // {
     rebuild = {
       isNormalUser = true;
       uid = 1001;
