@@ -13,14 +13,14 @@ let
     image = ./wallpaper.jpg;
 
     base16Scheme = {
-      base00 = "181B28"; # ----
-      base01 = "282b38"; # ---
-      base02 = "383b48"; # --
-      base03 = "484b58"; # -
-      base04 = "c58bcf"; # +
-      base05 = "d5abdf"; # ++
-      base06 = "e5cbef"; # +++
-      base07 = "f5ebff"; # ++++
+      base00 = "f5ebff"; # ----
+      base01 = "e5cbef"; # ---
+      base02 = "d5abdf"; # --
+      base03 = "c58bcf"; # -
+      base04 = "484b58"; # +
+      base05 = "383b48"; # ++
+      base06 = "282b38"; # +++
+      base07 = "181B28"; # ++++
       base08 = "4075dc"; # red
       base09 = "5075dc"; # orange
       base0A = "6075dc"; # yellow
