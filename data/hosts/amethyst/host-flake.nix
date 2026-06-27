@@ -65,7 +65,7 @@ let
 
       # LapisLazuli
       ../../../other/lapisLazuli/home-nix.nix # Lapis  -  Mount NAS to home
-      ../../../other/lapisLazuli/smb-nix.nix # Lapis  -  My NAS! It's here cause I want it!
+      #../../../other/lapisLazuli/smb-nix.nix # Lapis  -  My NAS! It's here cause I want it!
       ../../../other/lapisLazuli/nfs-nix.nix # Lapis  -  NAS
 
       # My stuff
