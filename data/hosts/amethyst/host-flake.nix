@@ -135,9 +135,13 @@ let
       krita
       gimp3
 
-      git
       vlc
       nano
+
+      libreoffice-qt6-fresh
+
+      inkscape
+      thunderbird
     ];
 
     bluetooth = true;
