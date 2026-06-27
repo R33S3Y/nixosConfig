@@ -39,6 +39,8 @@ let
       ../../../desktop/obsidian/enable-nix.nix
       # PCmanFM
       ../../../desktop/pcmanfm/enable-nix.nix
+      # Plasma
+      ../../../desktop/plasma/enable-nix.nix
       # Rofi
       ../../../desktop/rofi/enable-nix.nix
       # SDDM
