@@ -2,7 +2,7 @@
 
 let
   user = {
-    uid = 1004;
+    uid = 1000;
     prettyName = "Reese";
 
     profile = ./profile.png;
