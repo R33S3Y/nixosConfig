@@ -44,6 +44,7 @@ in
           #notify-send -i ${findPackage config.environment.systemPackages "nixSnowflake"}/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild failed!" \
           rm -rf /tmp/config_current \
           echo "Rebuild failed"
+        echo "Done!"
       '';
     };
   };
