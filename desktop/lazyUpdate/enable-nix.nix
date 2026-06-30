@@ -27,17 +27,22 @@ in
         set -e
 
         #notify-send -i ${findPackage config.environment.systemPackages "nixSnowflake"}/nixSnowflake.svg "NixOS Auto Rebuild" "Starting rebuild for $HOSTNAME..."
+
         rm -rf /tmp/config_current
         mkdir -p /tmp/config_current
         chown root /tmp/config_current
         chmod 700 /tmp/config_current
         rm -rf /tmp/config_current/{*,.*}
+        echo "Set folder"
         git clone https://github.com/R33S3Y/nixosConfig /tmp/config_current
+        echo "Cloned Repo"
         sudo nixos-rebuild switch --flake /tmp/config_current/#$HOSTNAME && \
           #notify-send -i ${findPackage config.environment.systemPackages "nixSnowflake"}/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild complete!" \
-          rm -rf /tmp/config_current || \
+          rm -rf /tmp/config_current \
+          echo "Rebuild complete"|| \
           #notify-send -i ${findPackage config.environment.systemPackages "nixSnowflake"}/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild failed!" \
-          rm -rf /tmp/config_current
+          rm -rf /tmp/config_current \
+          echo "Rebuild failed"
       '';
     };
   };
