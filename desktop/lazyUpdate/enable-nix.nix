@@ -15,6 +15,7 @@ in
       path = with pkgs; [
         libnotify
         git
+        nixos-rebuild-ng
       ];
 
       serviceConfig = {
