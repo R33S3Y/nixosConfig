@@ -19,6 +19,8 @@ in
 
       serviceConfig = {
         Type = "oneshot";
+        User = "root";
+        Group = "root";
       };
 
       script = ''
