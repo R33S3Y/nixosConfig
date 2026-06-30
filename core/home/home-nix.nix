@@ -1,4 +1,7 @@
 { system, ... }:
+let
+  users = builtins.mapAttrs (name: value: import ./home-home.nix) system.users;
+in
 {
 
   home-manager = {
@@ -10,6 +13,6 @@
       system = system;
     };
 
-    users."${system.user}" = import ./home-home.nix;
+    users = users;
   };
 }
