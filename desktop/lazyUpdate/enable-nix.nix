@@ -36,7 +36,7 @@ in
         echo "Set folder"
         git clone https://github.com/R33S3Y/nixosConfig /tmp/config_current
         echo "Cloned Repo"
-        sudo nixos-rebuild switch --flake /tmp/config_current/#$HOSTNAME && \
+        nixos-rebuild switch --flake /tmp/config_current/#$HOSTNAME && \
           #notify-send -i ${findPackage config.environment.systemPackages "nixSnowflake"}/nixSnowflake.svg "NixOS Auto Rebuild" "Rebuild complete!" \
           rm -rf /tmp/config_current \
           echo "Rebuild complete"|| \
