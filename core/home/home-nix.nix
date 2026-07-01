@@ -1,16 +1,16 @@
 { system, ... }:
 let
-  users = builtins.mapAttrs (
-    name: value:
-    import ./home-home.nix
-    // {
-      home = {
-        stateVersion = "24.11";
-        username = name;
-        homeDirectory = "/home/${name}";
-      };
-    }
-  ) system.users;
+  users = builtins.mapAttrs (name: value: {
+    imports = system.hosts.${system.host}.homeImports;
+
+    programs.home-manager.enable = true;
+
+    home = {
+      stateVersion = "24.11";
+      username = name;
+      homeDirectory = "/home/${name}";
+    };
+  }) system.users;
 in
 {
 
