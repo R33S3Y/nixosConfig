@@ -88,7 +88,7 @@ in
 
       theme.bar.transparent = transparent;
       theme.bar.location = "top";
-      theme.bar.background = background + (if transparentButtons && transparent then "00" else "");
+      theme.bar.background = background;
 
       theme.bar.buttons.hover = background;
       theme.bar.buttons.y_margins = "0px";
