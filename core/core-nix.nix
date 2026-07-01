@@ -14,7 +14,7 @@
     style/stylix-nix.nix # stylix  -  this repo expects stylix
     # Other
     other/cmd-nix.nix # CMD  -  Programs that are still needed. But don't need there own section
-    home/home-nix.nix # home
+    other/home-nix.nix # home
     other/journald-nix.nix # journald  -  adds a fix that explicity limits how much storage logs are allow to take at 2GB
     other/local-nix.nix # Local settings
     other/nix-nix.nix # Nix settings  -  enable flakes, state nix version, etc

@@ -55,9 +55,8 @@ let
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
-      ../../../desktop/other/alvr-nix.nix # ALVR  -  For my vr nerds
+      #../../../desktop/other/alvr-nix.nix # ALVR  -  For my vr nerds
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
-      ../../../desktop/other/x11-nix.nix # x11  -  needed for Xwayland??
 
       # LapisLazuli
       #../../../other/lapisLazuli/home-nix.nix # Lapis  -  Mount NAS to home
