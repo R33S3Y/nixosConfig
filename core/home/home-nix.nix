@@ -8,6 +8,7 @@ let
     home = {
       stateVersion = "24.11";
       username = name;
+      uid = value.uid;
       homeDirectory = "/home/${name}";
     };
   }) system.users;
