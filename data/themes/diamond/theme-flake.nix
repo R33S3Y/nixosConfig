@@ -84,7 +84,7 @@ let
 
     icons = {
       package = pkgs.kdePackages.breeze-icons;
-      name = "";
+      name = "breeze-dark"; # icon name is the folder name of your choice in /nix/store/{{icon Theme}}/share/icons
     };
   };
 in
