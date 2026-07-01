@@ -1,4 +1,13 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  system,
+  lib,
+  ...
+}:
+let
+  isDarkMode = system.themes.${system.theme}.polarity == "dark";
+in
 {
 
   stylix.targets.firefox = {
@@ -21,13 +30,15 @@
         extensions = {
           force = true;
           #autoDisableScopes = 0;
-          packages = with pkgs.nur.repos.rycee.firefox-addons; [
-            darkreader
-            sponsorblock
-            return-youtube-dislikes
-            ublock-origin
-            youtube-shorts-block
-          ];
+          packages =
+            with pkgs.nur.repos.rycee.firefox-addons;
+            [
+              sponsorblock
+              return-youtube-dislikes
+              ublock-origin
+              youtube-shorts-block
+            ]
+            ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader;
         };
         settings = {
           "extensions.autoDisableScopes" = 0;
