@@ -81,6 +81,11 @@ let
       active = 0.95;
       inactive = 0.9;
     };
+
+    icons = {
+      package = pkgs.kdePackages.breeze-icons;
+      name = "";
+    };
   };
 in
 theme

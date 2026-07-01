@@ -7,7 +7,7 @@ let
   };
   theme = {
 
-    polarity = "dark";
+    polarity = "light";
 
     # wallpaper
     image = ./wallpaper.jpg;
@@ -80,6 +80,11 @@ let
     opacity = {
       active = 0.95;
       inactive = 0.9;
+    };
+
+    icons = {
+      package = pkgs.kdePackages.breeze-icons;
+      name = "";
     };
   };
 in
