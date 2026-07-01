@@ -10,6 +10,7 @@ let
       username = name;
       uid = value.uid;
       homeDirectory = "/home/${name}";
+      backupFileExtension = "/home/${name}/.config/backup";
     };
   }) system.users;
 in
