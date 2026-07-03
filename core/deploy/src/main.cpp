@@ -69,9 +69,9 @@ int main(int argc, char const *argv[]) {
        it++) {
     *it = strings::trim(*it);
 
-    if (*it == "") {
-      gitDiff.erase(it);
-    }
+    // if (*it == "") {
+    //   gitDiff.erase(it);
+    // }
   }
   if (gitDiff.size() == 0) {
     dynamicBuild = false;
