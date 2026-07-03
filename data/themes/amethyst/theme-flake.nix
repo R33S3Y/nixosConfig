@@ -13,22 +13,22 @@ let
     image = ./wallpaper.jpg;
 
     base16Scheme = {
-      base00 = "f5ebff"; # ----
-      base01 = "e5cbef"; # ---
-      base02 = "d5abdf"; # --
-      base03 = "c58bcf"; # -
-      base04 = "484b58"; # +
-      base05 = "383b48"; # ++
-      base06 = "282b38"; # +++
-      base07 = "181B28"; # ++++
-      base08 = "4075dc"; # red
-      base09 = "5075dc"; # orange
-      base0A = "6075dc"; # yellow
-      base0B = "7075dc"; # green
-      base0C = "8075dc"; # aqua/cyan
-      base0D = "9075dc"; # blue
-      base0E = "a075dc"; # purple
-      base0F = "b075dc"; # brown
+      base00 = "f5ebff"; # #ebf5ff ----
+      base01 = "e5cbef"; # #cbe5ef ---
+      base02 = "d5abdf"; # #abd5df --
+      base03 = "c58bcf"; # #8bc5cf -
+      base04 = "484b58"; # #484b58 +
+      base05 = "383b48"; # #383b48 ++
+      base06 = "282b38"; # #282b38 +++
+      base07 = "181B28"; # #181B28 ++++
+      base08 = "4075dc"; # #4075dc red
+      base09 = "5075dc"; # #5075dc orange
+      base0A = "6075dc"; # #6075dc yellow
+      base0B = "7075dc"; # #7075dc green
+      base0C = "8075dc"; # #8075dc aqua/cyan
+      base0D = "9075dc"; # #9075dc blue
+      base0E = "a075dc"; # #a075dc purple
+      base0F = "b075dc"; # #b075dc brown
     };
 
     fonts = {
@@ -89,20 +89,3 @@ let
   };
 in
 theme
-
-#base00 = "#181B28"; # ----
-#base01 = "#282b38"; # ---
-#base02 = "#383b48"; # --
-#base03 = "#484b58"; # -
-#base04 = "#c58bcf"; # +
-#base05 = "#d5abdf"; # ++
-#base06 = "#e5cbef"; # +++
-#base07 = "#f5ebff"; # ++++
-#base08 = "#4075dc"; # red
-#base09 = "#5075dc"; # orange
-#base0A = "#6075dc"; # yellow
-#base0B = "#7075dc"; # green
-#base0C = "#8075dc"; # aqua/cyan
-#base0D = "#9075dc"; # blue
-#base0E = "#a075dc"; # purple
-#base0F = "#b075dc"; # brown
