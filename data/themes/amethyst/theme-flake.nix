@@ -17,9 +17,9 @@ let
       base01 = "cbe5ef"; # #cbe5ef ---
       base02 = "abd5df"; # #abd5df --
       base03 = "8bc5cf"; # #8bc5cf -
-      base04 = "484b58"; # #484b58 +
-      base05 = "383b48"; # #383b48 ++
-      base06 = "282b38"; # #282b38 +++
+      base04 = "484ba8"; # #484ba8 +
+      base05 = "383b88"; # #383b88 ++
+      base06 = "282b58"; # #282b58 +++
       base07 = "181B28"; # #181B28 ++++
       base08 = "4075dc"; # #4075dc red
       base09 = "5075dc"; # #5075dc orange
