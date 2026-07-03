@@ -10,7 +10,7 @@ let
     polarity = "light";
 
     # wallpaper
-    image = ./wallpaper.jpg;
+    image = ./wallpaper.png;
 
     base16Scheme = {
       base00 = "ebf5ff"; # #ebf5ff ----
