@@ -68,7 +68,7 @@ int main(int argc, char const *argv[]) {
   for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
        it++) {
     *it = strings::trim(*it);
-    cout << *it + "\n";
+
     if (*it == "") {
       gitDiff.erase(it);
     }
