@@ -64,13 +64,13 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
 
   vector<string> skippableFiles = {"LICENSE", "README"};
 
-  for (int i = 0; i > gitDiff.size(); i++) {
+  for (int i = 0; i < gitDiff.size(); i++) {
     cout << "git: " + gitDiff[i] + "\n";
 
     if (gitDiff[i].ends_with(".nix") != string::npos) {
       continue;
     }
-    for (int j = 0; j > skippableFiles.size(); j++) {
+    for (int j = 0; j < skippableFiles.size(); j++) {
       if (gitDiff[i].ends_with(skippableFiles[j]) != string::npos) {
         cout << "hit!";
         continue;
