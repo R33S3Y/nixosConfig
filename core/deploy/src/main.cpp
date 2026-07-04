@@ -69,6 +69,8 @@ int main(int argc, char const *argv[]) {
        it++) {
     *it = strings::trim(*it);
 
+    cout << *it + "\n";
+
     if (it->size() == 0) {
       gitDiff.erase(it);
       it--;
