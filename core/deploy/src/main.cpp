@@ -65,6 +65,10 @@ int main(int argc, char const *argv[]) {
   }
 
   vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
+  for (string str : gitDiff) {
+    cout << str + "\n";
+  }
+
   for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
        it++) {
     *it = strings::trim(*it);
