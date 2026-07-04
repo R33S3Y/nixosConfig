@@ -8,4 +8,3 @@
     kdePackages.konsole
   ];
 }
-  fdsfsdfs

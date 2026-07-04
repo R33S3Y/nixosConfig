@@ -57,8 +57,8 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  cmdOut =
-      systemHelper::runCommand("git -C " + flakePath + " diff --name-only");
+  cmdOut = systemHelper::runCommand("git -C " + flakePath +
+                                    " diff HEAD^ HEAD --name-only");
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("git diff failed");
     return 1;
