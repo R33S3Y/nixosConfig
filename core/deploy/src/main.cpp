@@ -63,8 +63,6 @@ int main(int argc, char const *argv[]) {
     cerr << ttyHelper::error("git diff failed");
     return 1;
   }
-  cout << "cout: \"" + cmdOut.output + "\"\n";
-  cout << "cerr: \"" + cmdOut.error + "\"\n";
 
   vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
 
@@ -75,7 +73,9 @@ int main(int argc, char const *argv[]) {
     if (it->size() == 0) {
       gitDiff.erase(it);
       it--;
+      continue;
     }
+    *it = "/" + *it;
   }
   if (gitDiff.size() == 0) {
     dynamicBuild = false;
