@@ -63,7 +63,7 @@ int main(int argc, char const *argv[]) {
     cerr << ttyHelper::error("git diff failed");
     return 1;
   }
-  cout << cmdOut.error;
+  cout << cmdOut.output;
 
   vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
 

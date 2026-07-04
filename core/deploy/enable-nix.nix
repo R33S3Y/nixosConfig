@@ -8,6 +8,8 @@ in
       pname = "deploy";
       version = version;
 
+      enableParallelBuilding = true;
+
       src = ./src;
 
       buildInputs = [
