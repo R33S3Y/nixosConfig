@@ -71,6 +71,7 @@ int main(int argc, char const *argv[]) {
 
     if (it->size() == 0) {
       gitDiff.erase(it);
+      it--;
     }
   }
   if (gitDiff.size() == 0) {
