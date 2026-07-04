@@ -89,9 +89,13 @@ int main(int argc, char const *argv[]) {
       rebuild.push_back(true);
       continue;
     }
-    cout << host + "\n";
+
     rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
-    cout << rebuild.back();
+    if (rebuild.back() == true) {
+      cout << "rebuild " + host + "\n";
+    } else {
+      cout << "skip " + host + "\n";
+    }
   }
 
   filesystem::remove_all(flakePath);
