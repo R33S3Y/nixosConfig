@@ -71,6 +71,7 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
     }
     for (int j = 0; j > skippableFiles.size(); j++) {
       if (gitDiff[i].find(skippableFiles[j]) != string::npos) {
+        cout << "hit!";
         continue;
       }
     }
@@ -128,7 +129,6 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
   }
 
   for (string file : processedFiles) {
-    cout << file + "\n";
     if (ranges::contains(gitDiff, file)) {
       return true;
     }
