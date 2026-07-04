@@ -32,7 +32,7 @@ vector<string> getFlakeInputs(string flakeLink) {
 int main(int argc, char const *argv[]) {
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
-  string flakePath = "/tmp/currentConfig";
+  string flakePath = "/tmp/nixosConfig";
   bool dynamicBuild = true;
 
   filesystem::create_directories(flakePath);
