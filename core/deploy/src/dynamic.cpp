@@ -68,14 +68,16 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
     cout << "git: " + gitDiff[i] + "\n";
 
     if (gitDiff[i].ends_with(".nix") != string::npos) {
+      cout << "hit .nix";
       continue;
     }
     for (int j = 0; j < skippableFiles.size(); j++) {
       if (gitDiff[i].ends_with(skippableFiles[j]) != string::npos) {
+        cout << "hit skippable";
         continue;
       }
     }
-    cout << "rebuild due to not .nix in diff";
+    cout << "rebuild due to not .nix in diff\n";
     return true;
   }
 
