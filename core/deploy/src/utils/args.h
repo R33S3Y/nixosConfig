@@ -10,13 +10,13 @@ class args {
 public:
   struct optionIn {
     string longName;
-    optional<string> shortName;
+    optional<char> shortName;
     bool takesValue = false;
   };
   struct optionOut {
     string longName;
     bool invoked;
-    optional<string> shortName;
+    optional<char> shortName;
     optional<string> value;
   };
   map<string, optionOut> parse(vector<string> userInput,

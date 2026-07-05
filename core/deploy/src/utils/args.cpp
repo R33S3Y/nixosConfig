@@ -58,7 +58,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
         break;
       }
       if (preposedArgInfo.shortName.has_value() == true &&
-          token.starts_with(*preposedArgInfo.shortName) && longArg == false) {
+          token[0] == *preposedArgInfo.shortName && longArg == false) {
         argName = preposedArgName;
         argInfo = preposedArgInfo;
         break;
@@ -84,8 +84,9 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
           throw invalid_argument("Arg: --" + argInfo.longName +
                                  " is needs a value");
         }
-        throw invalid_argument("Arg: -" + *argInfo.shortName +
-                               " is needs a value");
+        string throwable = "Arg: - is needs a value";
+        throw invalid_argument(throwable.substr(0, 6) + *argInfo.shortName +
+                               throwable.substr(6));
       }
       invokedOutput.value = userInput[i + 1];
       userInput.erase(userInput.begin() + i + 1);

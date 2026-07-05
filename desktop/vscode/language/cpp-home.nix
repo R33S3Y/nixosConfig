@@ -20,7 +20,6 @@
           editor.defaultFormatter = "llvm-vs-code-extensions.vscode-clangd";
         };
         clangd = {
-          #  arguments = [ "-std=c++23" ];
           fallbackFlags = [ "-std=c++23" ];
         };
       };
