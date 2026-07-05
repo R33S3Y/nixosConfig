@@ -1,6 +1,7 @@
 #include "args.h";
 #include "split.h"
 #include "strings.h"
+#include <exception>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -48,7 +49,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
 
     token = strings::replaceAll(token, "-", "");
-    string argName;
+    string argName = "";
     args::optionIn argInfo;
     for (auto &[preposedArgName, preposedArgInfo] : argValues) {
       if (token.starts_with(preposedArgInfo.longName) && longArg == true) {
@@ -63,37 +64,34 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
         break;
       }
     }
-  }
 
-  // find --longname
-  for (vector<string>::iterator it = userInput.begin();
-       it != userInput.end() - 1; it++) {
-    if (*it != "--" + curArgInfo.longName) {
-      continue;
+    if (argName.size() == 0) {
+      if (longArg == true) {
+        throw invalid_argument("Arg: --" + token + " is not valid.");
+      }
+      throw invalid_argument("Arg/s: -" + token + " is not valid.");
     }
 
-    // if is maybe invoked
-    if (userInputStr.find(curArgInfo.longName) == string::npos &&
-        (!curArgInfo.shortName.has_value() ||
-         userInputStr.find(*curArgInfo.shortName) == std::string::npos)) {
-      // if this is true arg is not in
-      output[curArg] = {
-          .longName = curArgInfo.longName,
-          .invoked = false,
-          .shortName = *curArgInfo.shortName,
-      };
-      continue;
-    }
+    args::optionOut invokedOutput = {
+        .longName = argInfo.longName,
+        .invoked = true,
+        .shortName = argInfo.shortName,
+    };
 
-    string value = "";
-    if (*it++.starts_with("-") == false && curArgInfo.takesValue == true) {
-      value = *it++;
-      userInput.erase(it++);
-    } else if (curArgInfo.takesValue == true) {
-      // arg needed but not found
-      throw invalid_argument("Arg: --" + curArgInfo.longName +
-                             " takes a value");
+    if (argInfo.takesValue == true) {
+      if (userInput[i + 1].starts_with("-") == true) {
+        if (longArg == true) {
+          throw invalid_argument("Arg: --" + argInfo.longName +
+                                 " is needs a value");
+        }
+        throw invalid_argument("Arg: -" + *argInfo.shortName +
+                               " is needs a value");
+      }
+      invokedOutput.value = userInput[i + 1];
+      userInput.erase(userInput.begin() + i + 1);
+      lastArgToken--;
     }
   }
+
   return output;
 }
