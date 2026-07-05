@@ -169,6 +169,8 @@ let
       inkscape
       thunderbird
       file
+
+      lutris
     ];
 
     bluetooth = true;

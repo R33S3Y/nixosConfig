@@ -30,6 +30,7 @@ vector<string> getFlakeInputs(string flakeLink) {
   return configs;
 }
 int main(int argc, char const *argv[]) {
+  vector<string> args(argv, argv + argc);
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/nixosConfig";
@@ -95,6 +96,18 @@ int main(int argc, char const *argv[]) {
       cout << "rebuild " + host + "\n";
     } else {
       cout << "skip " + host + "\n";
+    }
+  }
+  if (hosts.size() != rebuild.size()) {
+    cerr << ttyHelper::error(
+        "if rebuild list is not same length as hosts list");
+    return 0;
+  }
+  for (int i = 0; i < hosts.size(); i++) {
+    if (rebuild[i] == false) {
+      hosts.erase(hosts.begin() + i);
+      rebuild.erase(rebuild.begin() + i);
+      i--;
     }
   }
 
