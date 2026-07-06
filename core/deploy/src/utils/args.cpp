@@ -44,7 +44,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
   }
 
-  userInput.push_back(" ");
+  userInput.push_back("-");
 
   cout << "lastArgToken: ";
   cout << lastArgToken;
