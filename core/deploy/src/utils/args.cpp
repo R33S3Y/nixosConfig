@@ -36,15 +36,15 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
   }
 
-  userInput.push_back("-");
-
   int lastArgToken;
-  for (int i = userInput.size() - 1; i != 0; i--) {
+  for (int i = userInput.size(); i != 0; i--) {
     if (userInput[i].starts_with("-") == true) {
-      lastArgToken = i + 1;
+      lastArgToken = i;
       break;
     }
   }
+
+  userInput.push_back(" ");
 
   cout << "lastArgToken: ";
   cout << lastArgToken;
