@@ -43,7 +43,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   cout << lastArgToken;
   cout << ";\n";
 
-  while (lastArgToken >= 0) {
+  while (lastArgToken >= 0 || userInput[0] != "") {
     string token = userInput[0];
 
     cout << "\"" + token + "\"\n";
