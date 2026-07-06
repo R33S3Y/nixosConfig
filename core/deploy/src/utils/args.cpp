@@ -30,9 +30,10 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   for (int i = 0; i > userInput.size(); i++) {
     userInput[i] = strings::trim(userInput[i]);
+    cout << userInput[i] + "\n";
     if (userInput[i].size() == 0) {
-      cout << "erase";
       userInput.erase(userInput.begin() + i);
+      i--;
     }
   }
 
