@@ -39,6 +39,10 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
   }
 
+  cout << "lastArgToken: ";
+  cout << lastArgToken;
+  cout << "\n";
+
   for (int i = 0; i < lastArgToken; i++) {
     string token = userInput[i];
 
