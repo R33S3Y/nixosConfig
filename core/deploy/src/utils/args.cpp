@@ -46,7 +46,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   cout << ";\n";
 
   while (lastArgToken >= 0) {
-    string token = userInput[i];
+    string token = userInput[0];
 
     cout << token + "\n";
 
@@ -111,7 +111,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     // delete old stuff
     if (longArg == false) {
       token = token.substr(1);
-      userInput[i] = "-" + token;
+      userInput[0] = "-" + token;
 
       i--;
     }
