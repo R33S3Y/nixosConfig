@@ -131,6 +131,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   userInput.erase(userInput.end() - 1);
 
+  cout << "Ahh: " + userInput[0];
   string remainder = userInput[0];
   if (userInput.size() > 1) {
     for (int i = 1; i < userInput.size(); i++) {
