@@ -12,8 +12,6 @@ using namespace std;
 
 map<string, args::optionOut>
 args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
-  userInput.erase(userInput.begin());
-
   string userInputStr;
   for (string str : userInput) {
     userInputStr += " " + str;
@@ -121,6 +119,10 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     remainder += " " + str;
   }
   cout << "\nremainder: " + remainder + "\n";
+  cout << "found Flags: \n";
+  for (auto &[name, value] : output) {
+    cout << name + "\n";
+  }
 
   // add uninvoked args
   for (auto &[name, value] : argValues) {
