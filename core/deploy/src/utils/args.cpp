@@ -41,11 +41,9 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   cout << "lastArgToken: ";
   cout << lastArgToken;
-  cout << "; i: ";
-  cout << 0;
   cout << ";\n";
 
-  while (lastArgToken >= 0) {
+  while (lastArgToken <= 0) {
     string token = userInput[0];
 
     cout << token + "\n";
@@ -121,8 +119,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
     cout << "lastArgToken: ";
     cout << lastArgToken;
-    cout << "; i: ";
-    cout << 0;
     cout << ";\n";
 
     output[argName] = invokedOutput;
