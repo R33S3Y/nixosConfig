@@ -109,7 +109,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     // delete old stuff
     if (longArg == false) {
       token = token.substr(1);
-      userInput[i] = token;
+      userInput[i] = "-" + token;
       if (token.size() != 0) {
         i--;
       }
