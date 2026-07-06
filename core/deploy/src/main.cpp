@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -41,7 +42,12 @@ int main(int argc, char const *argv[]) {
       {"flake", args::optionIn{"flake", 'f', true}},
   };
 
-  map<string, args::optionOut> argsProcessed = args::parse(args, argsAvailable);
+  try {
+    map<string, args::optionOut> argsProcessed =
+        args::parse(args, argsAvailable);
+  } catch (invalid_argument e) {
+    cerr << ttyHelper::error(e.what());
+  }
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/nixosConfig";
