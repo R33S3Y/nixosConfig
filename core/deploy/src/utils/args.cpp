@@ -110,9 +110,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     if (longArg == false) {
       token = token.substr(1);
       userInput[i] = "-" + token;
-      if (token.size() != 0) {
-        i--;
-      }
+      i--;
     }
     if (longArg == true || token.size() == 0) {
       cout << "hit!!";
