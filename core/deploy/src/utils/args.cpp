@@ -101,8 +101,9 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     // delete old stuff
     if (longArg == false) {
       token = token.substr(1);
-      i--;
-      lastArgToken--;
+      if (token.size() != 0) {
+        i--;
+      }
     }
     if (longArg == true || token.size() == 0) {
       cout << "hit!!";
@@ -124,6 +125,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   for (auto &[name, value] : output) {
     cout << name + "\n";
   }
+  cout << "\n";
 
   // add uninvoked args
   for (auto &[name, value] : argValues) {
