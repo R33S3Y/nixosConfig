@@ -46,14 +46,8 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   userInput.push_back("-");
 
-  cout << "lastArgToken: ";
-  cout << lastArgToken;
-  cout << ";\n";
-
   while (lastArgToken >= 0) {
     string token = userInput[0];
-
-    cout << "\"" + token + "\"\n";
 
     if (token.starts_with("-") == false) {
       break;
@@ -122,16 +116,11 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       lastArgToken--;
     }
 
-    cout << "lastArgToken: ";
-    cout << lastArgToken;
-    cout << ";\n";
-
     output[argName] = invokedOutput;
   }
 
   userInput.erase(userInput.end() - 1);
 
-  cout << "Ahh: " + userInput[0];
   string remainder;
   if (userInput.size() > 0) {
     for (int i = 0; i < userInput.size(); i++) {
