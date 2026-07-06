@@ -123,7 +123,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   cout << "\nremainder: " + remainder + "\n";
   cout << "found Flags: \n";
   for (auto &[name, value] : output) {
-    cout << name + "\n";
+    cout << "  --" + name + "\n";
   }
   cout << "\n";
 
