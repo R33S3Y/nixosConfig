@@ -28,7 +28,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   // = signs it all gets split the same
   userInput = split::splitStrByChars(userInputStr, {' ', '='});
 
-  for (int i = 0; i > userInput.size(); i++) {
+  for (int i = 0; i < userInput.size(); i++) {
     userInput[i] = strings::trim(userInput[i]);
     cout << "Item: " + userInput[i] + "\n";
     if (userInput[i].size() == 0) {
