@@ -12,6 +12,8 @@ using namespace std;
 
 map<string, args::optionOut>
 args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
+  userInput.erase(userInput.begin());
+
   string userInputStr;
   for (string str : userInput) {
     userInputStr += " " + str;
