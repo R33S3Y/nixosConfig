@@ -113,7 +113,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   for (string str : userInput) {
     remainder += " " + str;
   }
-  cout << remainder + "\n";
+  cout << "remainder: " + remainder + "\n";
 
   // add uninvoked args
   for (auto &[name, value] : argValues) {
