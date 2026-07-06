@@ -129,7 +129,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     output[argName] = invokedOutput;
   }
 
-  userInput.erase(userInput.end());
+  userInput.erase(userInput.end() - 1);
 
   string remainder = userInput[0];
   for (int i = 1; i < userInput.size(); i++) {
