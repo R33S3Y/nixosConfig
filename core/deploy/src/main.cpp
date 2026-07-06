@@ -47,6 +47,7 @@ int main(int argc, char const *argv[]) {
         args::parse(args, argsAvailable);
   } catch (invalid_argument e) {
     cerr << ttyHelper::error(e.what());
+    return 1;
   }
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
