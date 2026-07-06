@@ -45,7 +45,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   cout << 0;
   cout << ";\n";
 
-  for (int i = 0; i < lastArgToken; i++) {
+  while (lastArgToken >= 0) {
     string token = userInput[i];
 
     cout << token + "\n";
@@ -93,7 +93,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
     // get value
     if (argInfo.takesValue == true) {
-      if (userInput[i + 1].starts_with("-") == true) {
+      if (userInput[1].starts_with("-") == true) {
         if (longArg == true) {
           throw invalid_argument("Arg: --" + argInfo.longName +
                                  " is needs a value");
@@ -102,9 +102,9 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
         throw invalid_argument(throwable.substr(0, 6) + *argInfo.shortName +
                                throwable.substr(6));
       }
-      invokedOutput.value = userInput[i + 1];
+      invokedOutput.value = userInput[1];
       cout << "hit!";
-      userInput.erase(userInput.begin() + i + 1);
+      userInput.erase(userInput.begin() + 1);
       lastArgToken--;
     }
 
@@ -117,7 +117,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
     if (longArg == true || token.size() == 0) {
       cout << "hit!!";
-      userInput.erase(userInput.begin() + i);
+      userInput.erase(userInput.begin());
       lastArgToken--;
     }
 
