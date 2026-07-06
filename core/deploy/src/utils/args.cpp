@@ -119,6 +119,10 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       lastArgToken--;
     }
 
+    cout << "lastArgToken: ";
+    cout << lastArgToken;
+    cout << "\n";
+
     output[argName] = invokedOutput;
   }
 
