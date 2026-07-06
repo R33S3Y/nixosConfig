@@ -19,6 +19,6 @@ public:
     optional<char> shortName;
     optional<string> value;
   };
-  map<string, optionOut> parse(vector<string> userInput,
-                               map<string, optionIn> argValues);
+  static map<string, optionOut> parse(vector<string> userInput,
+                                      map<string, optionIn> argValues);
 };

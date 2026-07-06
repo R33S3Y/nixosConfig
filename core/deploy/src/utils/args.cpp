@@ -2,6 +2,7 @@
 #include "split.h"
 #include "strings.h"
 #include <exception>
+#include <iostream>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -43,11 +44,13 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       continue;
     }
 
+    // is longArg
     bool longArg = true;
     if (token.starts_with("--") == false) {
       longArg = false;
     }
 
+    // find str
     token = strings::replaceAll(token, "-", "");
     string argName = "";
     args::optionIn argInfo;
@@ -64,7 +67,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
         break;
       }
     }
-
     if (argName.size() == 0) {
       if (longArg == true) {
         throw invalid_argument("Arg: --" + token + " is not valid.");
@@ -72,12 +74,14 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       throw invalid_argument("Arg/s: -" + token + " is not valid.");
     }
 
+    // make value
     args::optionOut invokedOutput = {
         .longName = argInfo.longName,
         .invoked = true,
         .shortName = argInfo.shortName,
     };
 
+    // get value
     if (argInfo.takesValue == true) {
       if (userInput[i + 1].starts_with("-") == true) {
         if (longArg == true) {
@@ -92,6 +96,35 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       userInput.erase(userInput.begin() + i + 1);
       lastArgToken--;
     }
+
+    // delete old stuff
+    if (longArg == false) {
+      token = token.substr(1);
+    }
+    if (longArg == true || token.size() == 0) {
+      userInput.erase(userInput.begin() + i);
+      lastArgToken--;
+    }
+
+    output[argName] = invokedOutput;
+  }
+
+  string remainder;
+  for (string str : userInput) {
+    remainder += " " + str;
+  }
+  cout << remainder + "\n";
+
+  // add uninvoked args
+  for (auto &[name, value] : argValues) {
+    if (output.find(name) == output.end()) {
+      continue;
+    }
+    output[name] = {
+        .longName = value.longName,
+        .invoked = false,
+        .shortName = value.shortName,
+    };
   }
 
   return output;

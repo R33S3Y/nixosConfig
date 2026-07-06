@@ -1,14 +1,17 @@
 
 #include "dynamic.h"
 
+#include "utils/args.h"
 #include "utils/split.h"
 #include "utils/strings.h"
 #include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
 #include <filesystem>
 #include <iostream>
+#include <map>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 using namespace std;
@@ -31,6 +34,14 @@ vector<string> getFlakeInputs(string flakeLink) {
 }
 int main(int argc, char const *argv[]) {
   vector<string> args(argv, argv + argc);
+
+  map<string, args::optionIn> argsAvailable = {
+      {"all", args::optionIn{"all", 'a'}},
+      {"dynamic", args::optionIn{"dynamic", 'd'}},
+      {"flake", args::optionIn{"flake", 'f', true}},
+  };
+
+  map<string, args::optionOut> argsProcessed = args::parse(args, argsAvailable);
 
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/nixosConfig";
