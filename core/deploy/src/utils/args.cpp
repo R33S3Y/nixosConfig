@@ -30,7 +30,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   for (int i = 0; i < userInput.size(); i++) {
     userInput[i] = strings::trim(userInput[i]);
-    cout << "Item: " + userInput[i] + "\n";
     if (userInput[i].size() == 0) {
       userInput.erase(userInput.begin() + i);
       i--;
@@ -40,7 +39,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   userInput.push_back("-");
 
   int lastArgToken;
-  for (int i = userInput.size() - 2; i != 0; i--) {
+  for (int i = userInput.size() - 1; i != 0; i--) {
     if (userInput[i].starts_with("-") == true) {
       lastArgToken = i + 1;
       break;
