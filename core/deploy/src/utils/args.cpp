@@ -34,7 +34,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   int lastArgToken;
   for (int i = userInput.size() - 2; i != 0; i--) {
     if (userInput[i].starts_with("-") == true) {
-      lastArgToken = i;
+      lastArgToken = i + 1;
       break;
     }
   }
