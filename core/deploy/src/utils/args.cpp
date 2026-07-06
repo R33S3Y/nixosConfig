@@ -27,8 +27,15 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   // resplitting and triming like this means that we dont need to worry about
   // = signs it all gets split the same
   userInput = split::splitStrByChars(userInputStr, {' ', '='});
-  for (string &token : userInput)
-    token = strings::trim(token);
+
+  for (int i = 0; i > userInput.size(); i++) {
+    userInput[i] = strings::trim(userInput[i]);
+    if (userInput[i].size() == 0) {
+      cout << "erase";
+      userInput.erase(userInput.begin() + i);
+    }
+  }
+
   userInput.push_back("-");
 
   int lastArgToken;
