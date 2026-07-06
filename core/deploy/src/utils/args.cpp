@@ -121,6 +121,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   userInput.erase(userInput.end() - 1);
 
+  // pass though remainder
   string remainder;
   if (userInput.size() > 0) {
     for (int i = 0; i < userInput.size(); i++) {
@@ -129,12 +130,12 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     remainder = remainder.substr(1);
   }
 
-  cout << "\nremainder: " + remainder + "\n";
-  cout << "found Flags: \n";
-  for (auto &[name, value] : output) {
-    cout << "  --" + name + " " + *value.value + "\n";
-  }
-  cout << "\n";
+  output["*"] = {
+      .longName = "remainder",
+      .invoked = false,
+      .shortName = '*',
+      .value = remainder,
+  };
 
   // add uninvoked args
   for (auto &[name, value] : argValues) {
