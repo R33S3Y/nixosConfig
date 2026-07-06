@@ -102,6 +102,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     if (longArg == false) {
       token = token.substr(1);
       i--;
+      lastArgToken--;
     }
     if (longArg == true || token.size() == 0) {
       cout << "hit!!";
