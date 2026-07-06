@@ -93,7 +93,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
                                throwable.substr(6));
       }
       invokedOutput.value = userInput[i + 1];
-      cout << "hit!";
+      // cout << "hit!";
       userInput.erase(userInput.begin() + i + 1);
       lastArgToken--;
     }
@@ -103,7 +103,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       token = token.substr(1);
     }
     if (longArg == true || token.size() == 0) {
-      cout << "hit!!";
+      // cout << "hit!!";
       userInput.erase(userInput.begin() + i);
       lastArgToken--;
     }
