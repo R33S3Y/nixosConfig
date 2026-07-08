@@ -52,9 +52,10 @@ int main(int argc, char const *argv[]) {
 
   for (auto &[name, value] : argsProcessed) {
     if (value.invoked == false) {
+      cout << "flag:  " + name + "; invoked: false;\n";
       continue;
     }
-    cout << "flag:  " + name + "\n";
+    cout << "flag:  " + name + "; invoked: true;\n";
   }
 
   if (argsProcessed["all"].invoked == true &&
