@@ -114,7 +114,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       userInput.erase(userInput.begin());
       lastArgToken--;
     }
-    cout << argName;
 
     output[argName] = invokedOutput;
   }
