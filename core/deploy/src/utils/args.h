@@ -12,6 +12,7 @@ public:
     string longName;
     optional<char> shortName;
     bool takesValue = false;
+    bool required = false;
   };
   struct optionOut {
     string longName;

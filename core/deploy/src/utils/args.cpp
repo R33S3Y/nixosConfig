@@ -139,6 +139,13 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     if (output.find(name) != output.end()) {
       continue;
     }
+    if (value.required == true) {
+      if (value.shortName.has_value()) {
+        throw invalid_argument("--" + value.longName + " (-" +
+                               *value.shortName + ") is required");
+      }
+      throw invalid_argument("--" + value.longName + " is required");
+    }
     output[name] = {
         .longName = value.longName,
         .invoked = false,
