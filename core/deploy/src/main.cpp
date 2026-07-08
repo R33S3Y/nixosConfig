@@ -50,14 +50,6 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  for (auto &[name, value] : argsProcessed) {
-    if (value.invoked == false) {
-      cout << "flag: " + name + "; invoked: false;\n";
-      continue;
-    }
-    cout << "flag: " + name + "; invoked: true;\n";
-  }
-
   if (argsProcessed["all"].invoked == true &&
       argsProcessed["dynamic"].invoked == true) {
     cerr << ttyHelper::error(
