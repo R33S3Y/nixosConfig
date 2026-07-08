@@ -1,7 +1,6 @@
 #include "args.h"
 #include "split.h"
 #include "strings.h"
-#include <iostream>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -138,7 +137,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
   // add uninvoked args
   for (auto &[name, value] : argValues) {
     if (output.find(name) != output.end()) {
-      cout << "hit: " + name + "\n";
       continue;
     }
     output[name] = {
@@ -150,3 +148,4 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   return output;
 }
+cout << "hit: " + name + "\n";
