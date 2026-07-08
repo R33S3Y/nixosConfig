@@ -1,6 +1,7 @@
 #include "args.h"
 #include "split.h"
 #include "strings.h"
+#include <iostream>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -113,6 +114,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
       userInput.erase(userInput.begin());
       lastArgToken--;
     }
+    cout << argName;
 
     output[argName] = invokedOutput;
   }
