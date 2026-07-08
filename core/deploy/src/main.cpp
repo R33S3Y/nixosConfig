@@ -39,7 +39,7 @@ int main(int argc, char const *argv[]) {
   map<string, args::optionIn> argsAvailable = {
       {"all", args::optionIn{"all", 'a'}},
       {"dynamic", args::optionIn{"dynamic", 'd'}},
-      {"flake", args::optionIn{"flake", 'f', true}},
+      {"flake", args::optionIn{"flake", 'f', true, true}},
   };
 
   map<string, args::optionOut> argsProcessed;
