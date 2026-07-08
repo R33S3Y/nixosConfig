@@ -50,6 +50,13 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
+  if (argsProcessed["all"].invoked == true &&
+      argsProcessed["dynamic"].invoked == true) {
+    cerr << ttyHelper::error(
+        "--dynamic (-d) and --all (-a) are mutually exclusive");
+    return 1;
+  }
+
   string flakeLink = "/home/reese/Projects/nixosConfig";
   string flakePath = "/tmp/nixosConfig";
   bool dynamicBuild = true;

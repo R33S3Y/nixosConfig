@@ -1,8 +1,6 @@
 #include "args.h";
 #include "split.h"
 #include "strings.h"
-#include <exception>
-#include <iostream>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -24,7 +22,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   map<string, args::optionOut> output;
 
-  // resplitting and triming like this means that we dont need to worry about
+  // resitting and trimming like this means that we dont need to worry about
   // = signs it all gets split the same
   userInput = split::splitStrByChars(userInputStr, {' ', '='});
 
@@ -129,7 +127,6 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
     remainder = remainder.substr(1);
   }
-
   output["*"] = {
       .longName = "remainder",
       .invoked = false,
