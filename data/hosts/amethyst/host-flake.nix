@@ -138,7 +138,7 @@ let
       vlc
       nano
 
-      libreoffice-qt6-fresh
+      libreoffice
 
       inkscape
       thunderbird

@@ -152,7 +152,7 @@ let
       keymapp
 
       kicad
-      libreoffice-qt6-fresh
+      libreoffice
 
       qtcreator
       cmake
