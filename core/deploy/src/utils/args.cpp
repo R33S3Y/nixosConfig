@@ -148,4 +148,3 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   return output;
 }
-cout << "hit: " + name + "\n";
