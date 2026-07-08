@@ -76,9 +76,9 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
     if (argName.size() == 0) {
       if (longArg == true) {
-        throw invalid_argument("Arg: --" + token + " is not valid.");
+        throw invalid_argument("--" + token + " is not valid.");
       }
-      throw invalid_argument("Arg/s: -" + token + " is not valid.");
+      throw invalid_argument("-" + token + " is not valid.");
     }
 
     // make value
@@ -91,13 +91,11 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     // get value
     if (argInfo.takesValue == true) {
       if (userInput[1].starts_with("-") == true) {
-        if (longArg == true) {
-          throw invalid_argument("Arg: --" + argInfo.longName +
-                                 " is needs a value");
+        if (argInfo.shortName.has_value()) {
+          throw invalid_argument("--" + argInfo.longName + " (-" +
+                                 *argInfo.shortName + ") needs a value");
         }
-        string throwable = "Arg: - is needs a value";
-        throw invalid_argument(throwable.substr(0, 6) + *argInfo.shortName +
-                               throwable.substr(6));
+        throw invalid_argument("--" + argInfo.longName + " needs a value");
       }
       invokedOutput.value = userInput[1];
       userInput.erase(userInput.begin() + 1);
