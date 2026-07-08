@@ -55,8 +55,8 @@ int main(int argc, char const *argv[]) {
   // error check
   if (argsProcessed["all"].invoked == true &&
       argsProcessed["dynamic"].invoked == true) {
-    cerr << ttyHelper::error(
-        "--dynamic (-d) and --all (-a) are mutually exclusive");
+    cerr << ttyHelper::error("--dynamic (\033[35m-d\033[0m) and --all "
+                             "(\033[35m-a\033[0m) are mutually exclusive");
     return 1;
   }
 

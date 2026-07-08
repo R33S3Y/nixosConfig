@@ -92,8 +92,8 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     if (argInfo.takesValue == true) {
       if (userInput[1].starts_with("-") == true) {
         if (argInfo.shortName.has_value()) {
-          throw invalid_argument("--" + argInfo.longName + " (-" +
-                                 *argInfo.shortName + ") needs a value");
+          throw invalid_argument("--" + argInfo.longName + " (\033[35m-" +
+                                 *argInfo.shortName + "\033[0m) needs a value");
         }
         throw invalid_argument("--" + argInfo.longName + " needs a value");
       }
@@ -139,8 +139,8 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     }
     if (value.required == true) {
       if (value.shortName.has_value()) {
-        throw invalid_argument("--" + value.longName + " (-" +
-                               *value.shortName + ") is required");
+        throw invalid_argument("--" + value.longName + " (\033[35m-" +
+                               *value.shortName + "\033[0m) is required");
       }
       throw invalid_argument("--" + value.longName + " is required");
     }
