@@ -42,9 +42,9 @@ int main(int argc, char const *argv[]) {
       {"flake", args::optionIn{"flake", 'f', true}},
   };
 
+  map<string, args::optionOut> argsProcessed;
   try {
-    map<string, args::optionOut> argsProcessed =
-        args::parse(args, argsAvailable);
+    argsProcessed = args::parse(args, argsAvailable);
   } catch (invalid_argument e) {
     cerr << ttyHelper::error(e.what());
     return 1;
