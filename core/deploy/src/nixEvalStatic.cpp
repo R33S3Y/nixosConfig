@@ -6,7 +6,7 @@
 #include "utils/ttyHelper.h"
 #include <iostream>
 #include <map>
-#include <string>
+#include <nlohmann/json.hpp>
 
 bool nixEvalStatic::filterCandidate(nixEvalStatic::candidate testingCandidate) {
   // returns trues if this thing we know the thing is valid.
@@ -233,4 +233,20 @@ nixEvalStatic::juniorInitWorker(map<string, nixEvalStatic::key> input) {
   }
 
   return output;
+}
+vector<string> nixEvalStatic::getFlakeHosts(string flakePath) {
+  string cmd = "nix flake show " + flakePath + " --json";
+  systemHelper::result cmdOut = systemHelper::runCommand(cmd);
+
+  if (cmdOut.exitCode != 0) {
+    return {};
+  }
+  auto json = nlohmann::json::parse(cmdOut.output);
+
+  vector<string> configs;
+  for (auto &[key, value] : json["nixosConfigurations"].items()) {
+    configs.push_back(key);
+  }
+
+  return configs;
 }

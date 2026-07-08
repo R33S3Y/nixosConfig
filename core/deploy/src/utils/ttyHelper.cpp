@@ -12,6 +12,15 @@ string ttyHelper::error(string message) {
   return "\n\033[31merror:\033[0m " + strings::trim(message) + "\n";
 }
 
+string ttyHelper::warning(string message) {
+  vector<string> tokens = split::splitStrByChar(message, '\n');
+  message = "";
+  for (string token : tokens) {
+    message += strings::trim(token) + "\n  ";
+  }
+  return "\n\033[31mwarning:\033[0m " + strings::trim(message) + "\n";
+}
+
 string ttyHelper::progressBar(const int progress, const int total,
                               const int chars) {
   if (progress > total) {

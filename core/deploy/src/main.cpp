@@ -1,38 +1,22 @@
 
 #include "dynamic.h"
 
+#include "nixEvalStatic.h"
 #include "utils/args.h"
 #include "utils/split.h"
 #include "utils/strings.h"
 #include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <map>
-#include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <string>
-#include <type_traits>
 #include <vector>
 
 using namespace std;
 
-vector<string> getFlakeInputs(string flakeLink) {
-  string cmd = "nix flake show " + flakeLink + " --json";
-  systemHelper::result cmdOut = systemHelper::runCommand(cmd);
-
-  if (cmdOut.exitCode != 0) {
-    return {};
-  }
-  auto json = nlohmann::json::parse(cmdOut.output);
-
-  vector<string> configs;
-  for (auto &[key, value] : json["nixosConfigurations"].items()) {
-    configs.push_back(key);
-  }
-
-  return configs;
-}
 int main(int argc, char const *argv[]) {
   vector<string> args(argv, argv + argc);
 
@@ -60,10 +44,9 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
+  // get flake
   string flakeLink = *argsProcessed["flake"].value;
   string flakePath = "/tmp/nixosConfig";
-  bool dynamicBuild = true;
-
   filesystem::create_directories(flakePath);
   if (filesystem::is_empty(flakePath) == false) {
     cerr << ttyHelper::error("flakePath (\033[35m" + flakePath +
@@ -79,37 +62,64 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  vector<string> hosts = getFlakeInputs(flakePath);
+  // get available hosts
+  vector<string> hosts;
+  vector<string> availableHosts = nixEvalStatic::getFlakeHosts(flakePath);
   if (hosts.size() == 0) {
     cerr << ttyHelper::error("flake does not contain any hosts or no "
                              "hosts could be found");
     return 1;
   }
-
-  cmdOut = systemHelper::runCommand("git -C " + flakePath +
-                                    " diff HEAD^ HEAD --name-only");
-  if (cmdOut.exitCode != 0) {
-    cerr << ttyHelper::error("git diff failed");
-    return 1;
-  }
-
-  vector<string> gitDiff = split::splitStrByChar(cmdOut.output, '\n');
-
-  for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
-       it++) {
-    *it = strings::trim(*it);
-
-    if (it->size() == 0) {
-      gitDiff.erase(it);
-      it--;
-      continue;
+  // compare against user input
+  vector<string> userHosts =
+      split::splitStrByChar(*argsProcessed["*"].value, ' ');
+  if (userHosts.size() == 1 && userHosts[0] == "*") {
+    hosts = availableHosts;
+  } else {
+    for (string userHost : userHosts) {
+      if (ranges::contains(availableHosts, userHost)) {
+        hosts.push_back(userHost);
+      } else {
+        cerr << ttyHelper::error("host (\033[35m" + userHost +
+                                 "\033[0m) does not exist in flake");
+        return 1;
+      }
     }
-    *it = "/" + *it;
   }
-  if (gitDiff.size() == 0) {
-    dynamicBuild = false;
-    cerr << ttyHelper::error(
-        "no changed items found. Skipping dynamic rebuild");
+
+  // get git diff
+  bool dynamicBuild = true;
+  vector<string> gitDiff;
+  if (dynamicBuild == true) {
+
+    cmdOut = systemHelper::runCommand("git -C " + flakePath +
+                                      " diff HEAD^ HEAD --name-only");
+    if (cmdOut.exitCode != 0) {
+      cerr << ttyHelper::error("git diff failed");
+      return 1;
+    }
+
+    gitDiff = split::splitStrByChar(cmdOut.output, '\n');
+    for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
+         it++) {
+      *it = strings::trim(*it);
+
+      if (it->size() == 0) {
+        gitDiff.erase(it);
+        it--;
+        continue;
+      }
+      // git diff cmd gives folder/file so this just converts it into
+      // /folder/file which is what we use cus it lets us just flakePath +
+      // "/folder/path"
+      *it = "/" + *it;
+    }
+
+    if (gitDiff.size() == 0) {
+      dynamicBuild = false;
+      cerr << ttyHelper::warning(
+          "no changed items found. Skipping dynamic rebuild");
+    }
   }
 
   vector<bool> rebuild;
@@ -129,7 +139,7 @@ int main(int argc, char const *argv[]) {
   if (hosts.size() != rebuild.size()) {
     cerr << ttyHelper::error(
         "if rebuild list is not same length as hosts list");
-    return 0;
+    return 1;
   }
   for (int i = 0; i < hosts.size(); i++) {
     if (rebuild[i] == false) {

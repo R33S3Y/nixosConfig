@@ -24,6 +24,7 @@ public:
   static string removeLetIn(string fileStr);
 
   static vector<string> list(string test, bool throwLazy = true);
+  static vector<string> getFlakeHosts(string flakePath);
 
   static map<string, nixEvalStatic::key> juniorInitWorker(map<string, key>);
   static map<string, map<string, nixEvalStatic::key>>
