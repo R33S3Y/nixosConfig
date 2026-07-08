@@ -36,12 +36,14 @@ vector<string> getFlakeInputs(string flakeLink) {
 int main(int argc, char const *argv[]) {
   vector<string> args(argv, argv + argc);
 
+  // set flags
   map<string, args::optionIn> argsAvailable = {
       {"all", args::optionIn{"all", 'a'}},
       {"dynamic", args::optionIn{"dynamic", 'd'}},
       {"flake", args::optionIn{"flake", 'f', true, true}},
   };
 
+  // parse user input
   map<string, args::optionOut> argsProcessed;
   try {
     argsProcessed = args::parse(args, argsAvailable);
@@ -50,6 +52,7 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
+  // error check
   if (argsProcessed["all"].invoked == true &&
       argsProcessed["dynamic"].invoked == true) {
     cerr << ttyHelper::error(
@@ -57,7 +60,7 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  string flakeLink = "/home/reese/Projects/nixosConfig";
+  string flakeLink = *argsProcessed["flake"].value;
   string flakePath = "/tmp/nixosConfig";
   bool dynamicBuild = true;
 
