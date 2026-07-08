@@ -137,7 +137,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
 
   // add uninvoked args
   for (auto &[name, value] : argValues) {
-    if (output.find(name) == output.end()) {
+    if (output.find(name) != output.end()) {
       cout << "hit: " + name + "\n";
       continue;
     }
