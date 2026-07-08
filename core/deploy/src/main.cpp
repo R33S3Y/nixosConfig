@@ -65,7 +65,7 @@ int main(int argc, char const *argv[]) {
   // get available hosts
   vector<string> hosts;
   vector<string> availableHosts = nixEvalStatic::getFlakeHosts(flakePath);
-  if (hosts.size() == 0) {
+  if (availableHosts.size() == 0) {
     cerr << ttyHelper::error("flake does not contain any hosts or no "
                              "hosts could be found");
     return 1;
