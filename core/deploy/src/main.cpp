@@ -86,6 +86,10 @@ int main(int argc, char const *argv[]) {
       }
     }
   }
+  if (hosts.size() == 0) {
+    cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
+                             "'man deploy' for more info");
+  }
 
   // get git diff
   bool dynamicBuild = true;
