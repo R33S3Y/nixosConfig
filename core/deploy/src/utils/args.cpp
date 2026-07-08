@@ -1,4 +1,4 @@
-#include "args.h";
+#include "args.h"
 #include "split.h"
 #include "strings.h"
 #include <map>
