@@ -13,8 +13,13 @@
         vscode-extensions.ms-python.python
       ];
       userSettings = {
-        "[python]" = {
-          editor.defaultFormatter = "charliermarsh.ruff";
+        "[python]".editor = {
+          formatOnSave = true;
+          codeActionsOnSave.source = {
+            fixAll = "explicit";
+            organizeImports = "explicit";
+          };
+          "editor.defaultFormatter" = "charliermarsh.ruff";
         };
       };
     };
