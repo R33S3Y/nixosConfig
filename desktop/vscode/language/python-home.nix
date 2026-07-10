@@ -1,10 +1,12 @@
 {
   pkgs,
-  system,
   ...
 }:
 
 {
+  home.packages = with pkgs; [
+    ruff
+  ];
 
   programs.vscode = {
     profiles.default = {
