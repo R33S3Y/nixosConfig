@@ -18,7 +18,7 @@
             fixAll = "explicit";
             organizeImports = "explicit";
           };
-          "editor.defaultFormatter" = "charliermarsh.ruff";
+          defaultFormatter = "charliermarsh.ruff";
         };
       };
     };
