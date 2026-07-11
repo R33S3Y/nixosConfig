@@ -71,7 +71,7 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
   // compare against user input
-  if (argsProcessed["*"].value.has_value() ||
+  if (!argsProcessed["*"].value.has_value() ||
       argsProcessed["*"].value->size() == 0) {
     cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
                              "'man deploy' for more info");
