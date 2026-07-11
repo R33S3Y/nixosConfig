@@ -103,8 +103,10 @@ int main(int argc, char const *argv[]) {
   vector<string> gitDiff;
   if (dynamicBuild == true) {
 
-    cmdOut = systemHelper::runCommand("git -C " + flakePath +
-                                      " diff HEAD^ HEAD --name-only");
+    // cmdOut = systemHelper::runCommand("git -C " + flakePath +
+    //                                   " diff HEAD^ HEAD --name-only");
+    cmdOut = systemHelper::runCommand(
+        "echo desktop/vscode/language/python-home.nix");
     if (cmdOut.exitCode != 0) {
       cerr << ttyHelper::error("git diff failed");
       return 1;
