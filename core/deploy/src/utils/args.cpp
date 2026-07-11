@@ -17,7 +17,7 @@ args::parse(vector<string> userInput, map<string, args::optionIn> argValues) {
     userInputStr += " " + str;
   }
   if (userInputStr.size() == 0) {
-    throw invalid_argument("No user inputs type 'man deploy' for more info");
+    throw invalid_argument("No user inputs. Type 'man deploy' for more info");
   }
 
   map<string, args::optionOut> output;
