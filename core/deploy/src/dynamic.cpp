@@ -122,6 +122,9 @@ bool dynamic::rebuild(const string &host, const string &flakePath,
       unprocessedFiles = merge(imports.paths, unprocessedFiles);
     }
   }
+  cout << "files: \n";
+  for (string file : processedFiles)
+    cout << "  " + file + "\n";
 
   for (string file : processedFiles) {
     if (ranges::contains(gitDiff, file)) {
