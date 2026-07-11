@@ -49,9 +49,9 @@ int main(int argc, char const *argv[]) {
   string flakePath = "/tmp/nixosConfig";
   filesystem::create_directories(flakePath);
   if (filesystem::is_empty(flakePath) == false) {
-    cerr << ttyHelper::error("flakePath (\033[35m" + flakePath +
-                             "\033[0m) is not empty");
-    return 1;
+    cerr << ttyHelper::warning("flakePath (\033[35m" + flakePath +
+                               "\033[0m) is not empty. Deleting...");
+    filesystem::remove_all(flakePath);
   }
   systemHelper::result cmdOut;
   cmdOut = systemHelper::runCommand("nix flake clone " + flakeLink +
@@ -75,6 +75,7 @@ int main(int argc, char const *argv[]) {
       argsProcessed["*"].value->size() == 0) {
     cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
                              "'man deploy' for more info");
+    return 1;
   }
   vector<string> userHosts =
       split::splitStrByChar(*argsProcessed["*"].value, ' ');
@@ -92,8 +93,9 @@ int main(int argc, char const *argv[]) {
     }
   }
   if (hosts.size() == 0) {
-    cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
-                             "'man deploy' for more info");
+    cerr << ttyHelper::error(
+        "no hosts selected. This error should be able to be trigged");
+    return 1;
   }
 
   // get git diff
