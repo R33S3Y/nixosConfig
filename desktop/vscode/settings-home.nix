@@ -20,6 +20,7 @@
           insertSpaces = true; # Space when tab
           detectIndentation = false; # turns off auto detect for tabSize
         };
+        workbench.startupEditor = "none";
         files = {
           trimTrailingWhitespace = true;
           insertFinalNewline = true;
