@@ -2,8 +2,14 @@
 #include "../utils/split.h"
 #include "../utils/strings.h"
 #include "../utils/systemHelper.h"
+#include "staticRemove.h"
 #include <algorithm>
+#include <cstddef>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
+
+using namespace std;
 
 bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
   // returns trues if this thing we know the thing is valid.
@@ -47,6 +53,24 @@ bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
   return true;
 }
 
+vector<string> inputValues(string file) {
+
+  // not 110% sure if letIn removal is needed. but it makes thinking about the
+  // issue easier so I don't care
+  file = staticRemove::letIn(file);
+
+  file = file.substr(0, file.find("="));
+  file = file.substr(0, file.rfind(":"));
+
+  file = strings::replaceAll(file, ":", "");
+  file = strings::trim(file);
+  if (file[0] == '{' && *file.end() == '}') {
+    file = file.substr(1, file.length() - 2);
+  }
+
+  return staticGet::listItems(file);
+}
+
 vector<string> staticGet::tokenizedTopLevel(const string test) {
   string mask = test;
   mask = strings::blankWithinTokens(mask, "${", "}", '!');
@@ -59,7 +83,6 @@ vector<string> staticGet::tokenizedTopLevel(const string test) {
 
   return tokens;
 }
-
 size_t staticGet::validStatementPos(string statement, string s) {
 
   while (s.find(statement) != string::npos) {
@@ -96,7 +119,6 @@ size_t staticGet::validStatementPos(string statement, string s) {
 
   return string::npos;
 }
-
 vector<string> staticGet::listItems(string test, bool throwLazy) {
   // mask and split
   string mask = test;

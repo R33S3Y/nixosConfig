@@ -173,12 +173,14 @@ nixEval::result nixEval::makeCommandStr(const string attrset,
         "\033[0m).\n Please implement\033[94m lambda input parsing\033[0m to "
         "determine the\033[94m winning candidate\033[0m. \n"
         "( translation: screw you, sincerely, past Reesey ) \033[35m:3\033[0m");
-    // if you ever run into this error and fix this properly then you should
-    // drop the filterCandidate thing and the commandCache thing. As the are
-    // very compute expensive ways of trying to avoid solving this issue for
-    // real. (as shown by the fact theirs a cache). If you do this for real I
-    // expect that it will be pure string manipulation that in comparison to nix
-    // eval is blazing fast.
+    // 12/06/26 - AR - if you ever run into this error and fix this properly
+    // then you should drop the filterCandidate thing and the commandCache
+    // thing. As the are very compute expensive ways of trying to avoid solving
+    // this issue for real. (as shown by the fact theirs a cache). If you do
+    // this for real I expect that it will be pure string manipulation that in
+    // comparison to nix eval is blazing fast.
+
+    // 14/07/26 - AR - I'm sorry past me. I might do both.
 
     nixEval::result res;
     res.error = true;

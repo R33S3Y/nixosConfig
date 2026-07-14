@@ -14,6 +14,10 @@ public:
   };
 
   static bool filterCandidate(candidate testingCandidate);
+  static vector<string> inputValues(string file);
+  static vector<staticGet::candidate> inheritStatement(string file);
+  static vector<staticGet::candidate> letInVariables(string file);
+
   static vector<string> tokenizedTopLevel(const string thing);
 
   static size_t validStatementPos(string statement, string s);
