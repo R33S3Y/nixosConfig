@@ -14,7 +14,7 @@ deploy - A utility cmd for remote nixos rebuilds
 
 **deploy** [deploy options] \-\-flake=flakeRef hosts...
 
-**deploy** [-a -d] -f flakeRef hosts...
+**deploy** [-a -c -d] -f flakeRef hosts...
 
 # DESCRIPTION
 
@@ -25,10 +25,13 @@ Deploy is a commandline utility for remotely rebuilding managing Nixos Rebuilds.
 **-a**, **\-\-all**
 : Rebuilds all hosts, Even if not necessary.
 
+**-c**, **\-\-commit**
+: Commits the code before deploying. Only works when the flakeRef is a standard filepath.
+
 **-d**, **\-\-dynamic**
 : Skip hosts if none of the files touched in the latest commit are used in on that host.
 
-**-f flakeRef**, **\-\-flake=flakeRef**
+**-f flakeRef**, **\-\-flake=flakeRef** (Required)
 : The flake to deploy.
 
 # HOSTS
