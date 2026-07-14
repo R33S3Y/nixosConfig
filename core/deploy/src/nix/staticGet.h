@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nixEvalSupport.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -12,8 +13,16 @@ public:
     string start;
     string end;
   };
+  struct key {
+    string start;
+    string end;
+  };
 
-  static bool filterCandidate(candidate testingCandidate);
+  static bool filterCandidate(staticGet::candidate testingCandidate);
+  static vector<staticGet::candidate>
+  candidatesFromAttrsets(vector<string> attrsets,
+                         map<string, staticGet::key> resolveMap,
+                         staticGet::key throwMap);
   static vector<string> inputValues(string file);
   static vector<staticGet::candidate> inheritStatement(string file);
   static vector<staticGet::candidate> letInVariables(string file);

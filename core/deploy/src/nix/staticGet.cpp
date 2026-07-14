@@ -52,8 +52,16 @@ bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
   }
   return true;
 }
-
-vector<string> inputValues(string file) {
+vector<staticGet::candidate>
+staticGet::candidatesFromAttrsets(vector<string> attrsets,
+                                  map<string, staticGet::key> resolveMap,
+                                  staticGet::key throwMap) {
+  vector<staticGet::candidate> output;
+  for (string attrset : attrsets) {
+    vector<string> tokenizedAttrset = split::splitStrByChar(, char inputChar)
+  }
+}
+vector<string> staticGet::inputValues(string file) {
 
   // not 110% sure if letIn removal is needed. but it makes thinking about the
   // issue easier so I don't care
