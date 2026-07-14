@@ -1,11 +1,9 @@
 #include "resolve.h"
+#include "../utils/split.h"
+#include "../utils/strings.h"
+#include "../utils/systemHelper.h"
 #include "nixEval.h"
-#include "nixEvalStatic.h"
-#include "utils/split.h"
-#include "utils/strings.h"
-#include "utils/systemHelper.h"
-#include <algorithm>
-#include <cctype>
+#include "staticRemove.h"
 #include <string>
 #include <vector>
 
@@ -23,7 +21,7 @@ void resolve::preprocessFile(const string &filePath) {
   string rawFileStr = systemHelper::readFile(flakePath + filePath);
   vector<string> lineFile = split::splitStrByChar(rawFileStr, '\n');
 
-  resolve::fileStr = nixEvalStatic::removeComments(rawFileStr);
+  resolve::fileStr = staticRemove::comments(rawFileStr);
 
   ev.preProcessFile(rawFileStr, filePath);
 
@@ -73,7 +71,7 @@ resolve::result resolve::resolveImportStatements() {
   return res;
 }
 resolve::result resolve::resolveImportsStatements() {
-  string workingFileStr = nixEvalStatic::removeLetIn(resolve::fileStr);
+  string workingFileStr = staticRemove::letIn(resolve::fileStr);
 
   result res;
 

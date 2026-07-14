@@ -1,7 +1,7 @@
 
 #include "dynamic.h"
 
-#include "nixEvalStatic.h"
+#include "nix/staticGet.h"
 #include "utils/args.h"
 #include "utils/split.h"
 #include "utils/strings.h"
@@ -64,7 +64,7 @@ int main(int argc, char const *argv[]) {
 
   // get available hosts
   vector<string> hosts;
-  vector<string> availableHosts = nixEvalStatic::getFlakeHosts(flakePath);
+  vector<string> availableHosts = staticGet::flakeHosts(flakePath);
   if (availableHosts.size() == 0) {
     cerr << ttyHelper::error("flake does not contain any hosts or no "
                              "hosts could be found");
@@ -123,7 +123,7 @@ int main(int argc, char const *argv[]) {
         continue;
       }
       // git diff cmd gives folder/file so this just converts it into
-      // /folder/file which is what we use cus it lets us just flakePath +
+      // /folder/file which is what we use cause it lets us just flakePath +
       // "/folder/path"
       *it = "/" + *it;
     }

@@ -14,7 +14,6 @@ let
   }) system.users;
 in
 {
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

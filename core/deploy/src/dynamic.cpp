@@ -1,6 +1,6 @@
 #include "dynamic.h"
-#include "nixEvalStatic.h"
-#include "resolve.h"
+#include "nix/resolve.h"
+#include "nix/staticGet.h"
 #include "utils/strings.h"
 #include "utils/systemHelper.h"
 #include "utils/ttyHelper.h"
@@ -23,7 +23,7 @@ vector<string> dynamic::getNixFiles(const string &flakePath,
     return {};
   }
 
-  vector<string> list = nixEvalStatic::list(cmdOut.output);
+  vector<string> list = staticGet::listItems(cmdOut.output);
 
   vector<string> output;
   for (string currentStr : list) {

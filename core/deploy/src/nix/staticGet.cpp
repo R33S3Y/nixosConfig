@@ -1,14 +1,11 @@
-#include "nixEvalStatic.h"
-#include "utils/split.h"
-#include "utils/strings.h"
-#include "utils/systemHelper.h"
-#include "utils/threading.h"
-#include "utils/ttyHelper.h"
-#include <iostream>
-#include <map>
+#include "staticGet.h"
+#include "../utils/split.h"
+#include "../utils/strings.h"
+#include "../utils/systemHelper.h"
+#include <algorithm>
 #include <nlohmann/json.hpp>
 
-bool nixEvalStatic::filterCandidate(nixEvalStatic::candidate testingCandidate) {
+bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
   // returns trues if this thing we know the thing is valid.
   if (testingCandidate.attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
@@ -35,7 +32,7 @@ bool nixEvalStatic::filterCandidate(nixEvalStatic::candidate testingCandidate) {
       return true; // if we are not sure assume valid
     }
 
-    vector<string> setList = nixEvalStatic::list(cmdItems.output);
+    vector<string> setList = staticGet::listItems(cmdItems.output);
     bool found = false;
     for (string setItem : setList) {
       if (strings::trim(setItem) ==
@@ -49,7 +46,8 @@ bool nixEvalStatic::filterCandidate(nixEvalStatic::candidate testingCandidate) {
   }
   return true;
 }
-vector<string> nixEvalStatic::tokenize(const string test) {
+
+vector<string> staticGet::tokenizedTopLevel(const string test) {
   string mask = test;
   mask = strings::blankWithinTokens(mask, "${", "}", '!');
   mask = strings::blankWithinTokens(mask, "{", "}", '!');
@@ -57,34 +55,12 @@ vector<string> nixEvalStatic::tokenize(const string test) {
   mask = strings::blankWithinTokens(mask, "[", "]", '!');
 
   vector<string> tokens =
-      split::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n'});
+      split::splitStrByCharsByFilterStr(test, mask, {' ', '.', '\n', ';'});
 
   return tokens;
 }
 
-string nixEvalStatic::removeComments(string fileStr) {
-
-  // gets the things before the strings are moved
-  vector<string> lineFile = split::splitStrByChar(fileStr, '\n');
-
-  // removes the contents inside str
-  fileStr = strings::blankWithinTokens(fileStr, "\"");
-  fileStr = strings::blankWithinTokens(fileStr, "''");
-
-  // removes  comments from filestr so it can be useful
-  vector<string> stringlessLineFile = split::splitStrByChar(fileStr, '\n');
-  string output;
-  for (int i = 0; i < lineFile.size(); i++) {
-    string line = lineFile[i];
-    if (stringlessLineFile[i].find("#") != string::npos) {
-      line = line.substr(0, stringlessLineFile[i].find("#"));
-    }
-    output += line + "\n";
-  }
-  return output;
-}
-
-size_t getValidStatementPos(string statement, string s) {
+size_t staticGet::validStatementPos(string statement, string s) {
 
   while (s.find(statement) != string::npos) {
     size_t pos = s.find(statement);
@@ -120,27 +96,8 @@ size_t getValidStatementPos(string statement, string s) {
 
   return string::npos;
 }
-string nixEvalStatic::removeLetIn(string fileStr) {
 
-  size_t letPos = getValidStatementPos("let", fileStr);
-  size_t inPos = string::npos;
-  if (letPos != string::npos) {
-    inPos = getValidStatementPos("in", fileStr.substr(letPos)) + letPos;
-  }
-
-  while (letPos != string::npos && inPos != string::npos) {
-    fileStr = fileStr.substr(0, letPos) + fileStr.substr(inPos + 2);
-
-    letPos = getValidStatementPos("let", fileStr);
-    inPos = string::npos;
-    if (letPos != string::npos) {
-      inPos = getValidStatementPos("in", fileStr.substr(letPos)) + letPos;
-    }
-  }
-  return fileStr;
-}
-
-vector<string> nixEvalStatic::list(string test, bool throwLazy) {
+vector<string> staticGet::listItems(string test, bool throwLazy) {
   // mask and split
   string mask = test;
   mask = strings::blankWithinTokens(mask, "${", "}", '.');
@@ -184,57 +141,7 @@ vector<string> nixEvalStatic::list(string test, bool throwLazy) {
   }
   return listItems;
 }
-
-map<string, map<string, nixEvalStatic::key>>
-nixEvalStatic::seniorInitWorker(map<string, nixEvalStatic::key> input) {
-
-  map<string, map<string, nixEvalStatic::key>> hold;
-  for (auto &[key, value] : input) {
-    hold.insert({key, {{key, value}}});
-  }
-
-  return threading::paralleliseMap<string, map<string, nixEvalStatic::key>,
-                                   map<string, nixEvalStatic::key>,
-                                   decltype(&nixEvalStatic::juniorInitWorker)>(
-      hold, nixEvalStatic::juniorInitWorker);
-}
-map<string, nixEvalStatic::key>
-nixEvalStatic::juniorInitWorker(map<string, nixEvalStatic::key> input) {
-  string key = input.begin()->first;
-  nixEvalStatic::key value = input[key];
-
-  string cmd = value.start + key + value.end;
-  if (key != "modulesPath") {
-    cmd = cmd + " --apply builtins.attrNames";
-  }
-
-  systemHelper::result cmdOut = systemHelper::runCommand(cmd);
-
-  if (cmdOut.exitCode != 0) {
-    ostringstream oss;
-    oss << ttyHelper::error("Failed to eval attrs of: (\033[35m" + key +
-                            "\033[0m)");
-    cerr << oss.str();
-
-    return {};
-  }
-
-  if (key == "modulesPath") {
-    return {{{key, {cmdOut.output, ""}}}};
-  }
-
-  map<string, nixEvalStatic::key> output;
-  vector<string> list = nixEvalStatic::list(cmdOut.output);
-  for (int i = 0; i < list.size(); i++) {
-    list[i] = strings::replaceAll(list[i], "\"", "");
-    if (list[i] == "inputs")
-      continue;
-    output.insert({list[i], {value.start + key + ".", value.end}});
-  }
-
-  return output;
-}
-vector<string> nixEvalStatic::getFlakeHosts(string flakePath) {
+vector<string> staticGet::flakeHosts(string flakePath) {
   string cmd = "nix flake show " + flakePath + " --json";
   systemHelper::result cmdOut = systemHelper::runCommand(cmd);
 

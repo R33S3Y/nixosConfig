@@ -1,10 +1,12 @@
 #include "nixEval.h"
-#include "nixEvalStatic.h"
-#include "utils/split.h"
-#include "utils/strings.h"
-#include "utils/systemHelper.h"
-#include "utils/threading.h"
-#include "utils/ttyHelper.h"
+#include "../utils/split.h"
+#include "../utils/strings.h"
+#include "../utils/systemHelper.h"
+#include "../utils/threading.h"
+#include "../utils/ttyHelper.h"
+#include "nixEvalSupport.h"
+#include "staticGet.h"
+#include "staticRemove.h"
 #include <algorithm>
 #include <cstddef>
 #include <filesystem>
@@ -39,28 +41,28 @@ nixEval::nixEval(const init &i) {
         ""}},
   };
 
-  map<string, map<string, nixEvalStatic::key>> parallelWork = {
+  map<string, map<string, nixEvalSupport::key>> parallelWork = {
       {"resolve", resolveMap},
       {"throw", throwMap},
       {"modulesPath",
-       map<string, nixEvalStatic::key>{
+       map<string, nixEvalSupport::key>{
            {"modulesPath",
-            nixEvalStatic::key{"nix eval " + flakePath +
-                                   "#nixosConfigurations." + host +
-                                   "._module.specialArgs.",
-                               ""}}}},
+            nixEvalSupport::key{"nix eval " + flakePath +
+                                    "#nixosConfigurations." + host +
+                                    "._module.specialArgs.",
+                                ""}}}},
       {"specialArgs",
-       map<string, nixEvalStatic::key>{
-           {"specialArgs",
-            nixEvalStatic::key{"nix eval " + flakePath +
-                                   "#nixosConfigurations." + host + "._module.",
-                               ""}}}}};
+       map<string, nixEvalSupport::key>{
+           {"specialArgs", nixEvalSupport::key{"nix eval " + flakePath +
+                                                   "#nixosConfigurations." +
+                                                   host + "._module.",
+                                               ""}}}}};
 
-  map<string, map<string, map<string, nixEvalStatic::key>>> parallelOut =
-      threading::paralleliseMap<string, map<string, nixEvalStatic::key>,
-                                map<string, map<string, nixEvalStatic::key>>,
-                                decltype(&nixEvalStatic::seniorInitWorker)>(
-          parallelWork, nixEvalStatic::seniorInitWorker);
+  map<string, map<string, map<string, nixEvalSupport::key>>> parallelOut =
+      threading::paralleliseMap<string, map<string, nixEvalSupport::key>,
+                                map<string, map<string, nixEvalSupport::key>>,
+                                decltype(&nixEvalSupport::seniorInitWorker)>(
+          parallelWork, nixEvalSupport::seniorInitWorker);
 
   bool canThrowModulesPath = false;
   // yes really
@@ -90,7 +92,7 @@ nixEval::nixEval(const init &i) {
 
 void nixEval::preProcessFile(string fileStr, string filePath) {
 
-  nixEval::fileStr = nixEvalStatic::removeComments(fileStr);
+  nixEval::fileStr = staticRemove::comments(fileStr);
   nixEval::filePath = filePath;
   nixEval::absoluteFilePath = flakePath + filePath;
 
@@ -146,15 +148,15 @@ nixEval::result nixEval::makeCommandStr(const string attrset,
     }
   }
   if (candidates.size() > 1) {
-    vector<nixEvalStatic::candidate> testingCandidates;
+    vector<staticGet::candidate> testingCandidates;
     for (keyCandidate candidate : candidates) {
       testingCandidates.push_back(
           {attrsetKeys, candidate.start, candidate.end});
     }
     vector<bool> validCandidates =
-        threading::paralleliseVector<nixEvalStatic::candidate, bool,
-                                     decltype(&nixEvalStatic::filterCandidate)>(
-            testingCandidates, nixEvalStatic::filterCandidate);
+        threading::paralleliseVector<staticGet::candidate, bool,
+                                     decltype(&staticGet::filterCandidate)>(
+            testingCandidates, staticGet::filterCandidate);
     for (int i = 0; i < validCandidates.size(); i++) {
       if (validCandidates[i] == true) {
         continue;
@@ -233,7 +235,7 @@ nixEval::result nixEval::statement(string test, bool canThrow) {
     return nixEval::bracket(test);
   }
 
-  vector<string> list = nixEvalStatic::list(test);
+  vector<string> list = staticGet::listItems(test);
   if (list.size() != 0) {
     // is list
     nixEval::result res;
@@ -378,7 +380,7 @@ nixEval::result nixEval::attrsetKey(string test, bool canThrow) {
 
   // does preprocessing to resolve funny statements like ${ } and ( ) and
   // get a clean attrset Split
-  vector<string> attrsetKeys = nixEvalStatic::tokenize(test);
+  vector<string> attrsetKeys = staticGet::tokenizedTopLevel(test);
   // go though key by key and resolve thing like ${ }
   for (int i = 0; i < attrsetKeys.size(); i++) {
     string attrsetKey = strings::trim(attrsetKeys[i]);
@@ -489,7 +491,7 @@ nixEval::result nixEval::bracket(string test) {
 }
 
 nixEval::result nixEval::lambdaCall(string test, bool canThrow) {
-  vector<string> tokens = nixEvalStatic::tokenize(test);
+  vector<string> tokens = staticGet::tokenizedTopLevel(test);
 
   if (tokens.size() <= 1) {
     return {.type = "skip"};

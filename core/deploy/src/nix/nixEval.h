@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nixEvalStatic.h"
+#include "nixEvalSupport.h"
 #include <any>
 #include <map>
 #include <string>
@@ -42,9 +42,9 @@ private:
   string absoluteFilePath;
   vector<string> prettyFile;
 
-  map<string, nixEvalStatic::key> resolveMap;
-  map<string, nixEvalStatic::key> throwMap;
-  map<string, map<string, nixEvalStatic::key>> inheritMap;
+  map<string, nixEvalSupport::key> resolveMap;
+  map<string, nixEvalSupport::key> throwMap;
+  map<string, map<string, nixEvalSupport::key>> inheritMap;
 
   struct commandStrCache {
     string attrset;
