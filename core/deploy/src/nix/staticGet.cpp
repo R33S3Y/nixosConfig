@@ -11,15 +11,17 @@
 
 using namespace std;
 
-bool staticGet::filterCandidate(staticGet::evalPackage testingCandidate) {
+bool staticGet::filterCandidate(staticGet::evalPackage evalPackage) {
   // returns trues if this thing we know the thing is valid.
-  if (testingCandidate.attrsetKeys.size() <= 1) {
+  vector<string> attrsetKeys = split::splitStrByChar(evalPackage.attrset, '.');
+  if (attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
   }
 
-  string attrsetPath = testingCandidate.attrsetKeys[0];
-  for (int i = 1; i < testingCandidate.attrsetKeys.size(); i++) {
-    string cmd = testingCandidate.start + attrsetPath + testingCandidate.end;
+  string attrsetPath = attrsetKeys[0];
+
+  for (int i = 1; i < attrsetKeys.size(); i++) {
+    string cmd = evalPackage.start + attrsetPath + evalPackage.end;
 
     systemHelper::result cmdType =
         systemHelper::runCommand(cmd + " --apply builtins.typeOf");
@@ -41,14 +43,13 @@ bool staticGet::filterCandidate(staticGet::evalPackage testingCandidate) {
     vector<string> setList = staticGet::listItems(cmdItems.output);
     bool found = false;
     for (string setItem : setList) {
-      if (strings::trim(setItem) ==
-          "\"" + testingCandidate.attrsetKeys[i] + "\"")
+      if (strings::trim(setItem) == "\"" + attrsetKeys[i] + "\"")
         found = true;
     }
     if (found == false) {
       return false;
     }
-    attrsetPath += "." + testingCandidate.attrsetKeys[i];
+    attrsetPath += "." + attrsetKeys[i];
   }
   return true;
 }
