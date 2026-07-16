@@ -15,7 +15,7 @@ public:
     bool throwable = false;
   };
 
-  static bool filterCandidate(staticGet::candidate testingCandidate);
+  static bool filterCandidate(staticGet::evalPackage testingCandidate);
   // Takes attrsets { "abc.xyz", "config"} and gets their other info from
   // evalPrimitives
   static vector<staticGet::evalPackage> evalPackagesFromAttrsets(
