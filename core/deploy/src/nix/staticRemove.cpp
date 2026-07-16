@@ -44,3 +44,18 @@ string staticRemove::letIn(string fileStr) {
   }
   return fileStr;
 }
+string staticRemove::notLetIn(string file) {
+
+  size_t letPos = staticGet::validStatementPos("let", file);
+  size_t letInLen = string::npos;
+  if (letPos != string::npos) {
+    letInLen = staticGet::validStatementPos("in", file.substr(letPos)) + 2;
+  }
+
+  if (letPos != string::npos && letInLen != string::npos) {
+    file = file.substr(letPos, letInLen);
+  } else {
+    file = "";
+  }
+  return file;
+}

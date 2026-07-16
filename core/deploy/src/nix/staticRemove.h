@@ -9,4 +9,5 @@ class staticRemove {
 public:
   static string comments(string fileStr);
   static string letIn(string fileStr);
+  static string notLetIn(string file);
 };

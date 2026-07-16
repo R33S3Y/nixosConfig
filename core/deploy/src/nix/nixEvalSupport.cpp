@@ -7,23 +7,25 @@
 #include <iostream>
 #include <map>
 
-map<string, map<string, nixEvalSupport::key>>
-nixEvalSupport::seniorInitWorker(map<string, nixEvalSupport::key> input) {
+map<string, map<string, nixEvalSupport::evalPackage>>
+nixEvalSupport::seniorInitWorker(
+    map<string, nixEvalSupport::evalPackage> input) {
 
-  map<string, map<string, nixEvalSupport::key>> hold;
+  map<string, map<string, nixEvalSupport::evalPackage>> hold;
   for (auto &[key, value] : input) {
     hold.insert({key, {{key, value}}});
   }
 
-  return threading::paralleliseMap<string, map<string, nixEvalSupport::key>,
-                                   map<string, nixEvalSupport::key>,
+  return threading::paralleliseMap<string,
+                                   map<string, nixEvalSupport::evalPackage>,
+                                   map<string, nixEvalSupport::evalPackage>,
                                    decltype(&nixEvalSupport::juniorInitWorker)>(
       hold, nixEvalSupport::juniorInitWorker);
 }
-map<string, nixEvalSupport::key>
-nixEvalSupport::juniorInitWorker(map<string, nixEvalSupport::key> input) {
+map<string, nixEvalSupport::evalPackage> nixEvalSupport::juniorInitWorker(
+    map<string, nixEvalSupport::evalPackage> input) {
   string key = input.begin()->first;
-  nixEvalSupport::key value = input[key];
+  nixEvalSupport::evalPackage value = input[key];
 
   string cmd = value.start + key + value.end;
   if (key != "modulesPath") {
@@ -45,7 +47,7 @@ nixEvalSupport::juniorInitWorker(map<string, nixEvalSupport::key> input) {
     return {{{key, {cmdOut.output, ""}}}};
   }
 
-  map<string, nixEvalSupport::key> output;
+  map<string, nixEvalSupport::evalPackage> output;
   vector<string> list = staticGet::listItems(cmdOut.output);
   for (int i = 0; i < list.size(); i++) {
     list[i] = strings::replaceAll(list[i], "\"", "");

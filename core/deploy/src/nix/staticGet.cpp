@@ -5,13 +5,14 @@
 #include "staticRemove.h"
 #include <algorithm>
 #include <cstddef>
+#include <map>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
+bool staticGet::filterCandidate(staticGet::evalPackage testingCandidate) {
   // returns trues if this thing we know the thing is valid.
   if (testingCandidate.attrsetKeys.size() <= 1) {
     return true; // could be anything. So yes valid
@@ -52,15 +53,33 @@ bool staticGet::filterCandidate(staticGet::candidate testingCandidate) {
   }
   return true;
 }
-vector<staticGet::candidate>
-staticGet::candidatesFromAttrsets(vector<string> attrsets,
-                                  map<string, staticGet::key> resolveMap,
-                                  staticGet::key throwMap) {
-  vector<staticGet::candidate> output;
+
+vector<staticGet::evalPackage> staticGet::evalPackagesFromAttrsets(
+    const vector<string> &attrsets,
+    const vector<staticGet::evalPackage> &evalPrimitives) {
+
+  vector<staticGet::evalPackage> output;
+  output.reserve(attrsets.size());
+
   for (string attrset : attrsets) {
-    vector<string> tokenizedAttrset = split::splitStrByChar(, char inputChar)
+    string topAttr = attrset;
+    if (attrset.find(".") != string::npos) {
+      topAttr = attrset.substr(0, attrset.find("."));
+    }
+
+    for (const staticGet::evalPackage evalPrimitive : evalPrimitives) {
+      if (evalPrimitive.attrset != topAttr) {
+        continue;
+      }
+
+      output.push_back({attrset, evalPrimitive.start, evalPrimitive.end,
+                        evalPrimitive.throwable});
+    }
   }
+
+  return output;
 }
+
 vector<string> staticGet::inputValues(string file) {
 
   // not 110% sure if letIn removal is needed. but it makes thinking about the
@@ -78,9 +97,20 @@ vector<string> staticGet::inputValues(string file) {
 
   return staticGet::listItems(file);
 }
+vector<string> staticGet::letInVariables(string file) {
+  string letInStr = staticRemove::notLetIn(file);
+
+  letInStr = strings::replace(letInStr, "let", "");
+  letInStr = strings::rReplace(letInStr, "in", "");
+  letInStr = strings::trim(letInStr);
+
+  vector<string> letInItems = tokenizedTopLevel(letInStr);
+  // todo
+}
 
 vector<string> staticGet::tokenizedTopLevel(const string test) {
   string mask = test;
+  mask = strings::blankWithinTokens(mask, "\"", "\"", '!');
   mask = strings::blankWithinTokens(mask, "${", "}", '!');
   mask = strings::blankWithinTokens(mask, "{", "}", '!');
   mask = strings::blankWithinTokens(mask, "(", ")", '!');

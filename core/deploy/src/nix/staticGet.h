@@ -8,26 +8,27 @@ using namespace std;
 
 class staticGet {
 public:
-  struct candidate {
-    vector<string> attrsetKeys;
+  struct evalPackage {
+    string attrset; // is like "abc.xyz"
     string start;
     string end;
-  };
-  struct key {
-    string start;
-    string end;
+    bool throwable = false;
   };
 
   static bool filterCandidate(staticGet::candidate testingCandidate);
-  static vector<staticGet::candidate>
-  candidatesFromAttrsets(vector<string> attrsets,
-                         map<string, staticGet::key> resolveMap,
-                         staticGet::key throwMap);
+  // Takes attrsets { "abc.xyz", "config"} and gets their other info from
+  // evalPrimitives
+  static vector<staticGet::evalPackage> evalPackagesFromAttrsets(
+      const vector<string> &attrsets,
+      const vector<staticGet::evalPackage> &evalPrimitives);
+  // Returns vector of attrsets Eg: { "abc.xyz", "config"}
   static vector<string> inputValues(string file);
-  static vector<staticGet::candidate> inheritStatement(string file);
-  static vector<staticGet::candidate> letInVariables(string file);
+  // Returns vector of attrsets Eg: { "abc.xyz", "config"}
+  static vector<string> inheritStatement(string file);
+  // Returns vector of attrsets Eg: { "abc.xyz", "config"}
+  static vector<string> letInVariables(string file);
 
-  static vector<string> tokenizedTopLevel(const string thing);
+  static vector<string> tokenizedTopLevel(const string statement);
 
   static size_t validStatementPos(string statement, string s);
   static vector<string> listItems(string test, bool throwLazy = true);

@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -40,29 +41,36 @@ string strings::trim(string s) {
 string strings::blankWithinTokens(string fileStr, string startToken,
                                   string endToken, char blankChar) {
 
+  cout << "start: \"" + startToken + "\" end: \"" + endToken +
+              " fileStr: " + fileStr + "\n";
   if (endToken == "") {
     endToken = startToken;
   }
 
   string holdStr;
+  int depth = 0;
+  size_t start = 0;
+  for (size_t i = 0; i > fileStr.size(); i++) {
+    size_t startRight =
+        fileStr.substr(i).find(startToken) + i + startToken.size();
+    size_t endLeft = fileStr.substr(i).find(endToken, startRight) + i;
 
-  while (fileStr.size() > 0 && fileStr.find(startToken) != string::npos) {
-    size_t startLeft = fileStr.find(startToken);
-    size_t startRight = startLeft + startToken.size();
-    size_t endLeft = fileStr.find(endToken, startRight);
-    if (endLeft == string::npos) {
-      break;
+    if (i == startRight) {
+      depth++;
     }
-    size_t endRight = endLeft + endToken.size();
-
-    for (size_t i = startRight; i < endLeft; i++) {
-      if (fileStr[i] != '\n') {
-        fileStr[i] = blankChar;
+    if (i == endLeft) {
+      depth--;
+      if (depth == 0) {
+        for (int j = start; j > endLeft; j++) {
+          fileStr[j] = blankChar;
+        }
       }
     }
-    holdStr += fileStr.substr(0, endRight);
-    fileStr = fileStr.substr(endRight);
+    if (depth == 0) {
+      start = startRight;
+    }
+    i = startRight;
   }
-  holdStr += fileStr;
-  return holdStr;
+  cout << "fileStr: " + fileStr + "\n";
+  return fileStr;
 }
