@@ -23,24 +23,25 @@ nixEval::nixEval(const init &i) {
   flakeLink = i.flakeLink;
   host = i.host;
 
-  resolveMap = {
-      {"config",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
+  evalPrimitives = {
+      {"config", "nix eval " + flakePath + "#nixosConfigurations." + host + ".",
+       "", false},
       {"options",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
-      {"lib",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
-      {"pkgs",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host + ".", ""}},
-  };
-  throwMap = {
-      {"builtins", {"nix eval --expr '", "'"}},
+       "nix eval " + flakePath + "#nixosConfigurations." + host + ".", "",
+       false},
+      {"lib", "nix eval " + flakePath + "#nixosConfigurations." + host + ".",
+       "", false},
+      {"pkgs", "nix eval " + flakePath + "#nixosConfigurations." + host + ".",
+       "", false},
+
+      {"builtins", "nix eval --expr '", "'", true},
       {"inputs",
-       {"nix eval " + flakePath + "#nixosConfigurations." + host +
-            "._module.specialArgs.",
-        ""}},
+       "nix eval " + flakePath + "#nixosConfigurations." + host +
+           "._module.specialArgs.",
+       "", true},
   };
 
+  // todo
   map<string, map<string, nixEvalSupport::key>> parallelWork = {
       {"resolve", resolveMap},
       {"throw", throwMap},

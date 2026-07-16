@@ -43,9 +43,9 @@ private:
   vector<string> prettyFile;
 
   vector<nixEvalSupport::evalPackage> evalPrimitives;
-  map<string, nixEvalSupport::key> resolveMap;
-  map<string, nixEvalSupport::key> throwMap;
-  map<string, map<string, nixEvalSupport::key>> inheritMap;
+  // map<string, nixEvalSupport::key> resolveMap;
+  // map<string, nixEvalSupport::key> throwMap;
+  // map<string, map<string, nixEvalSupport::key>> inheritMap;
 
   struct commandStrCache {
     string attrset;

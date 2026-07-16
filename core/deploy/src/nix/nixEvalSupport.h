@@ -8,7 +8,7 @@ using namespace std;
 class nixEvalSupport {
 public:
   struct evalPackage {
-    vector<string> attrset;
+    string attrset;
     string start;
     string end;
     bool throwable = false;
