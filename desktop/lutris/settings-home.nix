@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   programs.lutris = {
     enable = true;
-    extraPackages = with pkgs; [ ];
+    extraPackages = with pkgs; [ libadwaita ];
   };
 }
