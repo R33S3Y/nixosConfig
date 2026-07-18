@@ -41,53 +41,43 @@ nixEval::nixEval(const init &i) {
        "", true},
   };
 
-  // todo
-  map<string, map<string, nixEvalSupport::key>> parallelWork = {
-      {"resolve", resolveMap},
-      {"throw", throwMap},
-      {"modulesPath",
-       map<string, nixEvalSupport::key>{
-           {"modulesPath",
-            nixEvalSupport::key{"nix eval " + flakePath +
-                                    "#nixosConfigurations." + host +
-                                    "._module.specialArgs.",
-                                ""}}}},
-      {"specialArgs",
-       map<string, nixEvalSupport::key>{
-           {"specialArgs", nixEvalSupport::key{"nix eval " + flakePath +
-                                                   "#nixosConfigurations." +
-                                                   host + "._module.",
-                                               ""}}}}};
+  map<string, string> parallelWork = {
+      {"modulesPath", "nix eval " + flakePath + "#nixosConfigurations." + host +
+                          "._module.specialArgs.modulesPath"},
+      {"specialArgs", "nix eval " + flakePath + "#nixosConfigurations." + host +
+                          "._module.specialArgs  --apply builtins.attrNames"},
+  };
 
-  map<string, map<string, map<string, nixEvalSupport::key>>> parallelOut =
-      threading::paralleliseMap<string, map<string, nixEvalSupport::key>,
-                                map<string, map<string, nixEvalSupport::key>>,
-                                decltype(&nixEvalSupport::seniorInitWorker)>(
-          parallelWork, nixEvalSupport::seniorInitWorker);
+  map<string, string> parallelOut =
+      threading::paralleliseMap<string, string, string,
+                                decltype(&nixEvalSupport::initWorker)>(
+          parallelWork, nixEvalSupport::initWorker);
 
   bool canThrowModulesPath = false;
-  // yes really
-  if (parallelOut["modulesPath"]["modulesPath"]["modulesPath"].start.find(
-          "/nix/store/") != string::npos)
+  if (parallelOut["modulesPath"].find("/nix/store/") != string::npos) {
     canThrowModulesPath = true;
-  parallelOut.erase("modulesPath");
+  };
 
-  for (auto &[itemsType, valueTop] : parallelOut) {
-    for (auto &[itemsParent, items] : valueTop) {
-      if (itemsType == "specialArgs") {
-        for (auto &[item, cmd] : items) {
-          if (canThrowModulesPath == true && item == "modulesPath") {
-            nixEval::throwMap.insert({item, cmd});
+  vector<string> items = staticGet::listItems(parallelOut["specialArgs"]);
 
-          } else {
-            nixEval::resolveMap.insert({item, cmd});
-          }
-        }
-        continue;
-      }
-      // must be from throw or resolve at this point
-      nixEval::inheritMap.insert({itemsParent, items});
+  for (string item : items) {
+    if (item != "inputs" || item != "nixpkgs") {
+      continue;
     }
+
+    nixEvalSupport::evalPackage primitive = {
+        item,
+        "nix eval " + flakePath + "#nixosConfigurations." + host +
+            "._module.specialArgs.",
+        "",
+        false,
+    };
+
+    if (item == "modulesPath") {
+      primitive.throwable = canThrowModulesPath;
+    }
+
+    evalPrimitives.push_back(primitive);
   }
 }
 

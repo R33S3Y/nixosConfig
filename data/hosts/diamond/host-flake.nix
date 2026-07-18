@@ -33,6 +33,8 @@ let
       # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
       #../../../desktop/lazyUpdate/enable-nix.nix
       #../../../desktop/lazyUpdate/snowflake-nix.nix
+      # Lutris
+      ../../../desktop/lutris/enable-nix.nix
       # obsidian
       ../../../desktop/obsidian/enable-nix.nix
       # PCmanFM
@@ -92,6 +94,8 @@ let
       ../../../desktop/kitty/bind-home.nix # Key binds
       ../../../desktop/kitty/style-home.nix # Styles  -  You should be fine to get away with disabling this
       ../../../desktop/kitty/settings-home.nix # Settings
+      # Lutris
+      ../../../desktop/lutris/settings-home.nix
       # vencord
       ../../../desktop/vencord/settings-home.nix
       # obsidian
@@ -170,8 +174,6 @@ let
       inkscape
       thunderbird
       file
-
-      lutris
     ];
 
     bluetooth = true;

@@ -105,8 +105,8 @@ vector<string> staticGet::letInVariables(string file) {
   letInStr = strings::trim(letInStr);
 
   vector<string> letInItems = tokenizedTopLevel(letInStr);
-  // todo
 }
+vector<string> staticGet::inheritStatement(string file) {}
 
 vector<string> staticGet::tokenizedTopLevel(const string test) {
   string mask = test;

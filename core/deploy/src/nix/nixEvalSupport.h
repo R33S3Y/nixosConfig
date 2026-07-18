@@ -14,8 +14,5 @@ public:
     bool throwable = false;
   };
 
-  static map<string, nixEvalSupport::evalPackage>
-      juniorInitWorker(map<string, nixEvalSupport::evalPackage>);
-  static map<string, map<string, nixEvalSupport::evalPackage>>
-      seniorInitWorker(map<string, nixEvalSupport::evalPackage>);
+  static string initWorker(string cmd);
 };
