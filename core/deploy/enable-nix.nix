@@ -23,9 +23,8 @@ in
 
       buildPhase = ''
         g++ \
-            main.cpp dynamic.cpp \
+            main.cpp nixGet.cpp \
             utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp utils/args.cpp \
-            nix/resolve.cpp nix/nixEval.cpp nix/nixEvalSupport.cpp nix/staticGet.cpp nix/staticRemove.cpp \
           -o deploy \
           -std=c++23 \
           -g \
