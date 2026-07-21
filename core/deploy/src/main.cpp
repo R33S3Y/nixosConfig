@@ -1,7 +1,4 @@
-
-#include "dynamic.h"
-
-#include "nix/staticGet.h"
+#include "nixGet.h"
 #include "utils/args.h"
 #include "utils/split.h"
 #include "utils/strings.h"
@@ -59,15 +56,17 @@ int main(int argc, char const *argv[]) {
   if (cmdOut.exitCode != 0) {
     cerr << ttyHelper::error("failed to get flake (\033[35m" + flakeLink +
                              "\033[0m)");
+    filesystem::remove_all(flakePath);
     return 1;
   }
 
   // get available hosts
   vector<string> hosts;
-  vector<string> availableHosts = staticGet::flakeHosts(flakePath);
+  vector<string> availableHosts = nixGet::flakeHosts(flakePath);
   if (availableHosts.size() == 0) {
     cerr << ttyHelper::error("flake does not contain any hosts or no "
                              "hosts could be found");
+    filesystem::remove_all(flakePath);
     return 1;
   }
   // compare against user input
@@ -75,6 +74,7 @@ int main(int argc, char const *argv[]) {
       argsProcessed["*"].value->size() == 0) {
     cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
                              "'man deploy' for more info");
+    filesystem::remove_all(flakePath);
     return 1;
   }
   vector<string> userHosts =
@@ -88,6 +88,7 @@ int main(int argc, char const *argv[]) {
       } else {
         cerr << ttyHelper::error("host (\033[35m" + userHost +
                                  "\033[0m) does not exist in flake");
+        filesystem::remove_all(flakePath);
         return 1;
       }
     }
@@ -95,71 +96,8 @@ int main(int argc, char const *argv[]) {
   if (hosts.size() == 0) {
     cerr << ttyHelper::error(
         "no hosts selected. This error should be able to be trigged");
+    filesystem::remove_all(flakePath);
     return 1;
-  }
-
-  // get git diff
-  bool dynamicBuild = true;
-  vector<string> gitDiff;
-  if (dynamicBuild == true) {
-
-    // cmdOut = systemHelper::runCommand("git -C " + flakePath +
-    //                                   " diff HEAD^ HEAD --name-only");
-    cmdOut = systemHelper::runCommand(
-        "echo desktop/vscode/language/python-home.nix");
-    if (cmdOut.exitCode != 0) {
-      cerr << ttyHelper::error("git diff failed");
-      return 1;
-    }
-
-    gitDiff = split::splitStrByChar(cmdOut.output, '\n');
-    for (vector<string>::iterator it = gitDiff.begin(); it != gitDiff.end();
-         it++) {
-      *it = strings::trim(*it);
-
-      if (it->size() == 0) {
-        gitDiff.erase(it);
-        it--;
-        continue;
-      }
-      // git diff cmd gives folder/file so this just converts it into
-      // /folder/file which is what we use cause it lets us just flakePath +
-      // "/folder/path"
-      *it = "/" + *it;
-    }
-
-    if (gitDiff.size() == 0) {
-      dynamicBuild = false;
-      cerr << ttyHelper::warning(
-          "no changed items found. Skipping dynamic rebuild");
-    }
-  }
-
-  vector<bool> rebuild;
-  for (string host : hosts) {
-    if (dynamicBuild == false) {
-      rebuild.push_back(true);
-      continue;
-    }
-
-    rebuild.push_back(dynamic::rebuild(host, flakePath, flakeLink, gitDiff));
-    if (rebuild.back() == true) {
-      cout << "rebuild " + host + "\n";
-    } else {
-      cout << "skip " + host + "\n";
-    }
-  }
-  if (hosts.size() != rebuild.size()) {
-    cerr << ttyHelper::error(
-        "if rebuild list is not same length as hosts list");
-    return 1;
-  }
-  for (int i = 0; i < hosts.size(); i++) {
-    if (rebuild[i] == false) {
-      hosts.erase(hosts.begin() + i);
-      rebuild.erase(rebuild.begin() + i);
-      i--;
-    }
   }
 
   filesystem::remove_all(flakePath);
