@@ -24,7 +24,7 @@ public:
   // Returns vector of attrsets Eg: { "abc.xyz", "config"}
   static vector<string> inputValues(string file);
   // Returns vector of attrsets Eg: { "abc.xyz", "config"}
-  static vector<string> inheritStatement(string file);
+  static vector<string> inheritStatements(string file);
   // Returns vector of attrsets Eg: { "abc.xyz", "config"}
   static vector<string> letInVariables(string file);
 

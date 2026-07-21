@@ -5,7 +5,9 @@
 #include "staticRemove.h"
 #include <algorithm>
 #include <cstddef>
+#include <iostream>
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -106,8 +108,34 @@ vector<string> staticGet::letInVariables(string file) {
 
   vector<string> letInItems = tokenizedTopLevel(letInStr);
 }
-vector<string> staticGet::inheritStatement(string file) {
+vector<string> staticGet::inheritStatements(string file) {
   string letInStr = staticRemove::notLetIn(file);
+
+  size_t inheritPos = letInStr.find("inherit");
+  while (inheritPos != string::npos) {
+    size_t inheritLength = letInStr.substr(inheritPos).find(";");
+    if (inheritLength == string::npos) {
+      break;
+    }
+
+    string inheritStr = letInStr.substr(inheritPos, inheritLength);
+    letInStr = letInStr.substr(inheritPos + inheritLength);
+
+    inheritStr = strings::replace(inheritStr, "inherit", "");
+    inheritStr = strings::replace(inheritStr, ";", "");
+    inheritStr = strings::trim(inheritStr);
+
+    if (inheritStr[0] != '(') {
+      cerr << ttyHelper::error(
+          "deploy doesn't know how to proccess inherit statements that don't "
+          "have the bracketed first statement");
+      return {};
+    }
+
+    vector<string> tokenizedInherit = tokenizedTopLevel(inheritStr);
+
+    string topLevelItem = 
+  }
 }
 
 vector<string> staticGet::tokenizedTopLevel(const string test) {
