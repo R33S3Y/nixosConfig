@@ -18,7 +18,6 @@ in
       nativeBuildInputs = [
         pkgs.gcc
         pkgs.pandoc
-        pkgs.libtar
       ];
 
       buildPhase = ''
@@ -28,7 +27,7 @@ in
           -o deploy \
           -std=c++23 \
           -g \
-          -I${pkgs.nlohmann_json}/include
+          -I${pkgs.nlohmann_json}/include \
           -I${pkgs.libtar}/include
 
         sed -i 's/version/\"${version}\"/' server/man.md
