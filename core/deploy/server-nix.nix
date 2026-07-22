@@ -28,7 +28,7 @@ in
           -std=c++23 \
           -g \
           -I${pkgs.nlohmann_json}/include
-          -I${pkgs.libtar}/include
+          -I${pkgs.libtar}/include/libtar.h
 
         sed -i 's/version/\"${version}\"/' server/man.md
         pandoc server/man.md -s -t man -o deploy.1
