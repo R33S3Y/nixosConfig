@@ -8,12 +8,11 @@ in
       pname = "deploy";
       version = version;
 
-      enableParallelBuilding = true;
-
       src = ./src;
 
       buildInputs = [
         pkgs.nlohmann_json
+        pkgs.libtar
       ];
 
       nativeBuildInputs = [
@@ -23,15 +22,16 @@ in
 
       buildPhase = ''
         g++ \
-            main.cpp nixGet.cpp \
-            utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp utils/args.cpp \
+            server/main.cpp \
+            utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp utils/args.cpp utils/nixGet.cpp \
           -o deploy \
           -std=c++23 \
           -g \
           -I${pkgs.nlohmann_json}/include
+          -I${pkgs.libtar}/include
 
-        sed -i 's/version/\"${version}\"/' man.md
-        pandoc man.md -s -t man -o deploy.1
+        sed -i 's/version/\"${version}\"/' server/man.md
+        pandoc server/man.md -s -t man -o deploy.1
       '';
 
       installPhase = ''

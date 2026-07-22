@@ -1,9 +1,8 @@
-#include "nixGet.h"
-#include "utils/args.h"
-#include "utils/split.h"
-#include "utils/strings.h"
-#include "utils/systemHelper.h"
-#include "utils/ttyHelper.h"
+#include "../utils/args.h"
+#include "../utils/nixGet.h"
+#include "../utils/split.h"
+#include "../utils/systemHelper.h"
+#include "../utils/ttyHelper.h"
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
