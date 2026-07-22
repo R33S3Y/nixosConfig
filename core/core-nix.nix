@@ -5,7 +5,7 @@
     # btop
     btop/enable-nix.nix
     # Deploy
-    deploy/enable-nix.nix
+    deploy/server-nix.nix
     # Fast Fetch
     fastfetch/enable-nix.nix # Fastfetch  -  You got to show something in that cmd for your reddit posts
     # man
