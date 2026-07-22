@@ -10,14 +10,15 @@ in
 
       src = ./src;
 
-      buildInputs = [
-        pkgs.nlohmann_json
-        pkgs.libtar
+      buildInputs = with pkgs; [
+        nlohmann_json
+        libtar
+        libssh2
       ];
 
-      nativeBuildInputs = [
-        pkgs.gcc
-        pkgs.pandoc
+      nativeBuildInputs = with pkgs; [
+        gcc
+        pandoc
       ];
 
       buildPhase = ''
@@ -29,6 +30,7 @@ in
           -g \
           -I${pkgs.nlohmann_json}/include \
           -I${pkgs.libtar}/include \
+          -L${pkgs.libssh2}/lib -lssh2 \
 
         sed -i 's/version/\"${version}\"/' server/man.md
         pandoc server/man.md -s -t man -o deploy.1
