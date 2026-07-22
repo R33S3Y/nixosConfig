@@ -18,6 +18,7 @@ in
       nativeBuildInputs = [
         pkgs.gcc
         pkgs.pandoc
+        pkgs.libtar
       ];
 
       buildPhase = ''
