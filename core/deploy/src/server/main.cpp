@@ -99,7 +99,12 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  filesystem::remove_all(flakePath);
+  // make manifest file
+  // tarball flakepath
+  // send flakepath
+  // rebuild
+  // done
 
+  filesystem::remove_all(flakePath);
   return 0;
 }
