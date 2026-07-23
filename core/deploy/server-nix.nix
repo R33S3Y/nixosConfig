@@ -30,6 +30,8 @@ in
           -g \
           -I${pkgs.nlohmann_json}/include \
           -I${pkgs.libtar}/include \
+          -L${pkgs.libtar}/lib -ltar \
+          -I${pkgs.libssh2.dev}/include \
           -L${pkgs.libssh2}/lib -lssh2 \
 
         sed -i 's/version/\"${version}\"/' server/man.md
