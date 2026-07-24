@@ -73,7 +73,7 @@ int main(int argc, char const *argv[]) {
   if (!argsProcessed["*"].value.has_value() ||
       argsProcessed["*"].value->size() == 0) {
     cerr << ttyHelper::error("no hosts selected. Please enter a host or type "
-                             "'\033[35m man deploy \033[0m ' for more info");
+                             "'\033[35m man deploy \033[0m ' for more info.");
     filesystem::remove_all(flakePath);
     return 1;
   }
