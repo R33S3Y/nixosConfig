@@ -64,7 +64,7 @@ for HOST in "${REMOTE_HOSTS[@]}"; do
 
     # Sync configuration files
     echo -e "${OK}Copying files to $HOST...${RESET}"
-    scp -q -r "$CONFIG_SRC"/* "$HOST:$CONFIG_DST/"
+    scp -q -r "$CONFIG_SRC"/. "$HOST:$CONFIG_DST/"
 
     # Extract just the hostname (after @ if present)
     echo -e "${OK}Rebuilding $HOST...${RESET} \n"
