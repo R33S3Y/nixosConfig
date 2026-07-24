@@ -46,4 +46,4 @@ string nixGet::currentDerivationPath() {
   }
 
   return cmdOut.output;
-}
+};

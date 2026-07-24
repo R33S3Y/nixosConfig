@@ -3,7 +3,7 @@ let
   findPackage = pkgs: name: builtins.head (builtins.filter (p: p.pname or p.name or "" == name) pkgs);
 in
 {
-
+  # should be replaced with system.autoUpgrade at some point ...
   systemd = {
     services."lazyRebuild" = {
       enable = true;
