@@ -17,7 +17,7 @@ using namespace std;
 int main(int argc, char const *argv[]) {
   vector<string> args(argv, argv + argc);
 
-  // set flags
+  // list flags
   map<string, args::optionIn> argsAvailable = {
       {"all", args::optionIn{"all", 'a'}},
       {"dynamic", args::optionIn{"dynamic", 'd'}},
