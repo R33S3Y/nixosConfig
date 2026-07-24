@@ -21,6 +21,7 @@
     other/networking-nix.nix
     other/programs-nix.nix # Install all programs in the programs var
     other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
+    other/stable-nix.nix
     other/sudo-nix.nix # sudo  -  Sudo settings
     other/user-nix.nix # user  -  Adds a user
   ];

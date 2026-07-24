@@ -53,21 +53,7 @@
             nixpkgs.config.allowUnfree = true;
           };
 
-          modules = hosts.${hostName}.imports ++ [
-            (
-              { ... }:
-              {
-                nixpkgs.overlays = [
-                  (final: prev: {
-                    stable = import nixpkgsStable {
-                      system = "x86_64-linux";
-                      config.allowUnfree = true;
-                    };
-                  })
-                ];
-              }
-            )
-          ];
+          modules = hosts.${hostName}.imports;
         };
 
       hosts = {
