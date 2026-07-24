@@ -40,7 +40,7 @@ EOF
 # Copy the configuration files locally
 rm -rf $CONFIG_DST
 mkdir -p $CONFIG_DST
-cp -r "$CONFIG_SRC"/* "$CONFIG_DST"/
+cp -r "$CONFIG_SRC"/. "$CONFIG_DST"/
 
 # Rebuild NixOS locally (diamond)
 if ! nixos-rebuild switch --flake "$CONFIG_DST/#diamond"; then
