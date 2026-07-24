@@ -43,7 +43,7 @@ mkdir -p $CONFIG_DST
 cp -r "$CONFIG_SRC"/* "$CONFIG_DST"/
 
 # Rebuild NixOS locally (diamond)
-if ! nixos-rebuild switch --cores 8 --flake "$CONFIG_DST/#diamond"; then
+if ! nixos-rebuild switch --flake "$CONFIG_DST/#diamond"; then
     echo -e "${BAD}Local NixOS rebuild failed on diamond. Aborting.${RESET}"
     exit 1
 fi
