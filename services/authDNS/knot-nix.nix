@@ -1,11 +1,9 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
-let
-  findPackage = pkgs: name: builtins.head (builtins.filter (p: p.pname or p.name or "" == name) pkgs);
-in
 {
   networking.firewall = {
     allowedTCPPorts = [ 53 ];
@@ -23,7 +21,14 @@ in
           "::@53"
         ];
       };
-
+      policy = [
+        {
+          id = "DNSSEC";
+          signing-threads = 4;
+          algorithm = "ECDSAP256SHA256";
+          zsk-lifetime = "180d";
+        }
+      ];
       zone = lib.mapAttrsToList (
         name: info:
         let
@@ -31,8 +36,10 @@ in
         in
         {
           domain = name;
-          storage = "${findPackage config.environment.systemPackages zoneName}/";
+          storage = "${pkgs."${zoneName}"}/";
           file = zoneName;
+          dnssec-signing = "on";
+          dnssec-policy = "DNSSEC";
         }
       ) config.services.internal.authDNS.domains;
 
