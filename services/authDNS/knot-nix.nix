@@ -36,7 +36,7 @@
         in
         {
           domain = name;
-          storage = "${pkgs."${zoneName}"}/";
+          storage = "${pkgs.internal."${zoneName}"}/";
           file = zoneName;
           dnssec-signing = "on";
           dnssec-policy = "DNSSEC";
