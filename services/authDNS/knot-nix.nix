@@ -14,6 +14,9 @@
     checkConfig = true;
 
     settings = {
+      database = {
+        storage = "/var/lib/knot/keys";
+      };
 
       server = {
         listen = [
@@ -26,7 +29,7 @@
           id = "DNSSEC";
           signing-threads = 4;
           algorithm = "ECDSAP256SHA256";
-          zsk-lifetime = "180d";
+          zsk-lifetime = "30d";
         }
       ];
       zone = lib.mapAttrsToList (
