@@ -3,11 +3,9 @@ let
   version = "dev";
 in
 {
-  # overlay deploy package. So that it can be package and accessed with pkgs.internal.deploy
   nixpkgs.overlays = [
     (final: prev: {
       internal = (prev.internal or { }) // {
-        # prev.internal is their so we don't overwrite pkgs.internal
 
         deploy = prev.stdenv.mkDerivation {
           pname = "deploy";

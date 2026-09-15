@@ -50,10 +50,12 @@ let
       ../../../desktop/strawberry/enable-nix.nix # Music player
       # vencord
       ../../../desktop/vencord/enable-nix.nix
+      # VR
+      ../../../desktop/vr/index-nix.nix
+      ../../../desktop/vr/svrbsctl-nix.nix
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
-      ../../../desktop/other/monado-nix.nix
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
 
       # Services
