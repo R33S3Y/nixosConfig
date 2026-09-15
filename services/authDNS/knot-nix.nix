@@ -24,6 +24,8 @@
           "::@53"
         ];
       };
+      # This sets up the ZSK but not the KSK. We will still need to set that one.
+      # Not sure how to go about that so oh whelp have fun future me :3
       policy = [
         {
           id = "DNSSEC";
