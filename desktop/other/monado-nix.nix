@@ -4,6 +4,7 @@
   services.monado = {
     enable = true;
     defaultRuntime = true;
+    highPriority = true;
   };
 
   services.udev.packages = [ pkgs.monado ];
