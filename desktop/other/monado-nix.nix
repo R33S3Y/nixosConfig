@@ -19,5 +19,5 @@
     libsurvive # backend for lighthouse tracking
   ];
 
-  systemd.user.services.monado.environment.STEAMVR_LH_ENABLE = "1";
+  systemd.user.services.monado.environment.STEAMVR_LH_ENABLE = "0";
 }
