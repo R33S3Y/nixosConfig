@@ -23,7 +23,7 @@
                 owner = "chenxiaolong";
                 repo = "svrbsctl";
                 rev = "179f07f91d30a7507a35ad6384550aee21aa265a";
-                hash = lib.fakeHash;
+                hash = "sha256-L6oTHyWNQUGahXYZKuzb9pM5x92Rpb9vIzq9HUW+9Rs=";
               }
             }/Cargo.lock";
           };
