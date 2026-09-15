@@ -14,7 +14,7 @@
             owner = "chenxiaolong";
             repo = "svrbsctl";
             rev = "179f07f91d30a7507a35ad6384550aee21aa265a";
-            hash = lib.fakeHash; # resolved in step 3
+            hash = "sha256-L6oTHyWNQUGahXYZKuzb9pM5x92Rpb9vIzq9HUW+9Rs="
           };
 
           cargoLock = {
@@ -23,7 +23,7 @@
                 owner = "chenxiaolong";
                 repo = "svrbsctl";
                 rev = "179f07f91d30a7507a35ad6384550aee21aa265a";
-                hash = lib.fakeHash; # same src, keep in sync
+                hash = lib.fakeHash;
               }
             }/Cargo.lock";
           };
@@ -42,5 +42,5 @@
     })
   ];
 
-  environment.systemPackages = [ pkgs.internal.svrbsctl ]; # install it.
+  environment.systemPackages = [ pkgs.internal.svrbsctl ];
 }
