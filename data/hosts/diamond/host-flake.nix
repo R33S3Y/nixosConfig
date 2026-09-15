@@ -51,10 +51,8 @@ let
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
-      ../../../desktop/other/alvr-nix.nix
       ../../../desktop/other/monado-nix.nix
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
-      ../../../desktop/other/wivrn-nix.nix
 
       # OTHER
       # boot
