@@ -53,6 +53,7 @@ let
       # VR
       ../../../desktop/vr/index-nix.nix
       ../../../desktop/vr/svrbsctl-nix.nix
+      ../../../desktop/vr/wayvr-nix.nix
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
