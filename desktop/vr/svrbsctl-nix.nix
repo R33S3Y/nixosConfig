@@ -1,6 +1,8 @@
 { pkgs, lib, ... }:
 
 # this app is discontinued. use only if you must.
+# it's used to config the lighthouses seeing as,
+# their's no other way to do it other then SteamVR.
 {
   nixpkgs.overlays = [
     (final: prev: {
