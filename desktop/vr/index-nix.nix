@@ -27,6 +27,7 @@
 
   environment.sessionVariables = {
     XR_RUNTIME_JSON = "~/.config/openxr/1/active_runtime.json";
+    VR_OVERRIDE = "${pkgs.xrizer}/lib/xrizer";
   };
 
   hardware.steam-hardware.enable = true;
