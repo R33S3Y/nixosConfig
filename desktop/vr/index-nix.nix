@@ -23,7 +23,7 @@
   systemd.user.services.monado.environment = {
     STEAMVR_LH_ENABLE = "0";
     LH_HANDTRACKING = "0";
-    VK_LOADER_LAYERS_DISABLE = "1";
+    VK_LOADER_LAYERS_DISABLE = "~all~";
   };
 
   environment.sessionVariables = {
