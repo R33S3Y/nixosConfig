@@ -124,6 +124,8 @@ let
       ../../../desktop/steam/startup-home.nix
       # Strawberry
       ../../../desktop/strawberry/bind-home.nix # Global Hotkeys for music player
+      # VR
+      ../../../desktop/vr/index-home.nix
       # VScode
       ../../../desktop/vscode/settings-home.nix
       ../../../desktop/vscode/language/cpp-home.nix

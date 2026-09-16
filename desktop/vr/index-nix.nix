@@ -24,4 +24,7 @@
     LH_HANDTRACKING = "0";
   };
 
+  environment.sessionVariables = {
+    XR_RUNTIME_JSON = "~/.config/openxr/1/active_runtime.json";
+  };
 }
