@@ -1,10 +1,10 @@
 { pkgs, ... }:
 {
   home.file = {
-    #".config/openxr/1/active_runtime.json".source = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+    ".config/openxr/1/active_runtime.json".source = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
 
-    #".local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json".source =
-    #  "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+    ".local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json".source =
+      "${pkgs.monado}/share/openxr/1/openxr_monado.json";
 
     # Allows you to enable hand tracking without monado crashing
     ".local/share/monado/hand-tracking-models".source = pkgs.fetchgit {

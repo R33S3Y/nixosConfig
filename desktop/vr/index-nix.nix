@@ -17,20 +17,18 @@
   environment.systemPackages = with pkgs; [
     monado
     libsurvive # backend for lighthouse tracking
-    #  xrizer
+    xrizer
   ];
 
   systemd.user.services.monado.environment = {
     STEAMVR_LH_ENABLE = "0";
     # LH_HANDTRACKING = "0";
-    # VK_LOADER_LAYERS_DISABLE = "~all~";
-    # XRT_COMPOSITOR_FORCE_WAYLAND = "1";
   };
 
-  #environment.sessionVariables = {
-  #  XR_RUNTIME_JSON = "~/.config/openxr/1/active_runtime.json";
-  #  VR_OVERRIDE = "${pkgs.xrizer}/lib/xrizer";
-  #};
+  environment.sessionVariables = {
+    XR_RUNTIME_JSON = "~/.config/openxr/1/active_runtime.json";
+    VR_OVERRIDE = "${pkgs.xrizer}/lib/xrizer";
+  };
 
   hardware.steam-hardware.enable = true;
 }
