@@ -26,7 +26,7 @@
   };
 
   environment.sessionVariables = {
-    XR_RUNTIME_JSON = "~/.config/openxr/1/active_runtime.json";
+    XR_RUNTIME_JSON = "/home/${system.user}/.config/openxr/1/active_runtime.json";
     VR_OVERRIDE = "${pkgs.xrizer}/lib/xrizer";
   };
 
