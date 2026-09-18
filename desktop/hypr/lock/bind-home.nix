@@ -7,8 +7,7 @@
         {
           _args = [
             "SUPER + L"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"hyprlock\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"hyprlock\")")
           ];
         }
       ];

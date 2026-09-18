@@ -8,6 +8,8 @@ let
   overlaySystemNixValuesOnFile =
     { fileName, filePath }:
     let
+      # theme. forces this func to eval nixpkgs for some silly reason causing it to hit the max call depth.
+      # for now we can avoid it by just not using it seeing as only user. is used currently (in ./lua/bind.lua)
       vars = {
         #host = system.hosts.${system.host};
         #network = system.networks.${system.network};
