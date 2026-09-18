@@ -7,37 +7,32 @@
         {
           _args = [
             "XF86AudioPrev"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"strawberry --previous\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --previous\")")
           ];
         }
         {
           _args = [
             "XF86AudioPlay"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"strawberry --play-pause\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --play-pause\")")
           ];
         }
         {
           _args = [
             "XF86AudioNext"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"strawberry --next\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --next\")")
           ];
         }
 
         {
           _args = [
             "XF86AudioLowerVolume"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"strawberry --volume-down\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --volume-down\")")
           ];
         }
         {
           _args = [
             "XF86AudioRaiseVolume"
-            lib.generators.mkLuaInline
-            "hl.dsp.exec_cmd(\"strawberry --volume-up\")"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --volume-up\")")
           ];
         }
       ];
