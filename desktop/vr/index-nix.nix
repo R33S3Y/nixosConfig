@@ -23,6 +23,7 @@
   systemd.user.services.monado.environment = {
     STEAMVR_LH_ENABLE = "0";
     # LH_HANDTRACKING = "0";
+    SURVIVE_GLOBALSCENESOLVER = "0";
   };
 
   environment.sessionVariables = {
