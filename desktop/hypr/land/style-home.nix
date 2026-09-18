@@ -13,18 +13,18 @@
 
           layout = "dwindle";
         };
-      };
-      decoration = {
-        # See https://wiki.hypr.land/configuring/core/config-options/#decoration for more
+        decoration = {
+          # See https://wiki.hypr.land/configuring/core/config-options/#decoration for more
 
-        rounding = system.themes.${system.theme}.borders.rounding;
+          rounding = system.themes.${system.theme}.borders.rounding;
 
-        blur = system.themes.${system.theme}.blur;
+          blur = system.themes.${system.theme}.blur;
 
-        shadow = system.themes.${system.theme}.shadow;
+          shadow = system.themes.${system.theme}.shadow;
 
-        active_opacity = system.themes.${system.theme}.opacity.active;
-        inactive_opacity = system.themes.${system.theme}.opacity.inactive;
+          active_opacity = system.themes.${system.theme}.opacity.active;
+          inactive_opacity = system.themes.${system.theme}.opacity.inactive;
+        };
       };
     };
   };
