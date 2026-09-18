@@ -6,7 +6,7 @@
 let
   # Finds strings that match ${NIX.type.thing} (eg: ${NIX.user.screenshotFolder}) and replaces it with the value
   overlaySystemNixValuesOnFile =
-    fileName:
+    { fileName, filePath }:
     let
       vars = {
         host = system.hosts.${system.host};
@@ -15,14 +15,14 @@ let
         user = system.users.${system.user};
       };
     in
-    toString builtins.toFile fileName builtins.replaceStrings
+    builtins.toFile fileName builtins.replaceStrings
       # From
       (lib.mapAttrsToListRecursive (path: value: "\${NIX.${builtins.concatStringsSep "." path}}") vars)
       # To
       (lib.mapAttrsToListRecursive (path: value: toString value) vars)
       # string
       builtins.readFile
-      fileName;
+      filePath;
 in
 {
   wayland.windowManager.hyprland = {
@@ -31,15 +31,24 @@ in
     extraLuaFiles = {
       "bind.lua" = {
         autoLoad = true;
-        content = overlaySystemNixValuesOnFile ./lua/bind.lua;
+        content = overlaySystemNixValuesOnFile {
+          fileName = "bind.lua";
+          filePath = ./lua/bind.lua;
+        };
       };
       "settings.lua" = {
         autoLoad = true;
-        content = overlaySystemNixValuesOnFile ./lua/settings.lua;
+        content = overlaySystemNixValuesOnFile {
+          fileName = "settings.lua";
+          filePath = ./lua/settings.lua;
+        };
       };
       "style.lua" = {
         autoLoad = true;
-        content = overlaySystemNixValuesOnFile ./lua/style.lua;
+        content = overlaySystemNixValuesOnFile {
+          fileName = "style.lua";
+          filePath = ./lua/style.lua;
+        };
       };
     };
   };
