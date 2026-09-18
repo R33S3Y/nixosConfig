@@ -6,8 +6,7 @@
       on = {
         _args = [
           "hyprland.start"
-          lib.generators.mkLuaInline
-          "hl.dsp.exec_cmd(\"strawberry --play\")"
+          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"strawberry --play\")")
         ];
       };
     };
