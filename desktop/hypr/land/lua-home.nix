@@ -9,9 +9,9 @@ let
     { fileName, filePath }:
     let
       vars = {
-        host = system.hosts.${system.host};
-        network = system.networks.${system.network};
-        theme = system.themes.${system.theme};
+        #host = system.hosts.${system.host};
+        #network = system.networks.${system.network};
+        #theme = system.themes.${system.theme};
         user = system.users.${system.user};
       };
     in
@@ -42,13 +42,6 @@ in
         content = overlaySystemNixValuesOnFile {
           fileName = "settings.lua";
           filePath = ./lua/settings.lua;
-        };
-      };
-      "style.lua" = {
-        autoLoad = true;
-        content = overlaySystemNixValuesOnFile {
-          fileName = "style.lua";
-          filePath = ./lua/style.lua;
         };
       };
     };

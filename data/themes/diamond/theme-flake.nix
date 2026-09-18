@@ -65,21 +65,25 @@ let
       };
     };
 
+    opacity = {
+      active = 0.95;
+      inactive = 0.9;
+    };
+
+    # This sections follows the hyprland decoration.blur options.
+    # See: https://wiki.hypr.land/configuring/core/config-options/#blur for options
     blur = {
-      enabled = "true";
+      enabled = true;
       size = 10;
       passes = 4;
     };
 
+    # This sections follows the hyprland decoration.shadow options.
+    # See: https://wiki.hypr.land/configuring/core/config-options/#shadow for options
     shadow = {
-      enabled = "true";
+      enabled = true;
       range = 50;
       render_power = 10;
-    };
-
-    opacity = {
-      active = 0.95;
-      inactive = 0.9;
     };
 
     icons = {

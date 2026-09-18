@@ -5,6 +5,7 @@
     ./land/lua-home.nix
     ./land/monitor-home.nix
     ./land/mouse-home.nix
+    ./land/style-home.nix
 
     # hyprlock
     ./lock/bind-home.nix
