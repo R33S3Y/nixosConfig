@@ -20,7 +20,7 @@ let
       # From
       (lib.mapAttrsToListRecursive (path: value: "\${NIX.${builtins.concatStringsSep "." path}}") vars)
       # To
-      (lib.mapAttrsToListRecursive (path: value: builtins.toString value) vars)
+      (lib.mapAttrsToListRecursive (path: value: toString value) vars)
       # string
       builtins.readFile
       fileName;
