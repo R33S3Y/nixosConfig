@@ -15,7 +15,7 @@ let
         user = system.users.${system.user};
       };
     in
-    builtins.toFile fileName builtins.replaceStrings
+    toString builtins.toFile fileName builtins.replaceStrings
       # From
       (lib.mapAttrsToListRecursive (path: value: "\${NIX.${builtins.concatStringsSep "." path}}") vars)
       # To
