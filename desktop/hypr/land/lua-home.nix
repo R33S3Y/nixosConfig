@@ -15,14 +15,15 @@ let
         user = system.users.${system.user};
       };
     in
-    builtins.toFile fileName toString builtins.replaceStrings
+    builtins.toFile fileName "${builtins.replaceStrings
       # From
       (lib.mapAttrsToListRecursive (path: value: "\${NIX.${builtins.concatStringsSep "." path}}") vars)
       # To
       (lib.mapAttrsToListRecursive (path: value: toString value) vars)
       # string
       builtins.readFile
-      filePath;
+      filePath
+    }";
 in
 {
   wayland.windowManager.hyprland = {
