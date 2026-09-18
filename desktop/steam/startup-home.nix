@@ -6,8 +6,7 @@
       on = {
         _args = [
           "hyprland.start"
-          lib.generators.mkLuaInline
-          "hl.dsp.exec_cmd(\"steam -silent -no-browser\")"
+          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"steam -silent -no-browser\")")
         ];
       };
     };
