@@ -6,7 +6,7 @@
       on = {
         _args = [
           "hyprland.start"
-          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"hyprpanel\")")
+          (lib.generators.mkLuaInline "function() hl.exec_cmd(\"hyprpanel\") end")
         ];
       };
     };
