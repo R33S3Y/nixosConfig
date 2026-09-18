@@ -21,8 +21,7 @@ let
       # To
       (lib.mapAttrsToListRecursive (path: value: toString value) vars)
       # string
-      builtins.readFile
-      filePath
+      "${builtins.readFile filePath}"
     }";
 in
 {
