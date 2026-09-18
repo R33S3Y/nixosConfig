@@ -4,10 +4,6 @@
 }:
 
 {
-  home.packages = with pkgs; [
-    # lua-language-server
-  ];
-
   programs.vscode = {
     profiles.default = {
       extensions = with pkgs; [

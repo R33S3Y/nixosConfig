@@ -13,7 +13,7 @@ let
       inputs.nix-minecraft.nixosModules.minecraft-servers
 
       # Core
-      ../../../core/core-nix.nix
+      ../../../core/all-nix.nix
 
       # Minecraft
       ../../../services/minecraft/minecraft-nix.nix
@@ -32,7 +32,7 @@ let
     ];
     homeImports = [
       # CORE
-      ../../../core/core-home.nix
+      ../../../core/all-home.nix
     ];
 
     user = "reese";

@@ -240,8 +240,4 @@ in
       wallpaper.enable = false;
     };
   };
-
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "hyprpanel"
-  ];
 }

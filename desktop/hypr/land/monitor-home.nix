@@ -1,11 +1,12 @@
-{ ... }:
+{
+  system,
+  ...
+}:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      misc = {
-        "enable_anr_dialog" = "false";
-      };
+      monitor = system.hosts.${system.host}.monitors;
     };
   };
 }

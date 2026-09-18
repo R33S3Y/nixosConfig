@@ -17,32 +17,4 @@
 
   hardware.bluetooth.enable = system.hosts.${system.host}.bluetooth; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = system.hosts.${system.host}.bluetooth; # powers up the default Bluetooth controller on boot
-
-  environment.systemPackages = [
-    (pkgs.stdenv.mkDerivation {
-      pname = "getDeviceId";
-      version = "1.0";
-
-      src = ./.;
-
-      buildInputs = [
-        pkgs.nlohmann_json
-      ];
-
-      nativeBuildInputs = [
-        pkgs.gcc
-      ];
-
-      buildPhase = ''
-        g++ getDeviceId.cpp -o getDeviceId \
-          -std=c++20 \
-          -I${pkgs.nlohmann_json}/include
-      '';
-
-      installPhase = ''
-        mkdir -p $out/bin
-        cp getDeviceId $out/bin/
-      '';
-    })
-  ];
 }

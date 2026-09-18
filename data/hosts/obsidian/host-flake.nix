@@ -12,7 +12,7 @@ let
       inputs.home-manager.nixosModules.home-manager
 
       # Core
-      ../../../core/core-nix.nix
+      ../../../core/all-nix.nix
 
       # Services
 
@@ -29,7 +29,7 @@ let
     ];
     homeImports = [
       # CORE
-      ../../../core/core-home.nix
+      ../../../core/all-home.nix
     ];
 
     user = "reese";

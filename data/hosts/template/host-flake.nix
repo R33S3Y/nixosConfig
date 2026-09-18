@@ -14,17 +14,15 @@ let
       inputs.nix-minecraft.nixosModules.minecraft-servers
 
       # Core
-      ../../../core/core-nix.nix
+      ../../../core/all-nix.nix
 
       # Desktop
       # You can comment and uncomment these as needed
 
       # Firefox
       ../../../desktop/firefox/enable-nix.nix
-      # Hyprland
-      ../../../desktop/hyprland/enable-nix.nix
-      # Hyprlock
-      ../../../desktop/hyprlock/enable-nix.nix
+      # Hypr
+      ../../../desktop/hypr/all-nix.nix
       # Kitty
       ../../../desktop/kitty/enable-nix.nix
       # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
@@ -91,7 +89,7 @@ let
     ];
     homeImports = [
       # CORE
-      ../../../core/core-home.nix
+      ../../../core/all-home.nix
 
       # DESKTOP
       # You can comment and uncomment these as needed
@@ -100,13 +98,8 @@ let
       ../../../desktop/firefox/settings-home.nix
       # git
       ../../../desktop/git/settings-home.nix
-      # Hyprland
-      ../../../desktop/hyprland/bind-home.nix # Keyboard bindings
-      ../../../desktop/hyprland/monitor-home.nix # Monitor settings
-      ../../../desktop/hyprland/settings-home.nix # Settings
-      ../../../desktop/hyprland/style-home.nix # Styles tweaks  -  (Most styling is handled by stylix)
-      # Hyprlock
-      ../../../desktop/hyprlock/style-home.nix # Styles + What to display and where
+      # Hypr
+      ../../../desktop/hypr/all-home.nix
       # Kitty
       ../../../desktop/kitty/bind-home.nix # Key binds
       ../../../desktop/kitty/style-home.nix # Styles  -  You should be fine to get away with disabling this
@@ -119,12 +112,11 @@ let
       ../../../desktop/obsidian/settings-home.nix
       # Rofi
       ../../../desktop/rofi/style-home.nix # Styles
-      # Sound
-      ../../../desktop/sound/sound-home.nix
       # steam
       ../../../desktop/steam/startup-home.nix
       # Strawberry
       ../../../desktop/strawberry/bind-home.nix # Global Hotkeys for music player
+      ../../../desktop/strawberry/startup-home.nix
       # VR
       ../../../desktop/vr/index-home.nix
       # VScode
@@ -175,28 +167,28 @@ let
 
     bluetooth = true;
 
-    microphone = {
-      # use wpctl status to get device names
-      name = "Blue Microphones Analog Stereo";
-      volume = "1";
-      bluetooth = {
-        enable = false;
-        id = ""; # type bluetoothctl and then info to get this info
-      };
-    };
-    speaker = {
-      name = "Baseus Inspire XC1";
-      volume = "0.4";
-      bluetooth = {
-        enable = true;
-        id = "54:84:50:67:C9:A2"; # type bluetoothctl and then info to get this info
-      };
-    };
     primaryMonitor = "HDMI-A-1";
-    monitor = [
-      "HDMI-A-1, 1920x1080@60, 0x0, 1"
-      "DP-3, 2560x1440@165, 1920x-200, 2, transform,3"
-      "DP-2, 1920x1080@60, -960x375, 2"
+    monitors = [
+      {
+        output = "HDMI-A-1";
+        mode = "3840x2160@60";
+        position = "0x0";
+        scale = 1;
+      }
+      {
+        output = "DP-1";
+        mode = "2560x1440@165";
+        position = "3840x0";
+        scale = 1.066667;
+        transform = 3;
+      }
+      {
+        output = "DP-2";
+        mode = "1920x1080@180";
+        position = "-1080x0";
+        scale = 1;
+        transform = 3;
+      }
     ];
   };
 in

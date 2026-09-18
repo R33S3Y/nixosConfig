@@ -13,19 +13,15 @@ let
       inputs.nur.modules.nixos.default
 
       # Core
-      ../../../core/core-nix.nix
+      ../../../core/all-nix.nix
 
       # Desktop
       # You can comment and uncomment these as needed
 
       # Firefox
       ../../../desktop/firefox/enable-nix.nix
-      # Hyprland
-      ../../../desktop/hyprland/enable-nix.nix
-      # Hyprlock
-      ../../../desktop/hyprlock/enable-nix.nix
-      # Hyprpanel
-      ../../../desktop/hyprpanel/enable-nix.nix
+      # Hypr
+      ../../../desktop/hypr/all-nix.nix
       # Kitty
       ../../../desktop/kitty/enable-nix.nix
       # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
@@ -67,7 +63,7 @@ let
     ];
     homeImports = [
       # CORE
-      ../../../core/core-home.nix
+      ../../../core/all-home.nix
 
       # DESKTOP
       # You can comment and uncomment these as needed
@@ -76,15 +72,8 @@ let
       ../../../desktop/firefox/settings-home.nix
       # git
       ../../../desktop/git/settings-home.nix
-      # Hyprland
-      ../../../desktop/hyprland/bind-home.nix # Keyboard bindings
-      ../../../desktop/hyprland/monitor-home.nix # Monitor settings
-      ../../../desktop/hyprland/settings-home.nix # Settings
-      ../../../desktop/hyprland/style-home.nix # Styles tweaks  -  (Most styling is handled by stylix)
-      # Hyprlock
-      ../../../desktop/hyprlock/style-home.nix # Styles + What to display and where
-      # Hyprpanel
-      ../../../desktop/hyprpanel/style-home.nix
+      # Hypr
+      ../../../desktop/hypr/all-home.nix
       # Kitty
       ../../../desktop/kitty/bind-home.nix # Key binds
       ../../../desktop/kitty/style-home.nix # Styles  -  You should be fine to get away with disabling this
@@ -95,12 +84,11 @@ let
       ../../../desktop/obsidian/settings-home.nix
       # Rofi
       ../../../desktop/rofi/style-home.nix # Styles
-      # Sound
-      ../../../desktop/sound/sound-home.nix
       # steam
       ../../../desktop/steam/startup-home.nix
       # Strawberry
       ../../../desktop/strawberry/bind-home.nix # Global Hotkeys for music player
+      ../../../desktop/strawberry/startup-home.nix
       # VScode
       ../../../desktop/vscode/settings-home.nix
       ../../../desktop/vscode/language/cpp-home.nix
@@ -125,9 +113,13 @@ let
 
     # home manager vars
     primaryMonitor = "Unknown-1";
-
-    monitor = [
-      "Unknown-1, 1920x1080@60, 0x0, 2"
+    monitors = [
+      {
+        output = "Unknown-1";
+        mode = "1920x1080@60";
+        position = "0x0";
+        scale = 2;
+      }
     ];
 
   };
