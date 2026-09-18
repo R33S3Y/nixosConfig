@@ -131,6 +131,7 @@ let
       ../../../desktop/vscode/settings-home.nix
       ../../../desktop/vscode/language/cpp-home.nix
       ../../../desktop/vscode/language/javascript-home.nix # ESlint
+      ../../../desktop/vscode/language/lua-home.nix
       ../../../desktop/vscode/language/markdown-home.nix
       ../../../desktop/vscode/language/nix-home.nix # Nix LSP and FMT support
       ../../../desktop/vscode/language/python-home.nix
