@@ -229,7 +229,7 @@ int main(int argc, char const *argv[]) {
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/',
   };
 
-  cout << "\nBase 64 test: " + base64::encode(test);
+  // cout << "\nBase 64 test: " + base64::encode(test);
 
   // send flakePath
   // rebuild
