@@ -18,8 +18,7 @@ string base64::encode(vector<unsigned char> unEncoded) {
 
   // handles everything except the last 3 that need trail bits.
   int i;
-  //
-  for (i = 0; i < (unEncoded.size() / 3 * 3); i + 3) {
+  for (i = 0; i < (unEncoded.size() / 3 * 3); i += 3) {
     uint32_t bitHold =
         (unEncoded[i] << 16) | (unEncoded[i + 1] << 8) | unEncoded[i + 2];
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
