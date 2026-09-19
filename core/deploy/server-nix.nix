@@ -28,7 +28,8 @@ in
           buildPhase = ''
             g++ \
                 server/main.cpp \
-                utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp utils/args.cpp utils/nixGet.cpp utils/tarHelper.cpp utils/sslHelper.cpp \
+                utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp \
+                utils/args.cpp utils/nixGet.cpp utils/tarHelper.cpp utils/sslHelper.cpp utils/base64.cpp \
               -o deploy \
               -std=c++23 \
               -debug \
