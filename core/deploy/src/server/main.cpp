@@ -1,4 +1,5 @@
 #include "../utils/args.h"
+#include "../utils/base64.h"
 #include "../utils/nixGet.h"
 #include "../utils/split.h"
 #include "../utils/sslHelper.h"
@@ -219,6 +220,9 @@ int main(int argc, char const *argv[]) {
   cout << "signature: ";
   for (unsigned char i : *signatureStatus.output)
     cout << i;
+
+  string test = "Hi there :3";
+  cout << "\nBase 64 test: " + base64::encode(test);
 
   // send flakePath
   // rebuild
