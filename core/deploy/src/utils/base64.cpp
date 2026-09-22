@@ -32,12 +32,12 @@ string base64::encode(vector<unsigned char> unEncoded) {
     uint32_t bitHold = (unEncoded[i] << 16) | (unEncoded[i + 1] << 8);
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
     encodedStr.push_back(base64Chars[((bitHold >> 12) & 0x3F)]);
-    encodedStr.push_back(base64Chars[((bitHold >> 6) &)]);
+    encodedStr.push_back(base64Chars[((bitHold >> 6) & 0x3F)]);
   }
   if (unEncoded.size() - i == 1) {
     uint32_t bitHold = (unEncoded[i] << 16);
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
-    encodedStr.push_back(base64Chars[((bitHold >> 12) &)]);
+    encodedStr.push_back(base64Chars[((bitHold >> 12) & 0x3F)]);
   }
 
   return encodedStr;
