@@ -17,7 +17,7 @@
   environment.systemPackages = with pkgs; [
     monado
     libsurvive # backend for lighthouse tracking
-    xrizer
+    opencomposite
   ];
 
   systemd.user.services.monado.environment = {
@@ -28,7 +28,7 @@
 
   environment.sessionVariables = {
     XR_RUNTIME_JSON = "/home/${system.user}/.config/openxr/1/active_runtime.json";
-    VR_OVERRIDE = "${pkgs.xrizer}/lib/xrizer";
+    VR_OVERRIDE = "${pkgs.opencomposite}/lib/opencomposite";
   };
 
   hardware.steam-hardware.enable = true;

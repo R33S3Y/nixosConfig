@@ -53,7 +53,7 @@ let
       ../../../desktop/vr/svrbsctl-nix.nix
       ../../../desktop/vr/wayvr-nix.nix
       # VScode
-      ../../../desktop/vscode/enable-nix.nix
+      ../../../desktop/vscode/all-nix.nix
       # Other
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
 
@@ -120,14 +120,7 @@ let
       # VR
       ../../../desktop/vr/index-home.nix
       # VScode
-      ../../../desktop/vscode/settings-home.nix
-      ../../../desktop/vscode/language/cpp-home.nix
-      ../../../desktop/vscode/language/javascript-home.nix # ESlint
-      ../../../desktop/vscode/language/lua-home.nix
-      ../../../desktop/vscode/language/markdown-home.nix
-      ../../../desktop/vscode/language/nix-home.nix # Nix LSP and FMT support
-      ../../../desktop/vscode/language/python-home.nix
-
+      ../../../desktop/vscode/all-home.nix
     ];
 
     user = "reese";
