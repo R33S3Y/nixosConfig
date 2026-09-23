@@ -154,8 +154,6 @@ let
       nfs-utils
       libnotify
 
-      keepassxc
-
       osu-lazer-bin
       inkscape
       thunderbird

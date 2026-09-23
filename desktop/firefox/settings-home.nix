@@ -37,6 +37,7 @@ in
               return-youtube-dislikes
               ublock-origin
               youtube-shorts-block
+              keepassxc-browser
             ]
             ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader;
         };
