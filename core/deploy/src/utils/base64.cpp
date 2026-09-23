@@ -28,16 +28,19 @@ string base64::encode(vector<unsigned char> unEncoded) {
   }
   i -= 3; // remove the last run that it didn't do.
 
+  // handling trailing bits.
   if (unEncoded.size() - i == 2) {
     uint32_t bitHold = (unEncoded[i] << 16) | (unEncoded[i + 1] << 8);
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
     encodedStr.push_back(base64Chars[((bitHold >> 12) & 0x3F)]);
-    encodedStr.push_back(base64Chars[((bitHold >> 6) & 0x3F)]);
+    encodedStr.push_back(base64Chars[((bitHold >> 6) & 0x3C)]);
+    encodedStr.append("=");
   }
   if (unEncoded.size() - i == 1) {
     uint32_t bitHold = (unEncoded[i] << 16);
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
-    encodedStr.push_back(base64Chars[((bitHold >> 12) & 0x3F)]);
+    encodedStr.push_back(base64Chars[((bitHold >> 12) & 0x30)]);
+    encodedStr.append("==");
   }
 
   return encodedStr;
