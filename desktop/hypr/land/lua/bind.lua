@@ -23,8 +23,8 @@ for i = 1, 10 do
 end
 
 -- Scroll through existing workspaces with mainMod + scroll
-hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "m+1" }))
-hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "m-1" }))
+hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
+hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
 
 -- Screenshot a window
 hl.bind("SUPER + SHIFT + PRINT",
