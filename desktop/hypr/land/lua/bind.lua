@@ -28,8 +28,8 @@ hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
 
 hl.bind("SUPER + SHIFT + mouse_down", hl.dsp.window.move({ workspace = "r+1" }))
 hl.bind("SUPER + SHIFT + mouse_up", hl.dsp.window.move({ workspace = "r-1" }))
-hl.bind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
-hl.bind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
+--hl.bind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
+--hl.bind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
 
 -- Screenshot a window
 hl.bind("SUPER + SHIFT + PRINT",
