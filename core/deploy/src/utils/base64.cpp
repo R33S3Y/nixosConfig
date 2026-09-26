@@ -61,10 +61,10 @@ vector<unsigned char> base64::decode(string encoded) {
 
   int i;
   for (i = 0; i < (encoded.size() / 4 * 4); i += 4) {
-    uint32_t bitHold = ((base64CharToInt(unEncoded[i]) << 18) |
-                        (base64CharToInt(unEncoded[i + 1]) << 12) |
-                        (base64CharToInt(unEncoded[i + 2]) << 6) |
-                        (base64CharToInt(unEncoded[i + 3]) << 0));
+    uint32_t bitHold = ((base64CharToInt(encoded[i]) << 18) |
+                        (base64CharToInt(encoded[i + 1]) << 12) |
+                        (base64CharToInt(encoded[i + 2]) << 6) |
+                        (base64CharToInt(encoded[i + 3]) << 0));
     unEncoded.push_back((bitHold >> 16) & 0xFF);
     unEncoded.push_back((bitHold >> 8) & 0xFF);
     unEncoded.push_back((bitHold >> 0) & 0xFF);
