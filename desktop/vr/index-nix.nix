@@ -53,7 +53,7 @@
           export PATH="${pkgs.makeBinPath [ options.steam.package ]}:$PATH"
           ${
             if options.services.monado.highPriority then
-              "${config.security.wrapperDir}/monado-service"
+              "${options.config.security.wrapperDir}/monado-service"
             else
               lib.getExe' options.services.monado.package "monado-service"
           }
