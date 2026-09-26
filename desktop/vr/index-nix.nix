@@ -54,7 +54,7 @@
           export PATH="${lib.makeBinPath [ options.programs.steam.package ]}:$PATH"
           ${
             if config.services.monado.highPriority then
-              "${options.config.security.wrapperDir}/monado-service"
+              "${config.security.wrapperDir}/monado-service"
             else
               lib.getExe' options.services.monado.package "monado-service"
           }
