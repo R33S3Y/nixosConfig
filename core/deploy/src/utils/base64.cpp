@@ -1,7 +1,6 @@
 #include "base64.h"
 #include <algorithm>
 #include <cstdint>
-#include <iostream>
 #include <iterator>
 #include <vector>
 

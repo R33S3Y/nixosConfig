@@ -231,18 +231,24 @@ int main(int argc, char const *argv[]) {
   cout << endl;
 
   cout << "Base 64 encode test: " + base64::encode(test) << endl;
-  cout << "Base 64 decode test: " + base64::decode(base64::encode(test))
-       << endl;
+  cout << "Base 64 decode test: ";
+  for (unsigned char i : base64::decode(base64::encode(test)))
+    cout << i;
+  cout << endl;
 
   test.push_back('1');
   cout << "Base 64 encode test: " + base64::encode(test) << endl;
-  cout << "Base 64 decode test: " + base64::decode(base64::encode(test))
-       << endl;
+  cout << "Base 64 decode test: ";
+  for (unsigned char i : base64::decode(base64::encode(test)))
+    cout << i;
+  cout << endl;
 
   test.push_back('2');
   cout << "Base 64 encode test: " + base64::encode(test) << endl;
-  cout << "Base 64 decode test: " + base64::decode(base64::encode(test))
-       << endl;
+  cout << "Base 64 decode test: ";
+  for (unsigned char i : base64::decode(base64::encode(test)))
+    cout << i;
+  cout << endl;
 
   // send flakePath
   // rebuild
