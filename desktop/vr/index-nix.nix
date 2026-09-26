@@ -48,17 +48,19 @@
       PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES = "1";
     };
     serviceConfig = {
-      ExecStart = lib.mkForce lib.getExe (
-        pkgs.writeShellScriptBin "start-monado-server" ''
-          # The server needs Steam in PATH to open Steam games from the application launcher
-          export PATH="${lib.makeBinPath [ options.programs.steam.package ]}:$PATH"
-          ${
-            if config.services.monado.highPriority then
-              "${config.security.wrapperDir}/monado-service"
-            else
-              lib.getExe' options.services.monado.package "monado-service"
-          }
-        ''
+      ExecStart = lib.mkForce (
+        lib.getExe (
+          pkgs.writeShellScriptBin "start-monado-server" ''
+            # The server needs Steam in PATH to open Steam games from the application launcher
+            export PATH="${lib.makeBinPath [ options.programs.steam.package ]}:$PATH"
+            ${
+              if config.services.monado.highPriority then
+                "${config.security.wrapperDir}/monado-service"
+              else
+                lib.getExe' options.services.monado.package "monado-service"
+            }
+          ''
+        )
       );
     };
   };
