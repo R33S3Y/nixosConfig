@@ -69,5 +69,17 @@ vector<unsigned char> base64::decode(string encoded) {
     unEncoded.push_back((bitHold >> 8) & 0xFF);
     unEncoded.push_back((bitHold >> 0) & 0xFF);
   }
+  if (encoded.size() - i == 3) {
+    uint32_t bitHold = (base64CharToInt(encoded[i]) << 18) |
+                       (base64CharToInt(encoded[i + 1]) << 12) |
+                       (base64CharToInt(encoded[i + 2]) << 6);
+    unEncoded.push_back(base64Chars[((bitHold >> 16) & 0xFF)]);
+    unEncoded.push_back(base64Chars[((bitHold >> 8) & 0xFF)]);
+  }
+  if (encoded.size() - i == 2) {
+    uint32_t bitHold = (base64CharToInt(encoded[i]) << 18) |
+                       (base64CharToInt(encoded[i + 1]) << 12);
+    unEncoded.push_back(base64Chars[((bitHold >> 16) & 0xFF)]);
+  }
   return unEncoded;
 }
