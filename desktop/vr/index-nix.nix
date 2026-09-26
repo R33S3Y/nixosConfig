@@ -50,7 +50,7 @@
       ExecStart = lib.getExe (
         pkgs.writeShellScriptBin "start-monado-server" ''
           # The server needs Steam in PATH to open Steam games from the application launcher
-          export PATH="${pkgs.makeBinPath [ options.steam.package ]}:$PATH"
+          export PATH="${lib.makeBinPath [ options.steam.package ]}:$PATH"
           ${
             if options.services.monado.highPriority then
               "${options.config.security.wrapperDir}/monado-service"
