@@ -24,6 +24,7 @@
     # technically, not need but why take chances
     XR_RUNTIME_JSON = "/home/${system.user}/.config/openxr/1/active_runtime.json";
     VR_OVERRIDE = "${pkgs.opencomposite}/lib/opencomposite";
+    PRESSURE_VESSEL_FILESYSTEMS_RW = "/home/reese/.config/openxr/1/active_runtime.json";
   };
 
   services.monado = {
