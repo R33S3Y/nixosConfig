@@ -1,5 +1,6 @@
 #include "base64.h"
 #include <cstdint>
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -29,6 +30,10 @@ string base64::encode(vector<unsigned char> unEncoded) {
   i -= 3; // remove the last run that it didn't do.
 
   // handling trailing bits.
+  cout << "un : ";
+  cout << unEncoded.size();
+  cout << " i : ";
+  cout << i;
   if (unEncoded.size() - i == 2) {
     uint32_t bitHold = (unEncoded[i] << 16) | (unEncoded[i + 1] << 8);
     encodedStr.push_back(base64Chars[((bitHold >> 18) & 0x3F)]);
