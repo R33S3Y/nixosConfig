@@ -27,7 +27,7 @@ string base64::encode(vector<unsigned char> unEncoded) {
     encodedStr.push_back(base64Chars[((bitHold >> 6) & 0x3F)]);
     encodedStr.push_back(base64Chars[(bitHold & 0x3F)]);
   }
-  i -= 3; // remove the last run that it didn't do.
+  // i -= 3; // remove the last run that it didn't do.
 
   // handling trailing bits.
   cout << "un : ";
