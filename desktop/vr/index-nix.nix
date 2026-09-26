@@ -53,10 +53,11 @@
             # The server needs Steam in PATH to open Steam games from the application launcher
             export PATH="${lib.makeBinPath [ options.programs.steam.package ]}:$PATH"
             ${
+              # this tall thing exists to avoids a crash in init_epoll in ipc_server_mainloop_linux.c : 187
               if config.services.monado.highPriority then
-                "${config.security.wrapperDir}/monado-service"
+                "tail -f /dev/null | exec ${config.security.wrapperDir}/monado-service"
               else
-                lib.getExe' options.services.monado.package "monado-service"
+                "tail -f /dev/null | exec ${lib.getExe' options.services.monado.package "monado-service"}"
             }
           ''
         )
