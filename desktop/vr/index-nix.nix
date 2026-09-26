@@ -3,6 +3,7 @@
   system,
   options,
   lib,
+  config,
   ...
 }:
 
@@ -52,7 +53,7 @@
           # The server needs Steam in PATH to open Steam games from the application launcher
           export PATH="${lib.makeBinPath [ options.programs.steam.package ]}:$PATH"
           ${
-            if options.services.monado.highPriority then
+            if config.services.monado.highPriority then
               "${options.config.security.wrapperDir}/monado-service"
             else
               lib.getExe' options.services.monado.package "monado-service"
