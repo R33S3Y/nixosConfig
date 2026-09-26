@@ -30,7 +30,6 @@
     enable = true;
     defaultRuntime = true;
     highPriority = true;
-    forceDefaultRuntime = true;
   };
 
   environment.systemPackages = with pkgs; [
