@@ -182,7 +182,7 @@ let
         mode = "1920x1080@180";
         position = "-1080x0";
         scale = 1;
-        transform = 3;
+        transform = 1;
       }
     ];
   };
