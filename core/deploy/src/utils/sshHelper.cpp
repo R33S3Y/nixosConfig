@@ -1,10 +1,14 @@
+#include "./split.h"
+#include "./systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <sshHelper.h>
 #include <string>
+#include <sys/types.h>
 #include <termios.h>
+#include <vector>
 
 using namespace std;
 
@@ -144,5 +148,59 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
 sshHelper::result<void> sshHelper::disconnect(ssh_session session) {
   ssh_disconnect(session);
   ssh_free(session);
+  return {.exitCode = 0};
+}
+
+sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
+                                                  string from, string to,
+                                                  mode_t mode) {
+  systemHelper::result<vector<unsigned char>> fileResult =
+      systemHelper::readFile(from);
+  if (fileResult.exitCode != 0) {
+    return {.exitCode = 1, .error = *fileResult.error};
+  }
+  vector<unsigned char> fileVec = *fileResult.output;
+
+  sftp_file fileSftp = sftp_open(session, to.c_str(), O_WRONLY | O_CREAT, mode);
+  if (fileSftp == NULL) {
+    return {.exitCode = 1, .error = "failed to open file loc on server"};
+  }
+
+  if (sftp_write(fileSftp, &fileVec[0], fileVec.size()) < 0) {
+    return {.exitCode = 1, .error = "failed to write to file on server"};
+  }
+
+  if (sftp_close(fileSftp) != SSH_NO_ERROR) {
+    return {.exitCode = 1, .error = "failed to close file"};
+  }
+  return {.exitCode = 0};
+}
+
+sshHelper::result<void> sshHelper::sftpMkDir(sftp_session session, string dir,
+                                             mode_t mode) {
+  vector<string> pathItems = split::splitStrByChar(dir, '/');
+
+  string currentPath;
+  currentPath.reserve(dir.size());
+
+  for (string pathItem : pathItems) {
+    currentPath += '/' + pathItem;
+
+    if (sftp_mkdir(session, currentPath.c_str(), mode) != 0) {
+      int error = sftp_get_error(session);
+      if (error != SSH_FX_FILE_ALREADY_EXISTS)
+        return {.exitCode = 1, .error = "sftp_mkdir failed"};
+
+      sftp_attributes attr = sftp_stat(session, currentPath.c_str());
+      if (attr == nullptr || attr == NULL)
+        return {.exitCode = 1, .error = "sftp_stat failed"};
+      // not sure if I can handle simlinks here? Leaving unsupported for now.
+      if (attr->type != SSH_FILEXFER_TYPE_DIRECTORY) {
+        sftp_attributes_free(attr);
+        return {.exitCode = 1, .error = "path contains file"};
+      }
+      sftp_attributes_free(attr);
+    }
+  }
   return {.exitCode = 0};
 }

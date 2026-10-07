@@ -1,3 +1,5 @@
+#include "./hostConnection.h"
+
 #include "../utils/args.h"
 #include "../utils/base64.h"
 #include "../utils/nixGet.h"
@@ -5,11 +7,15 @@
 #include "../utils/sslHelper.h"
 #include "../utils/systemHelper.h"
 #include "../utils/tarHelper.h"
+#include "../utils/threading.h"
 #include "../utils/ttyHelper.h"
+
 #include <algorithm>
 #include <ctime>
 #include <filesystem>
 #include <iostream>
+#include <libssh/libssh.h>
+#include <libssh/sftp.h>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <pwd.h>
@@ -20,18 +26,21 @@
 
 using namespace std;
 
+// I don't like big functions like this.
+// However I can't see how to abstract much more out.
+// Seeing as it's basically just glue code and error handling.
+//
+// oh whelp.
+//
 int main(int argc, char const *argv[]) {
   vector<string> args(argv, argv + argc);
 
   // list flags
   map<string, args::optionIn> argsAvailable = {
       {"strict", args::optionIn{"strict", 's'}},
-      {"dynamic", args::optionIn{"dynamic", 'd'}},
+      {"lazy", args::optionIn{"lazy", 'l'}},
       {"flake", args::optionIn{"flake", 'f', true, true}},
-      {"key", args::optionIn{"key", 'k', true}},
-      {"keySSH", args::optionIn{.longName = "keySSH", .takesValue = true}},
-      {"keySigning",
-       args::optionIn{.longName = "keySigning", .takesValue = true}},
+      {"key", args::optionIn{"key", 'k', true, true}},
   };
 
   // parse user input
@@ -45,19 +54,20 @@ int main(int argc, char const *argv[]) {
 
   // rebuild mode
   if (argsProcessed["strict"].invoked == true &&
-      argsProcessed["dynamic"].invoked == true) {
-    cerr << ttyHelper::error("--dynamic (" + ttyColour::log + "-d" +
+      argsProcessed["lazy"].invoked == true) {
+    cerr << ttyHelper::error("--lazy (" + ttyColour::log + "-l" +
                              ttyColour::reset + ") and --strict (" +
                              ttyColour::log + "-s" + ttyColour::reset +
                              ") are mutually exclusive");
     return 1;
   }
-  bool dynamicRebuild = true;
+  bool lazyRebuild = true;
   if (argsProcessed["strict"].invoked == true) {
-    dynamicRebuild = false;
+    lazyRebuild = false;
   }
 
   // get flake
+  cout << ttyHelper::log("Getting flake ...");
   string tmpPath = "/tmp/deploy";
   string flakeLink = *argsProcessed["flake"].value;
   string flakePath = tmpPath + "/nixosConfig";
@@ -85,6 +95,7 @@ int main(int argc, char const *argv[]) {
   }
 
   // get available hosts
+  cout << ttyHelper::log("Comparing hosts ...");
   vector<string> hosts;
   vector<string> availableHosts = nixGet::flakeHosts(flakePath);
   if (availableHosts.size() == 0) {
@@ -127,6 +138,7 @@ int main(int argc, char const *argv[]) {
   }
 
   // make manifest file
+  cout << ttyHelper::log("Generating manifest ...");
   string user;
   struct passwd *pw = getpwuid(getuid());
   if (!pw) {
@@ -141,13 +153,14 @@ int main(int argc, char const *argv[]) {
           "signingTime",
           static_cast<int64_t>(time(nullptr)),
       },
-      {"dynamic", dynamicRebuild},
+      {"lazy", lazyRebuild},
       {"hosts", hosts},
   };
   systemHelper::saveFileFromStr(tmpPath + "/manifest.json",
                                 nlohmann::to_string(manifestJson));
 
   // make flake path into tarball
+  cout << ttyHelper::log("Packing tarball ...");
   const tarHelper::result<void> tarStatus =
       tarHelper::package(tmpPath + "/tarball.tar",
                          {
@@ -170,6 +183,7 @@ int main(int argc, char const *argv[]) {
   }
 
   // make hash
+  cout << ttyHelper::log("signing ...");
   const sslHelper::result<vector<unsigned char>> sslHashStatus =
       sslHelper::getSHA512Hash(*tarballFileResult.output);
   if (sslHashStatus.exitCode != 0) {
@@ -178,30 +192,20 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  // get signing ssh key
-  string signingKeyPath;
-  if (argsProcessed["keySigning"].invoked == true) {
-    signingKeyPath = *argsProcessed["keySigning"].value;
-  } else if (argsProcessed["key"].invoked == true) {
-    signingKeyPath = *argsProcessed["key"].value;
-  } else {
-    cerr << ttyHelper::error(
-        "no signingKey provided please set --keySigning or --key (" +
-        ttyColour::log + "-k" + ttyColour::reset + ").");
+  // get key
+  string keyPath = *argsProcessed["key"].value;
+  const systemHelper::result<string> keyFileResult =
+      systemHelper::readFileToStr(keyPath);
+  if (keyFileResult.exitCode != 0) {
+    cerr << ttyHelper::error(*keyFileResult.error);
     filesystem::remove_all(tmpPath);
     return 1;
   }
+  string keyFile = *keyFileResult.output;
 
-  const systemHelper::result<string> privateKeyFile =
-      systemHelper::readFileToStr(signingKeyPath);
-  if (privateKeyFile.exitCode != 0) {
-    cerr << ttyHelper::error(*privateKeyFile.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-
+  // get ssl key
   const sslHelper::result<EVP_PKEY *> privateKeyPKEY =
-      sslHelper::openPrivateKey(*privateKeyFile.output);
+      sslHelper::openPrivateKey(keyFile);
   if (privateKeyPKEY.exitCode != 0) {
     cerr << ttyHelper::error(*privateKeyPKEY.error);
     filesystem::remove_all(tmpPath);
@@ -216,12 +220,33 @@ int main(int argc, char const *argv[]) {
     filesystem::remove_all(tmpPath);
     return 1;
   }
+  string signature = base64::encode(*signatureStatus.output);
 
-  cout << "signature: " + base64::encode(*signatureStatus.output);
+  // Call to each host.
+  cout << ttyHelper::log("Deploying on hosts ...");
+  vector<hostConnection::input> hostInputs;
+  hostInputs.reserve(hosts.size());
+  for (string host : hosts) {
+    hostInputs.push_back({
+        .host = host,
+        .user = user,
+        .privateKey = keyFile,
+        .tmpPath = tmpPath,
+        .fileSig = signature,
+        .lazy = lazyRebuild,
+    });
+  }
 
-  // send flakePath
-  // rebuild
-  // done :3
+  vector<hostConnection::result<string>> hostOutputs =
+      threading::paralleliseVector<hostConnection::input,
+                                   hostConnection::result<string>,
+                                   decltype(hostConnection::hostConnection)>(
+          hostInputs, hostConnection::hostConnection);
+
+  for (hostConnection::result<string> hostOutput : hostOutputs) {
+    cout << ttyHelper::log(hostOutput.output.value_or(""));
+    cerr << ttyHelper::error(hostOutput.error.value_or(""));
+  }
 
   filesystem::remove_all(tmpPath);
   return 0;

@@ -52,5 +52,5 @@ tarHelper::result<void> tarHelper::package(string tarPath,
 
 tarHelper::result<vector<tarHelper::tarItem>>
 tarHelper::unpackage(string tarPath, string tarItemsSaveDir) {
-  return {.exitCode = 1};
+  return {.exitCode = 1, .error = "todo"};
 }
