@@ -1,5 +1,5 @@
-#include "./split.h"
-#include "./systemHelper.h"
+#include "split.h"
+#include "systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
 #include <libssh/libssh.h>
