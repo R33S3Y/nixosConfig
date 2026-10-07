@@ -32,7 +32,6 @@ in
                 utils/args.cpp utils/nixGet.cpp utils/tarHelper.cpp utils/sslHelper.cpp utils/base64.cpp \
               -o deploy \
               -std=c++23 \
-              -debug \
               -I${prev.nlohmann_json}/include \
               -I${prev.libtar}/include \
               -L${prev.libtar}/lib -ltar \
