@@ -1,10 +1,10 @@
+#include "sshHelper.h"
 #include "split.h"
 #include "systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
-#include <sshHelper.h>
 #include <string>
 #include <sys/types.h>
 #include <termios.h>
