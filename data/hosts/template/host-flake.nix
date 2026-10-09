@@ -25,9 +25,6 @@ let
       ../../../desktop/hypr/all-nix.nix
       # Kitty
       ../../../desktop/kitty/enable-nix.nix
-      # lazyUpdate - update on rebulid script - requres passwordless nixos-rebuild provided by sudo-nix.nix
-      ../../../desktop/lazyUpdate/enable-nix.nix
-      ../../../desktop/lazyUpdate/snowflake-nix.nix
       # Lutris
       ../../../desktop/lutris/enable-nix.nix
       # obsidian
