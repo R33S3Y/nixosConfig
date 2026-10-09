@@ -22,7 +22,7 @@ let
       # Firefox
       ../../../desktop/firefox/enable-nix.nix
       # Hypr
-      ../../../desktop/hypr/all-nix.nix
+      #../../../desktop/hypr/all-nix.nix
       # Kitty
       ../../../desktop/kitty/enable-nix.nix
       # obsidian
