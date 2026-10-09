@@ -23,6 +23,7 @@
     other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
     other/stable-nix.nix
     other/sudo-nix.nix # sudo  -  Sudo settings
+    other/update-nix.nix
     other/user-nix.nix # user  -  Adds a user
   ];
 }
