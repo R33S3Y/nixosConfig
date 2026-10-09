@@ -150,9 +150,7 @@ let
       krita
       gimp3
 
-      git
       vlc
-      nano
     ];
 
     bluetooth = true;

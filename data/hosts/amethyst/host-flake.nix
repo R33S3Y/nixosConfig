@@ -46,6 +46,7 @@ let
       # VScode
       ../../../desktop/vscode/all-nix.nix
       # Other
+      ../../../desktop/other/libreoffice-nix.nix
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
 
       # OTHER
@@ -112,9 +113,6 @@ let
       gimp3
 
       vlc
-      nano
-
-      libreoffice
 
       inkscape
       thunderbird

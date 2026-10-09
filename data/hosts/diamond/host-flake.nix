@@ -48,6 +48,7 @@ let
       # VScode
       ../../../desktop/vscode/enable-nix.nix
       # Other
+      ../../../desktop/other/libreoffice-nix.nix
       ../../../desktop/other/print-nix.nix # Print  -  How old are you?
 
       # OTHER
@@ -117,11 +118,6 @@ let
       krita
       gimp3
 
-      git
-      git-lfs
-      vlc
-      nano
-
       prismlauncher
       python314
 
@@ -140,7 +136,6 @@ let
       keymapp
 
       kicad
-      libreoffice
 
       qtcreator
       cmake
