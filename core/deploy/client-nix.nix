@@ -28,7 +28,7 @@ in
           buildPhase = ''
             g++ \
                 client/main.cpp \
-                utils/ttyHelper.cpp utils/args.cpp \
+                utils/ttyHelper.cpp utils/args.cpp utils/strings.cpp utils/split.cpp \
               -o deployClient \
               -std=c++23 \
               -I${prev.nlohmann_json}/include \
