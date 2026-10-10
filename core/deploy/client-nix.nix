@@ -7,8 +7,8 @@ in
     (final: prev: {
       internal = (prev.internal or { }) // {
 
-        deployServer = prev.stdenv.mkDerivation {
-          pname = "deployServer";
+        deployClient = prev.stdenv.mkDerivation {
+          pname = "deployClient";
           version = version;
 
           src = ./src;
@@ -27,10 +27,9 @@ in
 
           buildPhase = ''
             g++ \
-                server/main.cpp server/hostConnection.cpp \
-                utils/systemHelper.cpp utils/split.cpp utils/strings.cpp utils/ttyHelper.cpp utils/sshHelper.cpp \
-                utils/args.cpp utils/nixGet.cpp utils/tarHelper.cpp utils/sslHelper.cpp utils/base64.cpp \
-              -o deploy \
+                client/main.cpp \
+                utils/ttyHelper.cpp utils/args.cpp \
+              -o deployClient \
               -std=c++23 \
               -I${prev.nlohmann_json}/include \
               -I${prev.libtar}/include \
@@ -41,21 +40,21 @@ in
               -I${prev.libssh.dev}/include \
               -L${prev.libssh}/lib -lssh \
 
-            sed -i 's/version/\"${version}\"/' server/man.md
-            pandoc server/man.md -s -t man -o deploy.1
+            sed -i 's/version/\"${version}\"/' client/man.md
+            pandoc client/man.md -s -t man -o deployClient.1
           '';
 
           installPhase = ''
             mkdir -p $out/bin
-            cp deploy $out/bin/
+            cp deployClient $out/bin/
 
             mkdir -p $out/share/man/man1
-            cp deploy.1 $out/share/man/man1
+            cp deployClient.1 $out/share/man/man1
           '';
         };
       };
     })
   ];
 
-  environment.systemPackages = [ pkgs.internal.deployServer ]; # install it.
+  environment.systemPackages = [ pkgs.internal.deployClient ]; # install it.
 }
