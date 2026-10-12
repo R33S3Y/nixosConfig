@@ -1,9 +1,13 @@
-{ system, lib, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 let
   rules = lib.mapAttrsToList (name: value: {
     users = [ name ];
     commands = [ "ALL" ];
-  }) (lib.filterAttrs (name: value: value.access.canSudo) system.users);
+  }) (lib.filterAttrs (name: value: value.access.canSudo) config.services.internal.users);
 in
 {
   security.sudo = {

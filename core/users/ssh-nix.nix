@@ -1,8 +1,8 @@
 { system, lib, ... }:
 let
-  #allowUsers = lib.mapAttrsToList (name: value: name) lib.filterAttrs (
+  #allowUsers = lib.mapAttrsToList (name: value: name) (lib.filterAttrs (
   #  name: value: value.access.canSsh == true
-  #) system.users;
+  #) system.users);
 in
 {
   services.openssh = {
