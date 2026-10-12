@@ -1,8 +1,8 @@
 { system, lib, ... }:
 let
-  allowUsers = lib.mapAttrsToList (name: value: name) lib.filterAttrs (
-    name: value: value.access.canSsh == true
-  ) system.users;
+  #allowUsers = lib.mapAttrsToList (name: value: name) lib.filterAttrs (
+  #  name: value: value.access.canSsh == true
+  #) system.users;
 in
 {
   services.openssh = {
@@ -10,7 +10,9 @@ in
     ports = [ 22 ];
     settings = {
       PasswordAuthentication = true;
-      AllowUsers = allowUsers ++ [
+      AllowUsers = [
+        # allowUsers ++ [
+        system.user
         "rebuild"
       ];
       PermitRootLogin = "no";
