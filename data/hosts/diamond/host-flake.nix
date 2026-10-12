@@ -129,7 +129,6 @@ let
       super-slicer-beta
       openscad
       blender
-      freecad
 
       obs-studio
 
