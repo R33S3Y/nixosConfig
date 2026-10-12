@@ -183,7 +183,7 @@ int main(int argc, char const *argv[]) {
   }
 
   // make hash
-  cout << ttyHelper::log("signing ...");
+  cout << ttyHelper::log("Signing ...");
   const sslHelper::result<vector<unsigned char>> sslHashStatus =
       sslHelper::getSHA512Hash(*tarballFileResult.output);
   if (sslHashStatus.exitCode != 0) {

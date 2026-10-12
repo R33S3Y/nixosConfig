@@ -13,6 +13,13 @@
     man/enable-nix.nix
     # Style
     style/stylix-nix.nix # stylix  -  this repo expects stylix
+
+    # Users - implements and sets most user settings in system.users.<name>
+    users/access-nix.nix
+    users/locale-nix.nix
+    users/ssh-nix.nix
+    users/sudo-nix.nix
+    users/user-nix.nix
     # Other
     other/cmd-nix.nix # CMD  -  Programs that are still needed. But don't need there own section
     other/home-nix.nix # home
@@ -21,10 +28,7 @@
     other/nix-nix.nix # Nix settings  -  enable flakes, state nix version, etc
     other/networking-nix.nix
     other/programs-nix.nix # Install all programs in the programs var
-    other/ssh-nix.nix # ssh  -  Enables ssh on port 22 needed for deploy rs
     other/stable-nix.nix
-    other/sudo-nix.nix # sudo  -  Sudo settings
     other/update-nix.nix
-    other/user-nix.nix # user  -  Adds a user
   ];
 }
