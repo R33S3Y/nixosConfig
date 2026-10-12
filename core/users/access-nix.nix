@@ -53,6 +53,6 @@ in
   };
 
   config.services.internal.users = lib.mapAttrs (name: value: {
-    access = value.access;
+    access = value.access or { };
   }) system.users;
 }
