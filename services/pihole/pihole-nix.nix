@@ -38,7 +38,7 @@ in
   services.pihole-ftl = {
     enable = true;
 
-    package = pkgs.pihole-ftl;
+    package = pkgs.stable.pihole-ftl;
 
     openFirewallDHCP = true;
     openFirewallDNS = true;
