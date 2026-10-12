@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, system, ... }:
 
 let
   userOpts =
@@ -35,22 +35,22 @@ let
     };
 in
 {
-  options.services.internal.users = {
-    user = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule userOpts);
-      default = { };
-      description = ''
-        A attrset for all the users and their options
-      '';
-      example = {
-        "example.user" = {
-          access = {
-            canSudo = false;
-            canSsh = true;
-            canDeploy = false;
-          };
+  options.services.internal.users = lib.mkOption {
+    type = lib.types.attrsOf (lib.types.submodule userOpts);
+    default = { };
+    description = ''
+      A attrset for all the users and their options
+    '';
+    example = {
+      "example.user" = {
+        access = {
+          canSudo = false;
+          canSsh = true;
+          canDeploy = false;
         };
       };
     };
   };
+
+  services.internal.users = lib.mapAttrs (name: value: { access = value.access; }) system.users;
 }
