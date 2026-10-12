@@ -52,5 +52,7 @@ in
     };
   };
 
-  services.internal.users = lib.mapAttrs (name: value: { access = value.access; }) system.users;
+  config.services.internal.users = lib.mapAttrs (name: value: {
+    access = value.access;
+  }) system.users;
 }
