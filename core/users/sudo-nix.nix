@@ -1,13 +1,13 @@
 { system, lib, ... }:
 let
-  rules = builtins.mapAttrs (name: value: {
+  rules = lib.mapAttrsToList (name: value: {
     users = [ name ];
     commands = [ "ALL" ];
   }) lib.filterAttrs (name: value: value.access.canSudo) system.users;
 in
 {
-  security.sudo = rules // {
-    extraRules = [
+  security.sudo = {
+    extraRules = rules ++ [
       {
         groups = [ "wheel" ];
         commands = [
