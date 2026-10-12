@@ -3,7 +3,7 @@ let
   rules = builtins.mapAttrs (name: value: {
     users = [ name ];
     commands = [ "ALL" ];
-  }) lib.filterAttrs (name: value: value.access.canSudo == true) system.users;
+  }) lib.filterAttrs (name: value: value.access.canSudo) system.users;
 in
 {
   security.sudo = rules // {
