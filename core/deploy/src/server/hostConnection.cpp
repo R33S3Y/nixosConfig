@@ -37,7 +37,9 @@ hostConnection::hostConnection(hostConnection::input input) {
       input.tmpPath + "/tarball.tar", S_IWUSR | S_IRGRP);
   if (fileResult.exitCode != 0) {
     return {.exitCode = 1,
-            .error = "Failed to copy file (tarball.tar) to host"};
+            .error =
+                "Failed to copy file (tarball.tar) to host with error: \n" +
+                *fileResult.error};
   }
   sftp_free(sessionSftp);
 
