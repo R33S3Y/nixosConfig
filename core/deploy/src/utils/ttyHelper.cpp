@@ -7,7 +7,7 @@ const string ttyHelper::error(string message) {
   vector<string> tokens = split::splitStrByChar(message, '\n');
   message = "";
   for (string token : tokens) {
-    message += strings::trim(token) + "\n  ";
+    message += strings::trim(token) + "\n   ";
   }
   return ttyColour::error + "error: " + ttyColour::reset +
          strings::trim(message) + "\n";
@@ -17,7 +17,7 @@ const string ttyHelper::warning(string message) {
   vector<string> tokens = split::splitStrByChar(message, '\n');
   message = "";
   for (string token : tokens) {
-    message += strings::trim(token) + "\n  ";
+    message += strings::trim(token) + "\n   ";
   }
   return ttyColour::warning + "warning: " + ttyColour::reset +
          strings::trim(message) + "\n";
@@ -27,7 +27,7 @@ const string ttyHelper::log(string message) {
   vector<string> tokens = split::splitStrByChar(message, '\n');
   message = "";
   for (string token : tokens) {
-    message += strings::trim(token) + "\n  ";
+    message += strings::trim(token) + "\n   ";
   }
   return ttyColour::log + "log: " + ttyColour::reset + strings::trim(message) +
          "\n";
