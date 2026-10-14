@@ -163,7 +163,9 @@ sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
 
   sftp_file fileSftp = sftp_open(session, to.c_str(), O_WRONLY | O_CREAT, mode);
   if (fileSftp == NULL) {
-    return {.exitCode = 1, .error = "failed to open file loc on server"};
+    return {.exitCode = 1,
+            .error = "failed to open file loc on server with error: /n" +
+                     sftp_get_error(session)};
   }
 
   if (sftp_write(fileSftp, &fileVec[0], fileVec.size()) < 0) {
