@@ -2,15 +2,18 @@
 
 let
   user = {
+    # uid is and public Keys is used in core/user/user-nix.nix
     uid = 1000;
-    prettyName = "Reese";
-
-    profile = ./profile.png;
-    theme = "diamond";
+    publicKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGspq2G8adszEonoETTJ9s8RWFCJfthqCqd5fjq+wXm reese@diamond"
+    ];
 
     email = "r3es3y@gmail.com";
+    prettyName = "Reese";
+    profile = ./profile.png;
 
     screenshotFolder = "~/Pictures";
+    theme = "diamond";
 
     # access options in core/users/access-nix.nix
     access = {

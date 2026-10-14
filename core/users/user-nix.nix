@@ -6,11 +6,11 @@ let
     description = name;
     extraGroups = [
       "networkmanager"
-      "wheel"
       "jellyfin"
       "cms"
       "render"
     ];
+    openssh.authorizedKeys.keys = value.publicKeys or [ ];
   }) system.users;
 in
 {

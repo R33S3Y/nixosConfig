@@ -10,7 +10,7 @@ let
             type = lib.types.bool;
             default = false;
             description = ''
-              Gives user access to sudo
+              Gives user access to sudo. Implemented in ./sudo-nix.nix
             '';
             example = true;
           };
@@ -18,7 +18,7 @@ let
             type = lib.types.bool;
             default = false;
             description = ''
-              Gives user access to ssh
+              Gives user access to ssh. Implemented in ./ssh-nix.nix
             '';
             example = true;
           };
@@ -26,7 +26,7 @@ let
             type = lib.types.bool;
             default = false;
             description = ''
-              Gives user access to deploy
+              Gives user access to deploy. Implemented in ./sudo-nix.nix
             '';
             example = true;
           };
