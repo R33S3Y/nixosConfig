@@ -74,7 +74,7 @@ let
       # git
       ../../../desktop/git/settings-home.nix
       # Hypr
-      ../../../desktop/hypr/all-home.nix
+      #../../../desktop/hypr/all-home.nix
       # Kitty
       ../../../desktop/kitty/bind-home.nix # Key binds
       ../../../desktop/kitty/style-home.nix # Styles  -  You should be fine to get away with disabling this
