@@ -3,7 +3,6 @@
 #include "systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
-#include <iostream>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <string>
@@ -135,7 +134,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
   stdoutStr.reserve(4096);
   while (usedBuffer != 0) {
     // 1 = stdout, 0 = stdout
-    usedBuffer = ssh_channel_read(channel, buffer, sizeof(buffer) - 1, 1);
+    usedBuffer = ssh_channel_read(channel, buffer, sizeof(buffer) - 1, 0);
     if (usedBuffer == 0)
       break;
     buffer[usedBuffer + 1] = '\0';
@@ -162,7 +161,6 @@ sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
   }
   vector<unsigned char> fileVec = *fileResult.output;
 
-  cout << to;
   sftp_file fileSftp =
       sftp_open(session, to.c_str(), O_WRONLY | O_CREAT | O_TRUNC, mode);
 
