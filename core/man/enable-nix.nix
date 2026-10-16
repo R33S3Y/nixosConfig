@@ -7,5 +7,6 @@
     man-db
     man-pages
     openssl_4_0
+    gcc.man
   ];
 }
