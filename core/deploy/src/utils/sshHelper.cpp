@@ -3,6 +3,7 @@
 #include "systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
+#include <iostream>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <string>
@@ -161,6 +162,7 @@ sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
   }
   vector<unsigned char> fileVec = *fileResult.output;
 
+  cout << to;
   sftp_file fileSftp = sftp_open(session, to.c_str(), O_WRONLY | O_CREAT, mode);
 
   if (fileSftp == NULL) {
