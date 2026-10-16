@@ -13,7 +13,7 @@ let
     users = [ name ];
     commands = [
       {
-        command = "deployClient";
+        command = "/run/current-system/sw/bin/deployClient";
         options = [ "NOPASSWD" ];
       }
     ];
