@@ -30,6 +30,7 @@ in
                 client/main.cpp \
                 utils/ttyHelper.cpp utils/args.cpp utils/strings.cpp utils/split.cpp \
               -o deployClient \
+              -02 \
               -std=c++23 \
               -I${prev.nlohmann_json}/include \
               -I${prev.libtar}/include \

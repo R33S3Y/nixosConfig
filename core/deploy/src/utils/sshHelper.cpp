@@ -162,10 +162,9 @@ sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
   vector<unsigned char> fileVec = *fileResult.output;
 
   sftp_file fileSftp = sftp_open(session, to.c_str(), O_WRONLY | O_CREAT, mode);
+
   if (fileSftp == NULL) {
-    return {.exitCode = 1,
-            .error = "failed to open file loc on server with error code: " +
-                     sftp_get_error(session)};
+    return {.exitCode = 1, .error = "failed to open file loc on server"};
   }
 
   if (sftp_write(fileSftp, &fileVec[0], fileVec.size()) < 0) {
