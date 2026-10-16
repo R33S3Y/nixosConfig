@@ -68,7 +68,7 @@ int main(int argc, char const *argv[]) {
 
   // get flake
   cout << ttyHelper::log("Getting flake ...");
-  string tmpPath = "/tmp/deploy";
+  string tmpPath = "/tmp/deployServer";
   string flakeLink = *argsProcessed["flake"].value;
   string flakePath = tmpPath + "/nixosConfig";
   filesystem::create_directories(tmpPath);
@@ -231,7 +231,8 @@ int main(int argc, char const *argv[]) {
         .host = host,
         .user = user,
         .privateKey = keyFile,
-        .tmpPath = tmpPath,
+        .serverPath = tmpPath,
+        .clientPath = "/tmp/deployClient",
         .fileSig = signature,
         .lazy = lazyRebuild,
     });

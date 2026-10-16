@@ -28,13 +28,13 @@ hostConnection::hostConnection(hostConnection::input input) {
   sftp_session sessionSftp = *sftpResult.output;
 
   sshHelper::result<void> dirResult =
-      sshHelper::sftpMkDir(sessionSftp, input.tmpPath, S_IWUSR | S_IRGRP);
+      sshHelper::sftpMkDir(sessionSftp, input.clientPath, S_IWUSR | S_IRGRP);
   if (dirResult.exitCode != 0) {
     return {.exitCode = 1, .error = "Failed to make dir on host"};
   };
   sshHelper::result<void> fileResult = sshHelper::sftpMoveFileTo(
-      sessionSftp, input.tmpPath + "/tarball.tar",
-      input.tmpPath + "/tarball.tar", S_IWUSR | S_IRGRP);
+      sessionSftp, input.serverPath + "/tarball.tar",
+      input.clientPath + "/tarball.tar", S_IWUSR | S_IRGRP);
   if (fileResult.exitCode != 0) {
     return {.exitCode = 1,
             .error =
@@ -43,7 +43,8 @@ hostConnection::hostConnection(hostConnection::input input) {
   }
   sftp_free(sessionSftp);
 
-  string cmd = "sudo deployClient -d " + input.tmpPath + " -s " + input.fileSig;
+  string cmd =
+      "sudo deployClient -d " + input.clientPath + " -s " + input.fileSig;
   if (input.lazy == true)
     cmd += " -l";
 

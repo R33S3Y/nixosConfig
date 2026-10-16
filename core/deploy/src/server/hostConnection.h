@@ -22,7 +22,8 @@ struct input {
   string host;
   string user;
   string privateKey;
-  string tmpPath;
+  string serverPath;
+  string clientPath;
   string fileSig;
   bool lazy;
 };
