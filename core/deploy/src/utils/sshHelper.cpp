@@ -120,7 +120,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
   usedBuffer = 1;
   string stderrStr;
   stderrStr.reserve(4096);
-  while (usedBuffer != 0) {
+  while (usedBuffer > 0) {
     // 1 = stderr, 0 = stdout
     usedBuffer = ssh_channel_read(channel, buffer, sizeof(buffer) - 1, 1);
     if (usedBuffer == 0)
@@ -132,7 +132,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
   usedBuffer = 1;
   string stdoutStr;
   stdoutStr.reserve(4096);
-  while (usedBuffer != 0) {
+  while (usedBuffer > 0) {
     // 1 = stdout, 0 = stdout
     usedBuffer = ssh_channel_read(channel, buffer, sizeof(buffer) - 1, 0);
     if (usedBuffer == 0)

@@ -43,7 +43,8 @@ hostConnection::hostConnection(hostConnection::input input) {
   }
   sftp_free(sessionSftp);
 
-  string cmd = "deployClient -d " + input.clientPath + " -s " + input.fileSig;
+  string cmd =
+      "sudo deployClient -d " + input.clientPath + " -s " + input.fileSig;
   if (input.lazy == true)
     cmd += " -l";
 
