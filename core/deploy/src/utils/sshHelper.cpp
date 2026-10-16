@@ -3,6 +3,7 @@
 #include "systemHelper.h"
 #include <cstddef>
 #include <fcntl.h>
+#include <iostream>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <string>
@@ -114,6 +115,8 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     return {.exitCode = 1, .error = "failed to run command"};
   }
 
+  cout << "ran!";
+
   char buffer[2048];
   int usedBuffer;
 
@@ -129,6 +132,8 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     stderrStr += string(buffer);
   }
 
+  cout << "err";
+
   usedBuffer = 1;
   string stdoutStr;
   stdoutStr.reserve(4096);
@@ -140,6 +145,8 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     buffer[usedBuffer + 1] = '\0';
     stdoutStr += string(buffer);
   }
+
+  cout << "out";
 
   ssh_channel_free(channel);
   return {.output = stdoutStr, .exitCode = 0, .error = stderrStr};
