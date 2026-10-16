@@ -163,7 +163,8 @@ sshHelper::result<void> sshHelper::sftpMoveFileTo(sftp_session session,
   vector<unsigned char> fileVec = *fileResult.output;
 
   cout << to;
-  sftp_file fileSftp = sftp_open(session, to.c_str(), O_WRONLY | O_CREAT, mode);
+  sftp_file fileSftp =
+      sftp_open(session, to.c_str(), O_WRONLY | O_CREAT | O_TRUNC, mode);
 
   if (fileSftp == NULL) {
     return {.exitCode = 1, .error = "failed to open file loc on server"};
