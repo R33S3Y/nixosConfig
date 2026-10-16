@@ -28,13 +28,13 @@ hostConnection::hostConnection(hostConnection::input input) {
   sftp_session sessionSftp = *sftpResult.output;
 
   sshHelper::result<void> dirResult = sshHelper::sftpMkDir(
-      sessionSftp, input.clientPath, S_IWUSR | S_IRUSR | S_IRGRP);
+      sessionSftp, input.clientPath, S_IRWXU | S_IRGRP | S_IXGRP);
   if (dirResult.exitCode != 0) {
     return {.exitCode = 1, .error = "Failed to make dir on host"};
   };
   sshHelper::result<void> fileResult = sshHelper::sftpMoveFileTo(
       sessionSftp, input.serverPath + "/tarball.tar",
-      input.clientPath + "/tarball.tar", S_IWUSR | S_IRUSR | S_IRGRP);
+      input.clientPath + "/tarball.tar", S_IRWXU | S_IRGRP | S_IXGRP);
   if (fileResult.exitCode != 0) {
     return {.exitCode = 1,
             .error =

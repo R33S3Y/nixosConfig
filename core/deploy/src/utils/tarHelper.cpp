@@ -11,8 +11,8 @@ using namespace std;
 tarHelper::result<void> tarHelper::package(string tarPath,
                                            vector<tarHelper::tarItem> items) {
   TAR *tarball = nullptr;
-  if (tar_open(&tarball, tarPath.c_str(), nullptr, O_WRONLY | O_CREAT, 0644,
-               TAR_GNU) != 0) {
+  if (tar_open(&tarball, tarPath.c_str(), nullptr, O_WRONLY | O_CREAT | O_TRUNC,
+               0644, TAR_GNU) != 0) {
     return {1, "tar_open failed"};
   }
 
