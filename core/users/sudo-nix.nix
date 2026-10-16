@@ -13,7 +13,7 @@ let
     users = [ name ];
     commands = [
       {
-        command = "${pkgs.internal.deployClient}/bin/deployClient";
+        command = "deployClient";
         options = [ "NOPASSWD" ];
       }
     ];
