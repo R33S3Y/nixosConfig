@@ -115,7 +115,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     return {.exitCode = 1, .error = "failed to run command"};
   }
 
-  cout << "ran!";
+  cout << "ran!" << endl;
 
   char buffer[2048];
   int usedBuffer;
@@ -132,7 +132,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     stderrStr += string(buffer);
   }
 
-  cout << "err";
+  cout << "err" << endl;
 
   usedBuffer = 1;
   string stdoutStr;
@@ -146,7 +146,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     stdoutStr += string(buffer);
   }
 
-  cout << "out";
+  cout << "out" << endl;
 
   ssh_channel_free(channel);
   return {.output = stdoutStr, .exitCode = 0, .error = stderrStr};
