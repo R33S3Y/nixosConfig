@@ -1,9 +1,9 @@
 #include "sshHelper.h"
 #include "split.h"
 #include "systemHelper.h"
+#include <algorithm>
 #include <cstddef>
 #include <fcntl.h>
-#include <iostream>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <string>
@@ -108,12 +108,9 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     return {.exitCode = 1, .error = "ssh channel = NULL"};
   }
 
-  cout << "channel" << endl;
-
   if (ssh_channel_open_session(channel) != SSH_OK) {
     return {.exitCode = 1, .error = "failed to open channel session"};
   }
-  cout << "session" << endl;
 
   // it is worth noting that we could add retry logic here and in other places.
   // But that sounds like a issue for future me :3
@@ -122,8 +119,6 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     ssh_channel_free(channel);
     return {.exitCode = 1, .error = "failed to run command"};
   }
-
-  cout << "ran!" << endl;
 
   char buffer[2048];
   int usedBuffer;
@@ -140,8 +135,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     stderrStr += string(buffer);
   }
 
-  cout << "err" << endl;
-
+  fill_n(buffer, sizeof(buffer), 0);
   usedBuffer = 1;
   string stdoutStr;
   stdoutStr.reserve(4096);
@@ -153,8 +147,6 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     buffer[usedBuffer + 1] = '\0';
     stdoutStr += string(buffer);
   }
-
-  cout << "out" << endl;
 
   ssh_channel_close(channel);
   ssh_channel_free(channel);
