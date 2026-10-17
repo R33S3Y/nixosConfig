@@ -110,9 +110,15 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
 
   cout << "channel" << endl;
 
+  if (ssh_channel_open_session(channel) != SSH_OK) {
+    return {.exitCode = 1, .error = "failed to open channel session"};
+  }
+  cout << "session" << endl;
+
   // it is worth noting that we could add retry logic here and in other places.
   // But that sounds like a issue for future me :3
   if (ssh_channel_request_exec(channel, command.c_str()) != SSH_OK) {
+    ssh_channel_close(channel);
     ssh_channel_free(channel);
     return {.exitCode = 1, .error = "failed to run command"};
   }
@@ -150,6 +156,7 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
 
   cout << "out" << endl;
 
+  ssh_channel_close(channel);
   ssh_channel_free(channel);
   return {.output = stdoutStr, .exitCode = 0, .error = stderrStr};
 }
