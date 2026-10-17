@@ -24,7 +24,6 @@ const result<EVP_PKEY *> openPublicKey(string publicKeyFile);
 
 const result<vector<unsigned char>>
 signDataWithKey(const vector<unsigned char> data, EVP_PKEY *privateKey);
-const result<bool> verifySignatureWithKey(const vector<unsigned char> data,
-                                          const vector<unsigned char> sign,
-                                          EVP_PKEY *publicKey);
+const result<bool> verifyDataWithSign(const vector<unsigned char> data,
+                                      const vector<unsigned char> sign);
 } // namespace sslHelper

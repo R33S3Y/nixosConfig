@@ -18,10 +18,8 @@
 #include <libssh/sftp.h>
 #include <map>
 #include <nlohmann/json.hpp>
-#include <pwd.h>
 #include <stdexcept>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
 using namespace std;
@@ -139,14 +137,7 @@ int main(int argc, char const *argv[]) {
 
   // make manifest file
   cout << ttyHelper::log("Generating manifest ...");
-  string user;
-  struct passwd *pw = getpwuid(getuid());
-  if (!pw) {
-    cerr << ttyHelper::error("couldn't find username");
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-  user = pw->pw_name;
+  string user = systemHelper::getProccessUser();
   nlohmann::json manifestJson = {
       {"signingUser", user},
       {
@@ -242,7 +233,7 @@ int main(int argc, char const *argv[]) {
       threading::paralleliseVector<hostConnection::input,
                                    hostConnection::result<string>,
                                    decltype(hostConnection::hostConnection)>(
-          hostInputs, hostConnection::hostConnection);
+          hostInputs, hostConnection::hostConnection, 64);
 
   for (hostConnection::result<string> hostOutput : hostOutputs) {
     cout << ttyHelper::log(hostOutput.output.value_or(""));

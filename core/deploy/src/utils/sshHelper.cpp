@@ -135,7 +135,9 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     stderrStr += string(buffer);
   }
 
+  // blank array for reuse
   fill_n(buffer, sizeof(buffer), 0);
+
   usedBuffer = 1;
   string stdoutStr;
   stdoutStr.reserve(4096);

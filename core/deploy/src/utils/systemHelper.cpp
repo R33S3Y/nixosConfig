@@ -4,9 +4,11 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include <pwd.h>
 #include <sstream>
 #include <string>
 #include <sys/wait.h>
+#include <unistd.h>
 #include <vector>
 
 using namespace std;
@@ -100,3 +102,5 @@ systemHelper::saveFileFromStr(const string &path, const string &content) {
   file.close();
   return {.exitCode = 0};
 }
+
+string systemHelper::getProccessUser() { return getpwuid(getuid())->pw_name; }

@@ -131,3 +131,25 @@ sslHelper::signDataWithKey(const vector<unsigned char> data,
   vector<unsigned char> output(signature, signature + signatureSize);
   return {.output = output, .exitCode = 0};
 }
+const sslHelper::result<bool>
+sslHelper::verifyDataWithSign(const vector<unsigned char> data,
+                              const vector<unsigned char> sign) {
+
+  EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+
+  if (EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, NULL) != 1) {
+    EVP_MD_CTX_free(ctx);
+    return {.exitCode = 1, .error = "EVP_DigestVerifyInit failed"};
+  };
+  int out = EVP_DigestVerify(ctx, &sign[0], sign.size(), &data[0], data.size());
+  if (out != 1) {
+    EVP_MD_CTX_free(ctx);
+    return {.output = false,
+            .exitCode = 0,
+            .error = "Signature is not valid or EVP_DigestSign failed"};
+  }
+
+  EVP_MD_CTX_free(ctx);
+
+  return {.output = out, .exitCode = 0};
+}

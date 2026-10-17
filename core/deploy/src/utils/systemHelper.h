@@ -24,4 +24,6 @@ result<string> runCommand(string cmd);
 result<string> readFileToStr(const string &path);
 result<vector<unsigned char>> readFile(const string &path);
 result<void> saveFileFromStr(const string &path, const string &content);
+
+string getProccessUser();
 }; // namespace systemHelper
