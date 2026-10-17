@@ -43,9 +43,10 @@ hostConnection::hostConnection(hostConnection::input input) {
   }
   sftp_free(sessionSftp);
 
-  string cmd = "whoami";
-  // if (input.lazy == true)
-  //   cmd += " -l";
+  string cmd =
+      "sudo deployClient -d " + input.clientPath + " -s " + input.fileSig;
+  if (input.lazy == true)
+    cmd += " -l";
 
   sshHelper::result<string> cmdResult =
       sshHelper::runCommandOn(sessionSsh, cmd);
