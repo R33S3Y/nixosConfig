@@ -28,7 +28,8 @@ in
           buildPhase = ''
             g++ \
                 client/main.cpp \
-                utils/ttyHelper.cpp utils/args.cpp utils/strings.cpp utils/split.cpp \
+                utils/ttyHelper.cpp utils/args.cpp utils/strings.cpp utils/split.cpp utils/systemHelper.cpp \
+                utils/base64.cpp utils/sslHelper.cpp \
               -o deployClient \
               -O2 \
               -std=c++23 \
