@@ -108,6 +108,8 @@ sshHelper::result<string> sshHelper::runCommandOn(ssh_session session,
     return {.exitCode = 1, .error = "ssh channel = NULL"};
   }
 
+  cout << "channel" << endl;
+
   // it is worth noting that we could add retry logic here and in other places.
   // But that sounds like a issue for future me :3
   if (ssh_channel_request_exec(channel, command.c_str()) != SSH_OK) {
