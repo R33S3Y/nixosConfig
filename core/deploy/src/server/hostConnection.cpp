@@ -44,8 +44,8 @@ hostConnection::hostConnection(hostConnection::input input) {
   sftp_free(sessionSftp);
 
   string cmd = "whoami";
-  if (input.lazy == true)
-    cmd += " -l";
+  // if (input.lazy == true)
+  //   cmd += " -l";
 
   sshHelper::result<string> cmdResult =
       sshHelper::runCommandOn(sessionSsh, cmd);
