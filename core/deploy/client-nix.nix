@@ -29,7 +29,7 @@ in
             g++ \
                 client/main.cpp \
                 utils/ttyHelper.cpp utils/args.cpp utils/strings.cpp utils/split.cpp utils/systemHelper.cpp \
-                utils/base64.cpp utils/sslHelper.cpp \
+                utils/base64.cpp utils/sslHelper.cpp utils/tarHelper.cpp \
               -o deployClient \
               -O2 \
               -std=c++23 \

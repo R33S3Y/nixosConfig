@@ -2,6 +2,7 @@
 #include "../utils/base64.h"
 #include "../utils/sslHelper.h"
 #include "../utils/systemHelper.h"
+#include "../utils/tarHelper.h"
 #include "../utils/ttyHelper.h"
 
 #include <iostream>
@@ -31,8 +32,9 @@ int main(int argc, char const *argv[]) {
   }
 
   // get values
-  string dir = *argsProcessed["directory"].value;
-  vector<unsigned char> sig = base64::decode(*argsProcessed["signature"].value);
+  const string dir = *argsProcessed["directory"].value;
+  const vector<unsigned char> sig =
+      base64::decode(*argsProcessed["signature"].value);
 
   // Check running with Sudo, user should be root
   if (systemHelper::getProccessUser() != "root") {
@@ -58,21 +60,27 @@ int main(int argc, char const *argv[]) {
     cerr << ttyHelper::error(*tarballFileResult.error);
     return 1;
   }
-  const sslHelper::result<vector<unsigned char>> sslHashStatus =
+  const sslHelper::result<vector<unsigned char>> sslHashResult =
       sslHelper::getSHA512Hash(*tarballFileResult.output);
-  if (sslHashStatus.exitCode != 0) {
-    cerr << ttyHelper::error(*sslHashStatus.error);
+  if (sslHashResult.exitCode != 0) {
+    cerr << ttyHelper::error(*sslHashResult.error);
     return 1;
   }
-  const sslHelper::result<bool> signatureValid =
-      sslHelper::verifyDataWithSign(*sslHashStatus.output, sig);
-  if (signatureValid.exitCode != 0 ||
-      signatureValid.output.value_or(false) != true) {
-    cerr << ttyHelper::error(*signatureValid.error);
+  const sslHelper::result<bool> signatureResult =
+      sslHelper::verifyDataWithSign(*sslHashResult.output, sig);
+  if (signatureResult.exitCode != 0 ||
+      signatureResult.output.value_or(false) != true) {
+    cerr << ttyHelper::error(*signatureResult.error);
     return 1;
   }
 
-  // Unpack Tarball - See tarHelper.h
+  // Unpack Tarball
+  const tarHelper::result<void> tarResult =
+      tarHelper::unpackage(dir + "/tarball.tar", dir);
+  if (tarResult.exitCode != 0) {
+    cerr << ttyHelper::error(*tarResult.error);
+    return 1;
+  }
 
   // Get Manifest Signing time
   // Throw if more then 10min off now
@@ -88,4 +96,5 @@ int main(int argc, char const *argv[]) {
 
   // Complete rebuild
   // Exit
+  return 0;
 };

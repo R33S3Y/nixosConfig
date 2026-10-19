@@ -20,6 +20,5 @@ struct tarItem {
 };
 
 result<void> package(const string tarPath, const vector<tarItem> items);
-result<vector<tarItem>> unpackage(const string tarPath,
-                                  const string tarDropoffLoc);
+result<void> unpackage(const string tarPath, string savePath);
 } // namespace tarHelper

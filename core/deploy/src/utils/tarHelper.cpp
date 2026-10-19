@@ -50,7 +50,16 @@ tarHelper::result<void> tarHelper::package(string tarPath,
   return {0};
 }
 
-tarHelper::result<vector<tarHelper::tarItem>>
-tarHelper::unpackage(string tarPath, string tarItemsSaveDir) {
-  return {.exitCode = 1, .error = "todo"};
+tarHelper::result<void> tarHelper::unpackage(const string tarPath,
+                                             string tarItemsSaveDir) {
+  TAR *tarball = nullptr;
+  if (tar_open(&tarball, tarPath.c_str(), nullptr, O_RDONLY, 200, TAR_GNU) != 0)
+    return {.exitCode = 1, .error = "tar_open failed"};
+
+  if (tar_extract_all(tarball, tarItemsSaveDir.data()) != 0) {
+    tar_close(tarball);
+    return {.exitCode = 1, .error = "tar_extract_all failed"};
+  }
+  tar_close(tarball);
+  return {.exitCode = 0};
 }
