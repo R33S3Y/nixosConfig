@@ -92,127 +92,135 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  // get available hosts
-  cout << ttyHelper::log("Comparing hosts ...");
   vector<string> hosts;
-  vector<string> availableHosts = nixGet::flakeHosts(flakePath);
-  if (availableHosts.size() == 0) {
-    cerr << ttyHelper::error("flake does not contain any hosts or no "
-                             "hosts could be found");
-    filesystem::remove_all(tmpPath);
-    return 1;
+  {
+    // get available hosts
+    cout << ttyHelper::log("Comparing hosts ...");
+
+    vector<string> availableHosts = nixGet::flakeHosts(flakePath);
+    if (availableHosts.size() == 0) {
+      cerr << ttyHelper::error("flake does not contain any hosts or no "
+                               "hosts could be found");
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
+    // compare against user input
+    if (!argsProcessed["*"].value.has_value() ||
+        argsProcessed["*"].value->size() == 0) {
+      cerr << ttyHelper::error(
+          "no hosts selected. Please enter a host or type '" + ttyColour::log +
+          "man deploy" + ttyColour::reset + "' for more info.");
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
+    vector<string> userHosts =
+        split::splitStrByChar(*argsProcessed["*"].value, ' ');
+    if (userHosts.size() == 1 && userHosts[0] == "all") {
+      hosts = availableHosts;
+    } else {
+      for (string userHost : userHosts) {
+        if (ranges::contains(availableHosts, userHost)) {
+          hosts.push_back(userHost);
+        } else {
+          cerr << ttyHelper::error("host (" + ttyColour::log + userHost +
+                                   ttyColour::reset +
+                                   ") does not exist in flake");
+          filesystem::remove_all(tmpPath);
+          return 1;
+        }
+      }
+    }
+    if (hosts.size() == 0) {
+      cerr << ttyHelper::error(
+          "no hosts selected. This error should be able to be trigged");
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
   }
-  // compare against user input
-  if (!argsProcessed["*"].value.has_value() ||
-      argsProcessed["*"].value->size() == 0) {
-    cerr << ttyHelper::error(
-        "no hosts selected. Please enter a host or type '" + ttyColour::log +
-        "man deploy" + ttyColour::reset + "' for more info.");
-    filesystem::remove_all(tmpPath);
-    return 1;
+  {
+    // make manifest file
+    cout << ttyHelper::log("Generating manifest ...");
+    string user = systemHelper::getProccessUser();
+    nlohmann::json manifestJson = {
+        {"signingUser", user},
+        {
+            "signingTime",
+            static_cast<int64_t>(time(nullptr)),
+        },
+        {"lazy", lazyRebuild},
+        {"hosts", hosts},
+    };
+    systemHelper::saveFileFromStr(tmpPath + "/manifest.json",
+                                  nlohmann::to_string(manifestJson));
+
+    // make flake path into tarball
+    cout << ttyHelper::log("Packing tarball ...");
+    const tarHelper::result<void> tarStatus =
+        tarHelper::package(tmpPath + "/tarball.tar",
+                           {
+                               {tmpPath + "/manifest.json", "manifest.json"},
+                               {flakePath, "nixosConfig"},
+                           });
+    if (tarStatus.exitCode != 0) {
+      cerr << ttyHelper::error(*tarStatus.error);
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
   }
-  vector<string> userHosts =
-      split::splitStrByChar(*argsProcessed["*"].value, ' ');
-  if (userHosts.size() == 1 && userHosts[0] == "all") {
-    hosts = availableHosts;
-  } else {
-    for (string userHost : userHosts) {
-      if (ranges::contains(availableHosts, userHost)) {
-        hosts.push_back(userHost);
-      } else {
-        cerr << ttyHelper::error("host (" + ttyColour::log + userHost +
-                                 ttyColour::reset +
-                                 ") does not exist in flake");
+  string signature;
+  {
+    vector<unsigned char> hash;
+    {
+      // get tarball
+      const systemHelper::result<vector<unsigned char>> tarballFileResult =
+          systemHelper::readFile(tmpPath + "/tarball.tar");
+      if (tarballFileResult.exitCode != 0) {
+        cerr << ttyHelper::error(*tarballFileResult.error);
         filesystem::remove_all(tmpPath);
         return 1;
       }
+
+      // make hash
+      cout << ttyHelper::log("Signing ...");
+      const sslHelper::result<vector<unsigned char>> sslHashStatus =
+          sslHelper::getSHA512Hash(*tarballFileResult.output);
+      if (sslHashStatus.exitCode != 0) {
+        cerr << ttyHelper::error(*sslHashStatus.error);
+        filesystem::remove_all(tmpPath);
+        return 1;
+      }
+      hash = *sslHashStatus.output;
     }
-  }
-  if (hosts.size() == 0) {
-    cerr << ttyHelper::error(
-        "no hosts selected. This error should be able to be trigged");
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
+    // get key
+    string keyPath = *argsProcessed["key"].value;
+    const systemHelper::result<string> keyFileResult =
+        systemHelper::readFileToStr(keyPath);
+    if (keyFileResult.exitCode != 0) {
+      cerr << ttyHelper::error(*keyFileResult.error);
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
+    string keyFile = *keyFileResult.output;
 
-  // make manifest file
-  cout << ttyHelper::log("Generating manifest ...");
-  string user = systemHelper::getProccessUser();
-  nlohmann::json manifestJson = {
-      {"signingUser", user},
-      {
-          "signingTime",
-          static_cast<int64_t>(time(nullptr)),
-      },
-      {"lazy", lazyRebuild},
-      {"hosts", hosts},
-  };
-  systemHelper::saveFileFromStr(tmpPath + "/manifest.json",
-                                nlohmann::to_string(manifestJson));
+    // get ssl key
+    const sslHelper::result<EVP_PKEY *> privateKeyPKEY =
+        sslHelper::openPrivateKey(keyFile);
+    if (privateKeyPKEY.exitCode != 0) {
+      cerr << ttyHelper::error(*privateKeyPKEY.error);
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
 
-  // make flake path into tarball
-  cout << ttyHelper::log("Packing tarball ...");
-  const tarHelper::result<void> tarStatus =
-      tarHelper::package(tmpPath + "/tarball.tar",
-                         {
-                             {tmpPath + "/manifest.json", "manifest.json"},
-                             {flakePath, "nixosConfig"},
-                         });
-  if (tarStatus.exitCode != 0) {
-    cerr << ttyHelper::error(*tarStatus.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
+    // sign Sha
+    const sslHelper::result<vector<unsigned char>> signatureStatus =
+        sslHelper::signDataWithKey(hash, *privateKeyPKEY.output);
+    if (signatureStatus.exitCode != 0) {
+      cerr << ttyHelper::error(*signatureStatus.error);
+      filesystem::remove_all(tmpPath);
+      return 1;
+    }
+    signature = base64::encode(*signatureStatus.output);
   }
-
-  // get tarball
-  const systemHelper::result<vector<unsigned char>> tarballFileResult =
-      systemHelper::readFile(tmpPath + "/tarball.tar");
-  if (tarballFileResult.exitCode != 0) {
-    cerr << ttyHelper::error(*tarballFileResult.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-
-  // make hash
-  cout << ttyHelper::log("Signing ...");
-  const sslHelper::result<vector<unsigned char>> sslHashStatus =
-      sslHelper::getSHA512Hash(*tarballFileResult.output);
-  if (sslHashStatus.exitCode != 0) {
-    cerr << ttyHelper::error(*sslHashStatus.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-
-  // get key
-  string keyPath = *argsProcessed["key"].value;
-  const systemHelper::result<string> keyFileResult =
-      systemHelper::readFileToStr(keyPath);
-  if (keyFileResult.exitCode != 0) {
-    cerr << ttyHelper::error(*keyFileResult.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-  string keyFile = *keyFileResult.output;
-
-  // get ssl key
-  const sslHelper::result<EVP_PKEY *> privateKeyPKEY =
-      sslHelper::openPrivateKey(keyFile);
-  if (privateKeyPKEY.exitCode != 0) {
-    cerr << ttyHelper::error(*privateKeyPKEY.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-
-  // sign Sha
-  const sslHelper::result<vector<unsigned char>> signatureStatus =
-      sslHelper::signDataWithKey(*sslHashStatus.output, *privateKeyPKEY.output);
-  if (signatureStatus.exitCode != 0) {
-    cerr << ttyHelper::error(*signatureStatus.error);
-    filesystem::remove_all(tmpPath);
-    return 1;
-  }
-  string signature = base64::encode(*signatureStatus.output);
-
   // Call to each host.
   cout << ttyHelper::log("Deploying on hosts ...");
   vector<hostConnection::input> hostInputs;
@@ -236,8 +244,8 @@ int main(int argc, char const *argv[]) {
           hostInputs, hostConnection::hostConnection, 64);
 
   for (hostConnection::result<string> hostOutput : hostOutputs) {
-    cout << ttyHelper::log(hostOutput.output.value_or(""));
-    cerr << ttyHelper::error(hostOutput.error.value_or(""));
+    cout << hostOutput.output.value_or("");
+    cerr << hostOutput.error.value_or("");
   }
 
   filesystem::remove_all(tmpPath);
