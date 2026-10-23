@@ -31,26 +31,26 @@ using namespace std;
 // oh whelp.
 //
 int main(int argc, char const *argv[]) {
+
+  vector<string> args(argv, argv + argc);
+
+  // list flags
+  map<string, args::optionIn> argsAvailable = {
+      {"strict", args::optionIn{"strict", 's'}},
+      {"lazy", args::optionIn{"lazy", 'l'}},
+      {"flake", args::optionIn{"flake", 'f', true, true}},
+      {"key", args::optionIn{"key", 'k', true, true}},
+  };
+
+  // parse user input
   map<string, args::optionOut> argsProcessed;
-  {
-    vector<string> args(argv, argv + argc);
-
-    // list flags
-    map<string, args::optionIn> argsAvailable = {
-        {"strict", args::optionIn{"strict", 's'}},
-        {"lazy", args::optionIn{"lazy", 'l'}},
-        {"flake", args::optionIn{"flake", 'f', true, true}},
-        {"key", args::optionIn{"key", 'k', true, true}},
-    };
-
-    // parse user input
-    try {
-      argsProcessed = args::parse(args, argsAvailable);
-    } catch (invalid_argument e) {
-      cerr << ttyHelper::error(e.what());
-      return 1;
-    }
+  try {
+    argsProcessed = args::parse(args, argsAvailable);
+  } catch (invalid_argument e) {
+    cerr << ttyHelper::error(e.what());
+    return 1;
   }
+
   // rebuild mode
   if (argsProcessed["strict"].invoked == true &&
       argsProcessed["lazy"].invoked == true) {
