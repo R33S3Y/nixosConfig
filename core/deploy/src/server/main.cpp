@@ -137,10 +137,11 @@ int main(int argc, char const *argv[]) {
       return 1;
     }
   }
+  string user = systemHelper::getProccessUser();
   {
     // make manifest file
     cout << ttyHelper::log("Generating manifest ...");
-    string user = systemHelper::getProccessUser();
+
     nlohmann::json manifestJson = {
         {"signingUser", user},
         {
@@ -168,6 +169,7 @@ int main(int argc, char const *argv[]) {
     }
   }
   string signature;
+  string privateKey;
   {
     vector<unsigned char> hash;
     {
@@ -200,11 +202,11 @@ int main(int argc, char const *argv[]) {
       filesystem::remove_all(tmpPath);
       return 1;
     }
-    string keyFile = *keyFileResult.output;
+    privateKey = *keyFileResult.output;
 
     // get ssl key
     const sslHelper::result<EVP_PKEY *> privateKeyPKEY =
-        sslHelper::openPrivateKey(keyFile);
+        sslHelper::openPrivateKey(privateKey);
     if (privateKeyPKEY.exitCode != 0) {
       cerr << ttyHelper::error(*privateKeyPKEY.error);
       filesystem::remove_all(tmpPath);
@@ -229,7 +231,7 @@ int main(int argc, char const *argv[]) {
     hostInputs.push_back({
         .host = host,
         .user = user,
-        .privateKey = keyFile,
+        .privateKey = privateKey,
         .serverPath = tmpPath,
         .clientPath = "/tmp/deployClient",
         .fileSig = signature,
