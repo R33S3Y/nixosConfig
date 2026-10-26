@@ -5,6 +5,7 @@
 #include "../utils/tarHelper.h"
 #include "../utils/ttyHelper.h"
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
@@ -39,16 +40,19 @@ int main(int argc, char const *argv[]) {
   // Check running with Sudo, user should be root
   if (systemHelper::getProccessUser() != "root") {
     cerr << ttyHelper::error("deployClient needs to be run with sudo!");
+    filesystem::remove_all(dir);
     return 1;
   }
 
   // restrict access to --directory
   if (chown(dir.c_str(), getuid(), getgid()) != 0) {
     cerr << ttyHelper::error("Failed to chown");
+    filesystem::remove_all(dir);
     return 1;
   }
   if (chmod(dir.c_str(), S_IRWXU) != 0) {
     cerr << ttyHelper::error("Failed to chmod");
+    filesystem::remove_all(dir);
     return 1;
   }
 
@@ -58,12 +62,14 @@ int main(int argc, char const *argv[]) {
       systemHelper::readFile(dir + "/tarball.tar");
   if (tarballFileResult.exitCode != 0) {
     cerr << ttyHelper::error(*tarballFileResult.error);
+    filesystem::remove_all(dir);
     return 1;
   }
   const sslHelper::result<vector<unsigned char>> sslHashResult =
       sslHelper::getSHA512Hash(*tarballFileResult.output);
   if (sslHashResult.exitCode != 0) {
     cerr << ttyHelper::error(*sslHashResult.error);
+    filesystem::remove_all(dir);
     return 1;
   }
   const sslHelper::result<bool> signatureResult =
@@ -71,6 +77,7 @@ int main(int argc, char const *argv[]) {
   if (signatureResult.exitCode != 0 ||
       signatureResult.output.value_or(false) != true) {
     cerr << ttyHelper::error(*signatureResult.error);
+    filesystem::remove_all(dir);
     return 1;
   }
 
@@ -79,6 +86,7 @@ int main(int argc, char const *argv[]) {
       tarHelper::unpackage(dir + "/tarball.tar", dir);
   if (tarResult.exitCode != 0) {
     cerr << ttyHelper::error(*tarResult.error);
+    filesystem::remove_all(dir);
     return 1;
   }
 
@@ -96,5 +104,6 @@ int main(int argc, char const *argv[]) {
 
   // Complete rebuild
   // Exit
+  filesystem::remove_all(dir);
   return 0;
 };
