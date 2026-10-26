@@ -1,5 +1,6 @@
 #include "tarHelper.h"
 #include "ttyHelper.h"
+#include <cstring>
 #include <fcntl.h>
 #include <filesystem>
 #include <libtar.h>
@@ -53,14 +54,14 @@ tarHelper::result<void> tarHelper::package(string tarPath,
 tarHelper::result<void> tarHelper::unpackage(const string tarPath,
                                              const string tarItemsSaveDir) {
   TAR *tarball = nullptr;
-  if (tar_open(&tarball, tarPath.c_str(), nullptr, O_RDONLY, 0500, TAR_GNU) !=
-      0)
+  if (tar_open(&tarball, tarPath.c_str(), nullptr, O_RDONLY, 0, TAR_GNU) != 0)
     return {.exitCode = 1, .error = "tar_open failed"};
 
   if (tar_extract_all(tarball, const_cast<char *>(tarItemsSaveDir.c_str())) !=
       0) {
+    string error = strerror(errno);
     tar_close(tarball);
-    return {.exitCode = 1, .error = "tar_extract_all failed"};
+    return {.exitCode = 1, .error = "tar_extract_all failed: + " + error};
   }
   tar_close(tarball);
   return {.exitCode = 0};
