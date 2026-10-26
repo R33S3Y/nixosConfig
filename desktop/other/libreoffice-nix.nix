@@ -7,4 +7,6 @@
   ];
 
   environment.variables.DICPATH = "${pkgs.hunspellDicts.en-au-large}/share/hunspell";
+
+  # org.openoffice.Office.Linguistic.General.DefaultLocale
 }

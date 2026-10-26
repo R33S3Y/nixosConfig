@@ -1,5 +1,6 @@
 #include "hostConnection.h"
 #include "../utils/sshHelper.h"
+#include "../utils/ttyHelper.h"
 #include <libssh/sftp.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -8,12 +9,16 @@ using namespace std;
 
 hostConnection::result<string>
 hostConnection::hostConnection(hostConnection::input input) {
+
   sshHelper::result<ssh_session> sessionResult =
       sshHelper::connectTo(input.host, "22", input.user, "", input.privateKey);
   if (sessionResult.exitCode != 0) {
+    // We need to run ttyHelper on all of errors and output on all strings
+    // due to the client doing ttyHelper on it's own input.
     return {.exitCode = 1,
-            .error = "Failed to connect to host (" + input.host +
-                     ") with error: \n" + *sessionResult.error};
+            .error =
+                ttyHelper::error("Failed to connect to host (" + input.host +
+                                 ") with error: \n" + *sessionResult.error)};
   }
   ssh_session sessionSsh = *sessionResult.output;
 
@@ -22,24 +27,26 @@ hostConnection::hostConnection(hostConnection::input input) {
   if (sftpResult.exitCode != 0) {
     sshHelper::disconnect(sessionSsh);
     return {.exitCode = 1,
-            .error = "Failed to setup SFTP link with (" + input.host +
-                     ") with error: \n" + *sftpResult.error};
+            .error = ttyHelper::error("Failed to setup SFTP link with (" +
+                                      input.host + ") with error: \n" +
+                                      *sftpResult.error)};
   }
   sftp_session sessionSftp = *sftpResult.output;
 
   sshHelper::result<void> dirResult = sshHelper::sftpMkDir(
       sessionSftp, input.clientPath, S_IRWXU | S_IRGRP | S_IXGRP);
   if (dirResult.exitCode != 0) {
-    return {.exitCode = 1, .error = "Failed to make dir on host"};
+    return {.exitCode = 1,
+            .error = ttyHelper::error("Failed to make dir on host")};
   };
   sshHelper::result<void> fileResult = sshHelper::sftpMoveFileTo(
       sessionSftp, input.serverPath + "/tarball.tar",
       input.clientPath + "/tarball.tar", S_IRWXU | S_IRGRP | S_IXGRP);
   if (fileResult.exitCode != 0) {
     return {.exitCode = 1,
-            .error =
+            .error = ttyHelper::error(
                 "Failed to copy file (tarball.tar) to host with error: \n" +
-                *fileResult.error};
+                *fileResult.error)};
   }
   sftp_free(sessionSftp);
 
