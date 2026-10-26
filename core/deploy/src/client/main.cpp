@@ -58,7 +58,7 @@ int main(int argc, char const *argv[]) {
 
   // Unpack Tarball
   const tarHelper::result<void> tarResult =
-      tarHelper::unpackage(dir + "/tarball.tar", dir);
+      tarHelper::unpackage(dir + "/tarball.tar", dir + "/tar/");
   if (tarResult.exitCode != 0) {
     cerr << ttyHelper::error(*tarResult.error);
     filesystem::remove_all(dir);
