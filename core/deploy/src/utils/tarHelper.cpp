@@ -53,6 +53,8 @@ tarHelper::result<void> tarHelper::package(string tarPath,
 
 tarHelper::result<void> tarHelper::unpackage(const string tarPath,
                                              const string tarItemsSaveDir) {
+  filesystem::create_directory(tarItemsSaveDir);
+
   TAR *tarball = nullptr;
   if (tar_open(&tarball, tarPath.c_str(), nullptr, O_RDONLY, 0, TAR_GNU) != 0)
     return {.exitCode = 1, .error = "tar_open failed"};
@@ -61,7 +63,7 @@ tarHelper::result<void> tarHelper::unpackage(const string tarPath,
       0) {
     string error = strerror(errno);
     tar_close(tarball);
-    return {.exitCode = 1, .error = "tar_extract_all failed: + " + error};
+    return {.exitCode = 1, .error = "tar_extract_all failed: " + error};
   }
   tar_close(tarball);
   return {.exitCode = 0};
