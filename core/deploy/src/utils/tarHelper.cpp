@@ -51,13 +51,14 @@ tarHelper::result<void> tarHelper::package(string tarPath,
 }
 
 tarHelper::result<void> tarHelper::unpackage(const string tarPath,
-                                             string tarItemsSaveDir) {
+                                             const string tarItemsSaveDir) {
   TAR *tarball = nullptr;
   if (tar_open(&tarball, tarPath.c_str(), nullptr, O_RDONLY, 0500, TAR_GNU) !=
       0)
     return {.exitCode = 1, .error = "tar_open failed"};
 
-  if (tar_extract_all(tarball, tarItemsSaveDir.data()) != 0) {
+  if (tar_extract_all(tarball, const_cast<char *>(tarItemsSaveDir.c_str())) !=
+      0) {
     tar_close(tarball);
     return {.exitCode = 1, .error = "tar_extract_all failed"};
   }
