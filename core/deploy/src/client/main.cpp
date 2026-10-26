@@ -56,31 +56,6 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  // Verify File was signed by signature
-  // Throw if not
-  const systemHelper::result<vector<unsigned char>> tarballFileResult =
-      systemHelper::readFile(dir + "/tarball.tar");
-  if (tarballFileResult.exitCode != 0) {
-    cerr << ttyHelper::error(*tarballFileResult.error);
-    filesystem::remove_all(dir);
-    return 1;
-  }
-  const sslHelper::result<vector<unsigned char>> sslHashResult =
-      sslHelper::getSHA512Hash(*tarballFileResult.output);
-  if (sslHashResult.exitCode != 0) {
-    cerr << ttyHelper::error(*sslHashResult.error);
-    filesystem::remove_all(dir);
-    return 1;
-  }
-  const sslHelper::result<bool> signatureResult =
-      sslHelper::verifyDataWithSign(*sslHashResult.output, sig);
-  if (signatureResult.exitCode != 0 ||
-      signatureResult.output.value_or(false) != true) {
-    cerr << ttyHelper::error(*signatureResult.error);
-    filesystem::remove_all(dir);
-    return 1;
-  }
-
   // Unpack Tarball
   const tarHelper::result<void> tarResult =
       tarHelper::unpackage(dir + "/tarball.tar", dir);
@@ -90,7 +65,35 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-  // Get Manifest Signing time
+  // Get Manifest Signing File
+
+  {
+    // Verify File was signed by signature
+    // Throw if not
+    const systemHelper::result<vector<unsigned char>> tarballFileResult =
+        systemHelper::readFile(dir + "/tarball.tar");
+    if (tarballFileResult.exitCode != 0) {
+      cerr << ttyHelper::error(*tarballFileResult.error);
+      filesystem::remove_all(dir);
+      return 1;
+    }
+    const sslHelper::result<vector<unsigned char>> sslHashResult =
+        sslHelper::getSHA512Hash(*tarballFileResult.output);
+    if (sslHashResult.exitCode != 0) {
+      cerr << ttyHelper::error(*sslHashResult.error);
+      filesystem::remove_all(dir);
+      return 1;
+    }
+    const sslHelper::result<bool> signatureResult =
+        sslHelper::verifyDataWithSign(*sslHashResult.output, sig);
+    if (signatureResult.exitCode != 0 ||
+        signatureResult.output.value_or(false) != true) {
+      cerr << ttyHelper::error(*signatureResult.error);
+      filesystem::remove_all(dir);
+      return 1;
+    }
+  }
+
   // Throw if more then 10min off now
 
   // Verify if this system is listed in Manifest file
@@ -104,6 +107,6 @@ int main(int argc, char const *argv[]) {
 
   // Complete rebuild
   // Exit
-  filesystem::remove_all(dir);
+  // filesystem::remove_all(dir);
   return 0;
 };
