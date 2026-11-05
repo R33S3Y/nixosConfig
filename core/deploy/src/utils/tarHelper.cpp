@@ -60,9 +60,8 @@ tarHelper::result<void> tarHelper::unpackage(const string tarPath,
     return {.exitCode = 1, .error = "tar_open failed"};
 
   if (tar_extract_all(tarball, const_cast<char *>(savePath.c_str())) != 0) {
-    string error = strerror(errno);
     tar_close(tarball);
-    return {.exitCode = 1, .error = "tar_extract_all failed: " + error};
+    return {.exitCode = 1, .error = "tar_extract_all failed"};
   }
   tar_close(tarball);
   return {.exitCode = 0};

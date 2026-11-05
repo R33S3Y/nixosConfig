@@ -7,6 +7,7 @@
 }:
 let
   isDarkMode = system.themes.${system.theme}.polarity == "dark";
+  isReese = system.user == "reese";
 in
 {
 
@@ -37,9 +38,13 @@ in
               return-youtube-dislikes
               ublock-origin
               youtube-shorts-block
-              keepassxc-browser
             ]
-            ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader;
+            ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader
+            ++ lib.optional isReese [
+              pkgs.nur.repos.rycee.firefox-addons.keepassxc-browser
+              pkgs.nur.repos.firefox-addons.enhancer-for-youtube
+            ];
+
         };
         settings = {
           "extensions.autoDisableScopes" = 0;
