@@ -39,12 +39,13 @@ in
               ublock-origin
               youtube-shorts-block
             ]
-            ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader
+            ++ (if isDarkMode then [ pkgs.nur.repos.rycee.firefox-addons.darkreader ] else [ ])
             ++ (
               if isReese then
+                with pkgs.nur.repos.rycee.firefox-addons;
                 [
-                  pkgs.nur.repos.rycee.firefox-addons.keepassxc-browser
-                  pkgs.nur.repos.rycee.firefox-addons.enhancer-for-youtube
+                  keepassxc-browser
+                  enhancer-for-youtube
                 ]
               else
                 [ ]
