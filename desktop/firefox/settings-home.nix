@@ -2,7 +2,6 @@
   pkgs,
   config,
   system,
-  lib,
   ...
 }:
 let
