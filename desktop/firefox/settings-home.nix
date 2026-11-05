@@ -40,11 +40,15 @@ in
               youtube-shorts-block
             ]
             ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader
-            ++ lib.optional isReese [
-              pkgs.nur.repos.rycee.firefox-addons.keepassxc-browser
-              pkgs.nur.repos.rycee.firefox-addons.enhancer-for-youtube
-            ];
-
+            ++ (
+              if isReese then
+                [
+                  pkgs.nur.repos.rycee.firefox-addons.keepassxc-browser
+                  pkgs.nur.repos.rycee.firefox-addons.enhancer-for-youtube
+                ]
+              else
+                [ ]
+            );
         };
         settings = {
           "extensions.autoDisableScopes" = 0;
