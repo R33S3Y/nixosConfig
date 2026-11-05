@@ -42,7 +42,7 @@ in
             ++ lib.optional isDarkMode pkgs.nur.repos.rycee.firefox-addons.darkreader
             ++ lib.optional isReese [
               pkgs.nur.repos.rycee.firefox-addons.keepassxc-browser
-              pkgs.nur.repos.firefox-addons.enhancer-for-youtube
+              pkgs.nur.repos.rycee.firefox-addons.enhancer-for-youtube
             ];
 
         };
