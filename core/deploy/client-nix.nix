@@ -16,7 +16,7 @@ in
           buildInputs = with prev; [
             nlohmann_json
             libtar
-            openssl_4_0
+            openssl_4_1
             libssh2
           ];
 
@@ -36,9 +36,9 @@ in
               -I${prev.nlohmann_json}/include \
               -I${prev.libtar}/include \
               -L${prev.libtar}/lib -ltar \
-              -I${prev.openssl_4_0.dev}/include \
-              -L${prev.openssl_4_0.out}/lib -lssl \
-              -L${prev.openssl_4_0.out}/lib -lcrypto \
+              -I${prev.openssl_4_1.dev}/include \
+              -L${prev.openssl_4_1.out}/lib -lssl \
+              -L${prev.openssl_4_1.out}/lib -lcrypto \
               -I${prev.libssh.dev}/include \
               -L${prev.libssh}/lib -lssh \
 

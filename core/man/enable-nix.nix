@@ -6,7 +6,7 @@
     # just more man pages
     man-db
     man-pages
-    openssl_4_0
+    openssl_4_1
     gcc.man
   ];
 }
