@@ -83,7 +83,7 @@ let
     shadow = {
       enabled = true;
       range = 50;
-      render_power = 10;
+      render_power = 4; # max 4
     };
 
     icons = {
